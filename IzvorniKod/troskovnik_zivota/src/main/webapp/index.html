@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Home page</title>
+	
+	<style type="text/css">
+	.wrapper{
+    
+	</style>
+
+	<link rel="stylesheet" type="text/css" href="css/formBlue.css">
+	
+	<!-- Jquery -->
+	<script 
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+</head>
+
+<body>
+	<!-- The loader -->
+	<div id="loader"></div>
+
+	<div class="wrapper">
+		<div class="form-style-10">
+			<h1>Prijava postojećeg korisnika<span>Ispunite polja označena sa *</span></h1>
+			<form action="#naOvuAdresuSeSaljuPrikljupeniPodaci/prvoProvjera" method="post">
+			    <div class="section"><span>1</span>Podaci</div>
+			    <div class="inner-wrap">
+			        <label>Korisnicko ime * <input type="text" name="userName" required/></label>
+			        <label>Lozinka *<input type="password" name="password" required/></label>
+			    </div>
+				
+			    <div class='button-section'>
+			     <input type="submit" name="Pošalji"/>
+			    </div>
+			</form>
+		</div>
+		
+		<a href="javascript:displayRegisterForm();">Registracija novog korisnika</a>
+		
+		<div id="registerForm">
+		</div>
+	
+	</div>
+</body>
+<script type="text/javascript">
+
+	/*kada pises HTML tekst na dinamcki nacina navodnici moraju biti jednostruki, inace mogu i jednostruku i dvostruku (pogledaj gore button)*/
+	/*zadnji redak jquery -> $(#registerForm) dohvaca objekt dokumenta pod id-jem registerForm, pogledati w3schools*/
+	/* -- .html(Stirng) f-ja koja u objekt zapisuje html*/
+	function displayRegisterForm(){
+		var registerFormDiv = document.getElementById("registerForm");
+		var html = "";
+		html += "<div class='form-style-10'>";
+		html += "<h1>Registracija novog korisnika<span>Ispunite polja označena sa *</span></h1>";
+		html += "<form action='register.html' method='post'>";
+		html += "<div class='section'><span>1</span>Podaci</div>";
+		html += "<div class='inner-wrap'>";
+		html += "<label>Ime i prezime * <input type='text' name='fullName' required/></label>";
+		html += "<label>Lozinka *<input type='password' name='password' required/></label>";
+		html += "</div>";
+		html += "<div class='button-section'><input type='submit' name='Pošalji'/></div>";
+		html += "</form>";
+		html += "</div>";
+		html += "</div>";
+		$("#registerForm").html(html);
+	}
+	
+</script>
+</html>

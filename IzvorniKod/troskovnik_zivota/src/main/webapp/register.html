@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Home page</title>
+	
+	<style type="text/css">
+	.wrapper{
+    
+	</style>
+
+	<link rel="stylesheet" type="text/css" href="css/formBlue.css">
+</head>
+
+<body>
+	<!-- The loader -->
+	<div id="loader"></div>
+
+	<div class="wrapper">
+		<div class="form-style-10">
+			<h1>Registracija novog korisnika</h1>
+			<form action="#naOvuAdresuSeSaljuPrikljupeniPodaci2" method="post">
+			    <div class="section"><span>1</span>Obevezni podaci</div>
+			    <div class="inner-wrap">
+			        <label>Ime*<input type="text" name="fullName" required/></label>
+			        <label>Prezime *<input type="text" name="fullName" required/></label>
+					<label>Telefonski broj *<input type="text" name="phone" required/></label>
+					<label>Email *<input type="text" name="email" required/></label>	
+			    </div>
+				
+			    <div class="section"><span>2</span>Dodatni podaci</div>
+			    <div class="inner-wrap">
+			        <label>OIB <input type="text" name="OIBl"/></label>
+			        <label>Datum rođenja <input type="text" name="dateOfBirth"/></label>
+			        <label>Naziv mjesta <input type="email" name="town"/></label>
+			        <label>Postanski broj <input type="text" name="postCode"/></label>
+			        <label>Ulica i broj <input type="text" name="addres"/></label>
+			    </div>
+				
+				<div class="button-section">
+			     <input type="submit" name="Pošalji"/>
+			    </div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>
