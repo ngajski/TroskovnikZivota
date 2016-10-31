@@ -1,72 +1,113 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Home page</title>
-	
-	<style type="text/css">
-	.wrapper{
-    
-	</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Home page</title>
+<style type="text/css">
+#title{
+	font-family: 'Titillium Web', sans-serif;
+	float: center;
+	margin-top: 10px;
+	font-size: 48px;
+	/*fallback color*/
+	color: rgba(19, 35, 47);
+	color: rgba(19, 35, 47, 0.9);
+}
+</style>
 
-	<link rel="stylesheet" type="text/css" href="css/formBlue.css">
-	
-	<!-- Jquery -->
-	<script 
+<link
+	href='http://fonts.googleapis.com/css?family=Titillium+Web:400,300,600'
+	rel='stylesheet' type='text/css'>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/loader.css">
+
+<!-- Jquery -->
+<script
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="js/general.js"></script>
 </head>
 
+<script type="text/javascript">
+<!--
+	$(document).ready(
+				function() {
+					var myVar = setTimeout(showPage, 1000);
+				}
+	);	
+	
+//-->
+</script>
 <body>
 	<!-- The loader -->
 	<div id="loader"></div>
 
-	<div class="wrapper">
-		<div class="form-style-10">
-			<h1>Prijava postojećeg korisnika<span>Ispunite polja označena sa *</span></h1>
-			<form action="#naOvuAdresuSeSaljuPrikljupeniPodaci/prvoProvjera" method="post">
-			    <div class="section"><span>1</span>Podaci</div>
-			    <div class="inner-wrap">
-			        <label>Korisnicko ime * <input type="text" name="userName" required/></label>
-			        <label>Lozinka *<input type="password" name="password" required/></label>
-			    </div>
-				
-			    <div class='button-section'>
-			     <input type="submit" name="Pošalji"/>
-			    </div>
-			</form>
+	<div style="display: none;" id="pageContent" class="animate-bottom">
+		<h1 id='title'>Troškovnik života</h1>
+		<div class="form">
+
+			<ul class="tab-group">
+				<li class="tab active"><a href="#login">Prijava postojećeg
+						korisnika</a></li>
+				<li class="tab"><a href="#signup">Registracija novog
+						korisnika</a></li>
+			</ul>
+
+			<div class="tab-content">
+
+				<div id="login">
+					<h1>Dobro došli nazad!</h1>
+
+					<form action="/" method="post">
+
+						<div class="field-wrap">
+							<label> Korisničko ime<span class="req">*</span>
+							</label> <input type="text" required autocomplete="off" />
+						</div>
+
+						<div class="field-wrap">
+							<label> Lozinka<span class="req">*</span>
+							</label> <input type="password" required autocomplete="off" />
+						</div>
+
+						<button class="button button-block">Prijavi se</button>
+
+					</form>
+
+				</div>
+
+				<div id="signup">
+					<h1>Besplatna registracija</h1>
+
+					<form action="/" method="post">
+
+						<div class="field-wrap">
+							<label> Korisničko ime<span class="req">*</span>
+							</label> <input type="text" required autocomplete="off" />
+						</div>
+
+						<div class="field-wrap">
+							<label> Lozinka<span class="req">*</span>
+							</label> <input type="password" required autocomplete="off" />
+						</div>
+
+						<button type="submit" class="button button-block">Registriraj
+							se</button>
+
+					</form>
+
+				</div>
+
+			</div>
+			<!-- tab-content -->
+
 		</div>
-		
-		<a href="javascript:displayRegisterForm();">Registracija novog korisnika</a>
-		
-		<div id="registerForm">
-		</div>
-	
+		<!-- /form -->
 	</div>
 </body>
-<script type="text/javascript">
-
-	/*kada pises HTML tekst na dinamcki nacina navodnici moraju biti jednostruki, inace mogu i jednostruku i dvostruku (pogledaj gore button)*/
-	/*zadnji redak jquery -> $(#registerForm) dohvaca objekt dokumenta pod id-jem registerForm, pogledati w3schools*/
-	/* -- .html(Stirng) f-ja koja u objekt zapisuje html*/
-	function displayRegisterForm(){
-		var registerFormDiv = document.getElementById("registerForm");
-		var html = "";
-		html += "<div class='form-style-10'>";
-		html += "<h1>Registracija novog korisnika<span>Ispunite polja označena sa *</span></h1>";
-		html += "<form action='register.html' method='post'>";
-		html += "<div class='section'><span>1</span>Podaci</div>";
-		html += "<div class='inner-wrap'>";
-		html += "<label>Ime i prezime * <input type='text' name='fullName' required/></label>";
-		html += "<label>Lozinka *<input type='password' name='password' required/></label>";
-		html += "</div>";
-		html += "<div class='button-section'><input type='submit' name='Pošalji'/></div>";
-		html += "</form>";
-		html += "</div>";
-		html += "</div>";
-		$("#registerForm").html(html);
-	}
-	
-</script>
+<script
+	src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src="js/index.js"></script>
 </html>
