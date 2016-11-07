@@ -29,17 +29,59 @@
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="js/general.js"></script>
 </head>
+<script type="text/javascript">
+	var counter = 1;
+	
+	function displayExpensesList(data){
+		var listOfExpenses = data.listOfExpenses;
+		var html = "";
+		for (var i=0; i < listOfExpenses.length; ++i){
+			html += "Ime je: " + listOfExpenses[i].name+ "<br>";							
+			html += "Vrijednost troska je: " + listOfExpenses[i].value + "<br>";
+			html += "Trosak je fiksan: " + listOfExpenses[i].fixed; 	
+		}
+		$("#proba" + counter++).html(html);
+
+	}
+</script>
 
 <script type="text/javascript">
 <!--
 	$(document).ready(
 				function() {
 					var myVar = setTimeout(showPage, 1000);
+					var userName = "ivan";
+					
+					$.ajax({
+						data : {
+							userName : userName,
+							dummy : Math.random()
+						},
+						dataType : "json",
+						success : displayExpensesList,
+						url : "troskovnik"
+					});
+					
+					$.ajax({
+						type: "GET",
+						crossDomain: true,
+						data : {
+							userName : userName,
+							dummy : Math.random()
+                        },
+						dataType: "jsonp",
+						jsonpCallback: "displayExpensesList", 
+						url: "http://localhost:8080/baza-podataka/troskovnikJSONP",
+						error: function (XMLHttpRequest, textStatus, errorThrown) {
+					         console.log(textStatus, errorThrown);
+					    }
+					});
 				}
 	);	
 	
 //-->
 </script>
+
 <body>
 	<!-- The loader -->
 	<div id="loader"></div>
@@ -106,6 +148,13 @@
 		</div>
 		<!-- /form -->
 	</div>
+	
+	<div id='proba1'>
+	</div>
+	
+	<div id='proba2'>
+	</div>
+	
 </body>
 <script
 	src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
