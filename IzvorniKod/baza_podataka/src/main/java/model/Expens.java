@@ -8,13 +8,6 @@ public class Expens {
 	
 	private boolean fixed;
 	
-	public Expens(String name, float value, boolean fixed) {
-		super();
-		this.name = name;
-		this.value = value;
-		this.fixed = fixed;
-	}
-	
 	public String getName() {
 		return name;
 	}

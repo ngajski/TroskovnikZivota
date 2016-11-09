@@ -3,17 +3,10 @@ package model;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ExpensesList {
+public class ExpenseList {
 
 	private List<Expens> listOfExpenses = new LinkedList<>();
 	
-	public ExpensesList(Expens... expenses) {
-		super();
-		for(Expens expens: expenses){
-			this.listOfExpenses.add(expens);
-		}
-	}
-
 	public List<Expens> getListOfExpenses() {
 		return listOfExpenses;
 	}
