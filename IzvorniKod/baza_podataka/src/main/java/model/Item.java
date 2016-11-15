@@ -1,9 +1,25 @@
 package model;
 
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="items")
 public abstract class Item {
+	/**
+	 * id
+	 */
+	@Id
+	@GeneratedValue
+	private Long id;
 
 	private String name;
 	
+    @Enumerated(EnumType.STRING)
 	private Period period;
 	
 	private float amount;
@@ -11,6 +27,15 @@ public abstract class Item {
 	private boolean fixed;
 	
 	private String comment;
+
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getName() {
 		return name;

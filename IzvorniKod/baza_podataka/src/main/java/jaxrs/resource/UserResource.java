@@ -22,7 +22,6 @@ import javax.ws.rs.core.MediaType;
 
 import dao.DAO;
 import dao.DaoUser;
-import model.Person;
 import model.User;
 
 @Path("/users")

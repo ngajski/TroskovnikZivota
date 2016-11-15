@@ -2,16 +2,31 @@ package model;
 
 import java.util.List;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
 public class ExpenseCategory {
 
+	/**
+	 * id
+	 */
+	@Id
+	@GeneratedValue
+	private Long id;
+	
 	private String name;
 	
 	private boolean fixed;
 	
+	@OneToMany(mappedBy="superCategory")
 	private List<Item> expenses;
 	
+	@ManyToOne
 	private ExpenseCategory superCategory;
 	
+	@OneToMany(mappedBy="superCategory")
 	private List<ExpenseCategory> subCategories;
 
 	public String getName() {
@@ -52,6 +67,14 @@ public class ExpenseCategory {
 
 	public void setSubCategories(List<ExpenseCategory> subCategories) {
 		this.subCategories = subCategories;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 }

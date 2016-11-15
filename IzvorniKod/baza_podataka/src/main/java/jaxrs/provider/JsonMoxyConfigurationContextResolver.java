@@ -18,7 +18,6 @@ public class JsonMoxyConfigurationContextResolver implements ContextResolver<Mox
     private final MoxyJsonConfig config;
  
     public JsonMoxyConfigurationContextResolver() {
-    	System.out.println("tu dosao");
         final Map<String, String> namespacePrefixMapper = new HashMap<String, String>();
         namespacePrefixMapper.put("http://www.w3.org/2001/XMLSchema-instance", "xsi");
         

@@ -1,6 +1,10 @@
 package model;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 public class ExpenseItem extends Item {
+
 
 	private ExpenseCategory category;
 

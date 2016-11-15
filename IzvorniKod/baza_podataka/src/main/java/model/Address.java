@@ -1,13 +1,34 @@
 package model;
 
-public class Adress {
+import javax.jws.soap.SOAPBinding.Use;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
+public class Address {
+
+	/**
+	 * id
+	 */
+	@Id
+	@GeneratedValue
+	@Column
+	private Long id;
+	
+	@Column(nullable = false, length = 30)
 	private String street;
 
+	@Column(nullable = false)
 	private int houseNumber;
 
+	/**
+	 * text of blog entry
+	 */
+	@Column(nullable = false, length = 30)
 	private String city;
 
+	@Column(nullable = false)
 	private int postCode;
 
 	public String getStreet() {
@@ -41,6 +62,14 @@ public class Adress {
 	public void setPostCode(int postCode) {
 		this.postCode = postCode;
 	}
-	
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	
 }
