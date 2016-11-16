@@ -45,9 +45,7 @@ public class ExpenseList {
 	@OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<IncomeItem> incomes;
 
-	/**
-	 * reference to blog user which created this blog entry
-	 */
+	
 	@ManyToOne
 	private User owner;
 
