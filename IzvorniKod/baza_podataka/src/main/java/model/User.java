@@ -29,7 +29,7 @@ public class User {
 	/**
 	 * username
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String username;
 
 	/**
@@ -50,19 +50,23 @@ public class User {
 	@Column(nullable = false)
 	private String lastName;
 
-	@Column
+	@Column(nullable = true)
 	private String OIB;
 
 	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = true)
 	private Date dateOfBirth;
 
 	/**
-	 * employe ima kljuc na address, u db strani kljuc user::id nece imati nad
-	 * sobom UNIQUE - legalno da vise usera na istoj address zivi
+	 * ovdje ne pise mappedBy pa je ovaj razred sadrzi FK na address, ni u
+	 * razredu address nema nikakve notacije <br>
+	 * ---- pogledaj dolje list -----
 	 */
 	@ManyToOne
+	@Column(nullable = true)
 	private Address adress;
 
+	@Column(nullable = true)
 	private String telefon;
 
 	/**
@@ -72,9 +76,12 @@ public class User {
 	private String email;
 
 	/**
-	 * list of blog entries this user has created and published
+	 * KADA VIDIS ATTR mappedBy to znaci da se razredu koji je el liste(razred
+	 * A) nalazi FK na ovaj razred i zato se dodatno razredu A pise clanska
+	 * varijabla tipa ovaj razred na kojem pise ManyToOne (tak se realizira list
+	 * s jpa)
 	 */
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+	@OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<ExpenseList> expenseLists;
 
 	public String getUsername() {

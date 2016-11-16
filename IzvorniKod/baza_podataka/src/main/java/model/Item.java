@@ -5,10 +5,12 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
 
-@Entity
-@Table(name="items")
+
+@MappedSuperclass
 public abstract class Item {
 	/**
 	 * id
@@ -27,7 +29,9 @@ public abstract class Item {
 	private boolean fixed;
 	
 	private String comment;
-
+	
+	@ManyToOne
+	private ExpenseList owner;
 	
 	public Long getId() {
 		return id;
@@ -77,4 +81,13 @@ public abstract class Item {
 		this.comment = comment;
 	}
 
+	public ExpenseList getOwner() {
+		return owner;
+	}
+
+	public void setOwner(ExpenseList owner) {
+		this.owner = owner;
+	}
+
+	
 }
