@@ -20,13 +20,20 @@ public class ExpenseCategory {
 	
 	private boolean fixed;
 	
-	//nepotrebno !!
-	//@OneToMany(mappedBy="superCategory")
-	//private List<Item> expenses;
+	
+	private List<ExpenseItem> expenseItems;
 	
 	@ManyToOne
 	private ExpenseCategory superCategory;
 	
+	public List<ExpenseItem> getExpenseItems() {
+		return expenseItems;
+	}
+
+	public void setExpenseItems(List<ExpenseItem> expenseItems) {
+		this.expenseItems = expenseItems;
+	}
+
 	@OneToMany(mappedBy="superCategory")
 	private List<ExpenseCategory> subCategories;
 

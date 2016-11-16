@@ -34,7 +34,7 @@ public class ExpenseList {
 	 * kojem pise ManyToOne (tak se realizira list s jpa)
 	 */
 	@OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
-	private List<ExpenseItem> expenses;
+	private List<ExpenseCategory> expenseCategories;
 
 	/**
 	 * KADA VIDIS ATTR mappedBy to znaci da se razredu koji je el liste(razred
@@ -67,12 +67,14 @@ public class ExpenseList {
 		this.name = name;
 	}
 
-	public List<ExpenseItem> getExpenses() {
-		return expenses;
+	
+
+	public List<ExpenseCategory> getExpenseCategories() {
+		return expenseCategories;
 	}
 
-	public void setExpenses(List<ExpenseItem> expenses) {
-		this.expenses = expenses;
+	public void setExpenseCategories(List<ExpenseCategory> expenseCategories) {
+		this.expenseCategories = expenseCategories;
 	}
 
 	public List<IncomeItem> getIncomes() {
