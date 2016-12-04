@@ -15,6 +15,37 @@
   </properties>  
   
   <dependencies>
+   	<dependency>
+  		<groupId>junit</groupId>
+  		<artifactId>junit</artifactId>
+  		<version>4.12</version>
+  		<scope>test</scope>
+  	</dependency>
+
+	<dependency>
+	    <groupId>org.hibernate</groupId>
+	    <artifactId>hibernate-entitymanager</artifactId>
+	    <version>5.1.0.Final</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>org.hibernate</groupId>
+	    <artifactId>hibernate-ehcache</artifactId>
+	    <version>5.1.0.Final</version>
+	</dependency>	
+	
+	<dependency>
+	    <groupId>org.hibernate</groupId>
+	    <artifactId>hibernate-c3p0</artifactId>
+	    <version>5.1.0.Final</version>
+	</dependency>
+	
+	<dependency>
+    	<groupId>org.apache.derby</groupId>
+   		<artifactId>derbyclient</artifactId>
+    	<version>10.12.1.1</version>
+	</dependency>
+  
   	<dependency>
   		<groupId>javax.servlet</groupId>
   		<artifactId>javax.servlet-api</artifactId>
@@ -47,47 +78,18 @@
   		</exclusions>
   	</dependency>
   	
-  	<!-- https://mvnrepository.com/artifact/javax.mail/mail -->
   	<dependency>
-    	<groupId>javax.mail</groupId>
-    	<artifactId>mail</artifactId>
-    	<version>1.4</version>
-	</dependency>
-	
-	<!-- https://mvnrepository.com/artifact/javax/javaee-api -->
-	<dependency>
-  		<groupId>javax</groupId>
-    	<artifactId>javaee-api</artifactId>
-    	<version>7.0</version>
+    		<groupId>org.apache.poi</groupId>
+    		<artifactId>poi</artifactId>
+    		<version>3.14</version>
 	</dependency>
 
-  	<!-- https://mvnrepository.com/artifact/org.json/json -->
 	<dependency>
-	    <groupId>org.json</groupId>
-	    <artifactId>json</artifactId>
-	    <version>20160212</version>
+    		<groupId>com.mchange</groupId>
+    		<artifactId>c3p0</artifactId>
+    		<version>0.9.5.2</version>
 	</dependency>
-	
-	<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
-	<dependency>
-	    <groupId>com.google.code.gson</groupId>
-	    <artifactId>gson</artifactId>
-	    <version>2.7</version>
-	</dependency>
-	
-	<!-- https://mvnrepository.com/artifact/org.glassfish.jersey.core/jersey-server -->
-	<dependency>
-	    <groupId>org.glassfish.jersey.core</groupId>
-	    <artifactId>jersey-server</artifactId>
-	    <version>2.23.1</version>
-	</dependency>
-	
-	<dependency>
-	    <groupId>org.glassfish.jersey.containers</groupId>
-	    <artifactId>jersey-container-servlet</artifactId>
-	    <version>2.23.1</version>
-	</dependency>
-
+  	
   </dependencies>
   
   

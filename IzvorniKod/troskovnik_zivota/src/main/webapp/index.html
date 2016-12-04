@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Home page</title>
 <style type="text/css">
-#title{
+#title {
 	font-family: 'Titillium Web', sans-serif;
 	float: center;
 	margin-top: 10px;
@@ -30,58 +30,44 @@
 <script src="js/general.js"></script>
 </head>
 <script type="text/javascript">
-	var counter = 1;
-	
-	function displayExpensesList(data){
-		var listOfExpenses = data.listOfExpenses;
-		var html = "";
-		for (var i=0; i < listOfExpenses.length; ++i){
-			html += "Ime je: " + listOfExpenses[i].name+ "<br>";							
-			html += "Vrijednost troska je: " + listOfExpenses[i].value + "<br>";
-			html += "Trosak je fiksan: " + listOfExpenses[i].fixed; 	
-		}
-		$("#proba" + counter++).html(html);
-
-	}
-</script>
-
-<script type="text/javascript">
 <!--
-	$(document).ready(
-				function() {
-					var myVar = setTimeout(showPage, 1000);
-					var userName = "ivan";
-					
-					$.ajax({
-						data : {
-							userName : userName,
-							dummy : Math.random()
-						},
-						dataType : "json",
-						success : displayExpensesList,
-						url : "troskovnik"
-					});
-					
-					$.ajax({
-						type: "GET",
-						crossDomain: true,
-						data : {
-							userName : userName,
-							dummy : Math.random()
-                        },
-						dataType: "jsonp",
-						jsonpCallback: "displayExpensesList", 
-						url: "http://localhost:8080/baza-podataka/troskovnik",
-						error: function (XMLHttpRequest, textStatus, errorThrown) {
-					         console.log(textStatus, errorThrown);
-					    }
-					});
-				}
-	);	
-	
+	$(document).ready(function() {
+		var myVar = setTimeout(showPage, 1000);
+
+	});
 //-->
 </script>
 
+<!-- Methods for validation of data in forms -->
+<script type="text/javascript">
+	function validateRegisterForm() {
+		var username = document.forms["registerForm"]["username"].value;
+		var password = document.forms["registerForm"]["password"].value;
+
+		$.ajax({
+			type : 'GET',
+			url : "http://localhost:8080/baza-podataka/service/users/exists/"
+					+ username,
+			crossDomain : true,
+			dataType : 'json',
+			success : function(responseData, textStatus, jqXHR) {
+				var exists = responseData;
+
+				if (exists == "true"l) {
+					alert("Name already exists");
+				} else {
+					sessionStorage.setItem('username', 'username');
+					sessionStorage.setItem('password', 'password');
+					changeWindowUrl('register.html');
+				}
+			},
+			error : function(responseData, textStatus, errorThrown) {
+				alert('GET failed.');
+			}
+		});
+
+	}
+</script>
 <body>
 	<!-- The loader -->
 	<div id="loader"></div>
@@ -93,7 +79,7 @@
 			<ul class="tab-group">
 				<li class="tab active"><a href="#login">Prijava postojećeg
 						korisnika</a></li>
-				<li class="tab"><a href="#signup">Registracija novog
+				<li class="tab"><a href="#register">Registracija novog
 						korisnika</a></li>
 			</ul>
 
@@ -120,19 +106,20 @@
 
 				</div>
 
-				<div id="signup">
+				<div id="register">
 					<h1>Besplatna registracija</h1>
 
-					<form action="/" method="post">
+					<form name="registerForm" action="#" onsubmit="validateRegisterForm()">
 
 						<div class="field-wrap">
 							<label> Korisničko ime<span class="req">*</span>
-							</label> <input type="text" required autocomplete="off" />
+							</label> <input type="text" name="username" required autocomplete="off" />
 						</div>
 
 						<div class="field-wrap">
 							<label> Lozinka<span class="req">*</span>
-							</label> <input type="password" required autocomplete="off" />
+							</label> <input type="password" name="password" required
+								autocomplete="off" />
 						</div>
 
 						<button type="submit" class="button button-block">Registriraj
@@ -148,13 +135,7 @@
 		</div>
 		<!-- /form -->
 	</div>
-	
-	<div id='proba1'>
-	</div>
-	
-	<div id='proba2'>
-	</div>
-	
+
 </body>
 <script
 	src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
