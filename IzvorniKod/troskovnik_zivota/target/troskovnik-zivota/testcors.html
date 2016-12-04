@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Home page</title>
+	
+	<!-- Jquery -->
+	<script
+		src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="js/general.js"></script>
+</head>
+
+
+<script type="text/javascript">
+	
+	function displayExpensesList(data){
+		var users = data;
+		var html = "";
+		var counter = 1;
+		
+		for (var i=0; i < users.length; ++i){
+			html += "User broj: " + counter++;
+			html += "Ime je: " + users[i].name+ "<br>";							
+			html += "Lozinka je: " + users[i].password + "<br>";
+			html += "Datum rođenja je: " + users[i].dateOfBirth; 	
+		}
+		$("#users").html(html);
+	}
+	
+	function displayExpensesList(data){
+		var user = data;
+		var html = "";
+		
+		html += "Ime je: " + user.name+ "<br>";							
+		html += "Lozinka je: " + user.password + "<br>";
+		html += "Datum rođenja je: " + user.dateOfBirth; 	
+		$("#userByUsername").html(html);
+	}
+
+</script>
+<script type="text/javascript">
+<!--
+	$(document).ready(function() {
+		
+		$.ajax({
+			type : 'GET',
+			url : "http://localhost:8080/baza-podataka/service/users/",
+			crossDomain : true,
+			dataType : 'json',
+			success : function(responseData, textStatus, jqXHR) {
+				var users = responseData;
+				var html = "";
+				var counter = 1;
+
+				for (var i = 0; i < users.length; ++i) {
+					html += "User broj: " + counter++ + "<br>";
+					html += "Ime je: " + users[i].username + "<br>";
+					html += "Lozinka je: " + users[i].password + "<br>";
+					html += "Datum rođenja je: " + users[i].dateOfBirth + "<br>";
+				}
+				$("#users").html(html);
+			},
+			error : function(responseData, textStatus, errorThrown) {
+				alert('GET failed.');
+			}
+		});
+
+		$.ajax({
+			type : 'GET',
+			url : "http://localhost:8080/baza-podataka/service/users/filip",
+			crossDomain : true,
+			dataType : 'json',
+			success : function(responseData, textStatus, jqXHR) {
+				var user = responseData;
+				var html = "";
+
+				html += "Ime je: " + user.username + "<br>";
+				html += "Lozinka je: " + user.password + "<br>";
+				html += "Datum rođenja je: " + user.dateOfBirth + "<br>";
+				$("#userByUsername").html(html);
+			},
+			error : function(responseData, textStatus, errorThrown) {
+				alert('GET failed.');
+			}
+		});
+
+	});
+//-->
+</script>
+<body>
+	<div id='userByUsername'></div>
+	<div id='users'></div>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Home page</title>
+<style type="text/css">
+#title {
+	font-family: 'Titillium Web', sans-serif;
+	float: center;
+	margin-top: 10px;
+	font-size: 48px;
+	/*fallback color*/
+	color: rgba(19, 35, 47);
+	color: rgba(19, 35, 47, 0.9);
+}
+</style>
+
+<link
+	href='http://fonts.googleapis.com/css?family=Titillium+Web:400,300,600'
+	rel='stylesheet' type='text/css'>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/loader.css">
+
+<!-- Jquery -->
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="js/general.js"></script>
+</head>
+<script type="text/javascript">
+<!--
+	$(document).ready(function() {
+		var myVar = setTimeout(showPage, 1000);
+
+	});
+//-->
+</script>
+
+<!-- Methods for validation of data in forms -->
+<script type="text/javascript">
+	function validateRegisterForm() {
+		var username = document.forms["registerForm"]["username"].value;
+		var password = document.forms["registerForm"]["password"].value;
+
+		$.ajax({
+			type : 'GET',
+			url : "http://localhost:8080/baza-podataka/service/users/exists/"
+					+ username,
+			crossDomain : true,
+			dataType : 'json',
+			success : function(responseData, textStatus, jqXHR) {
+				var exists = responseData;
+
+				if (exists == "true"l) {
+					alert("Name already exists");
+				} else {
+					sessionStorage.setItem('username', 'username');
+					sessionStorage.setItem('password', 'password');
+					changeWindowUrl('register.html');
+				}
+			},
+			error : function(responseData, textStatus, errorThrown) {
+				alert('GET failed.');
+			}
+		});
+
+	}
+</script>
+<body>
+	<!-- The loader -->
+	<div id="loader"></div>
+
+	<div style="display: none;" id="pageContent" class="animate-bottom">
+		<h1 id='title'>Troškovnik života</h1>
+		<div class="form">
+
+			<ul class="tab-group">
+				<li class="tab active"><a href="#login">Prijava postojećeg
+						korisnika</a></li>
+				<li class="tab"><a href="#register">Registracija novog
+						korisnika</a></li>
+			</ul>
+
+			<div class="tab-content">
+
+				<div id="login">
+					<h1>Dobro došli nazad!</h1>
+
+					<form action="/" method="post">
+
+						<div class="field-wrap">
+							<label> Korisničko ime<span class="req">*</span>
+							</label> <input type="text" required autocomplete="off" />
+						</div>
+
+						<div class="field-wrap">
+							<label> Lozinka<span class="req">*</span>
+							</label> <input type="password" required autocomplete="off" />
+						</div>
+
+						<button class="button button-block">Prijavi se</button>
+
+					</form>
+
+				</div>
+
+				<div id="register">
+					<h1>Besplatna registracija</h1>
+
+					<form name="registerForm" action="#" onsubmit="validateRegisterForm()">
+
+						<div class="field-wrap">
+							<label> Korisničko ime<span class="req">*</span>
+							</label> <input type="text" name="username" required autocomplete="off" />
+						</div>
+
+						<div class="field-wrap">
+							<label> Lozinka<span class="req">*</span>
+							</label> <input type="password" name="password" required
+								autocomplete="off" />
+						</div>
+
+						<button type="submit" class="button button-block">Registriraj
+							se</button>
+
+					</form>
+
+				</div>
+
+			</div>
+			<!-- tab-content -->
+
+		</div>
+		<!-- /form -->
+	</div>
+
+</body>
+<script
+	src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src="js/index.js"></script>
+</html>
