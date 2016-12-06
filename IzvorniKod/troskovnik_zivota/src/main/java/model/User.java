@@ -42,17 +42,17 @@ public class User {
 	/**
 	 * password
 	 */
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private String firstName;
 
 	/**
 	 * password
 	 */
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private String lastName;
 
 	@Column(nullable = true)
-	private String OIB;
+	private String oib;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = true)
@@ -72,7 +72,7 @@ public class User {
 	/**
 	 * password
 	 */
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private String email;
 
 	/**
@@ -83,6 +83,24 @@ public class User {
 	 */
 	@OneToMany(mappedBy = "userOwner", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<ExpenseList> expenseLists;
+
+	public User() {
+		super();
+	}
+
+	public User(String username, String password, String firstName, String lastName, String oib, Date dateOfBirth,
+			Address address, String telefon, String email) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.oib = oib;
+		this.dateOfBirth = dateOfBirth;
+		this.address = address;
+		this.telefon = telefon;
+		this.email = email;
+	}
 
 	public String getUsername() {
 		return username;
@@ -116,12 +134,24 @@ public class User {
 		this.lastName = lastName;
 	}
 
-	public String getOIB() {
-		return OIB;
+	public Long getId() {
+		return id;
 	}
 
-	public void setOIB(String oIB) {
-		OIB = oIB;
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getOib() {
+		return oib;
+	}
+
+	public void setOib(String oib) {
+		this.oib = oib;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 
 	public Date getDateOfBirth() {

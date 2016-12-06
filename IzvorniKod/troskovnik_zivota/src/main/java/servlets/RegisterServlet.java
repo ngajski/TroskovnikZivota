@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dao.DAOProvider;
+import model.User;
+
 
 /**
  * This servlet is used to validate data for registration of new user. For data
@@ -37,18 +40,22 @@ public class RegisterServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String username = req.getParameter("username");
+		String password = req.getParameter("password");
 		String fn = req.getParameter("firstName");
 		String ln = req.getParameter("lastName");
 		String telefon = req.getParameter("telefon");
+		String email = req.getParameter("email");
 		String oib = req.getParameter("oib");
 		String dateOfBirth = req.getParameter("dateOfBirth");
 		String town = req.getParameter("town");
 		String postCode = req.getParameter("postCode");
 		String street = req.getParameter("street");
 		String houseNumber = req.getParameter("houseNumber");
+		User user = new User(username, password, fn, ln, null, null, null, null, email);
 		
-		
-		System.out.println(fn + "/n" + ln + "/n" + dateOfBirth);
+		DAOProvider.getDAO().addUser(user);
+		System.out.println(fn + "/n" + ln);
 			
 	}
 

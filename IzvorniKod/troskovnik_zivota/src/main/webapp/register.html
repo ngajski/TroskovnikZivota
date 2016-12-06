@@ -59,7 +59,7 @@
 
 		var username = $(" input[name='username'] ").val();
 		var password = $("input[name='password']").val()
-		var firstname = $("input[name='firstName']").val();
+		var firstName = $("input[name='firstName']").val();
 		var lastName = $("input[name='lastName']").val();
 		var telefon = $("input[name='telefon']").val();
 		var email = $("input[name='email']").val();
@@ -81,22 +81,21 @@
 					contentType : "application/json",
 					success : function(responseData, textStatus, jqXHR) {
 						emailExists = responseData;
+						console.log('iz ajaxa email exists:' + emailExists);
 					},
 					error : function(responseData, textStatus, errorThrown) {
 						alert('GET failed.');
 					}
 				});
 
-		while (typeof emailExists === "undefined") {
-			//wait to get response for remote db
-		}
+		console.log('email exists:' + emailExists);
 
 		if (emailExists == "true") {
 			alert('Upisani email već postoji. Unesite drugi');
 			return;
 		}
 
-		if (!(typeof emailExists === "undefined")) {
+		if (dateOfBirth != "") {
 			if (isValidateDate(dateOfBirth) == false) {
 				alert('Datum rođenja je krivo unesen. Popravite prije nastavka registracije');
 				return;
@@ -106,10 +105,10 @@
 		var remoteSuccess, localSuccess;
 
 		var user = {
-			username : username,
-			firstName : firstName,
-			lastName : lastName,
-			email : email
+			username : "'" + username + "'",
+			firstName : "'" + firstName + "'",
+			lastName : "'" + lastName + "'",
+			email : "'" + email + "'"
 		};
 		var jsonUser = JSON.stringify(user);
 		$.ajax({
@@ -120,7 +119,7 @@
 			dataType : "json",
 			contentType : "application/json",
 			success : function(responseData, textStatus, jqXHR) {
-				remoteSuccess = responseData;
+				remoteSuccess = textStatus;
 			},
 			error : function(responseData, textStatus, errorThrown) {
 				alert('GET failed.');
@@ -134,7 +133,7 @@
 			data : {
 				username : username,
 				password : password,
-				firstname : firstname,
+				firstName : firstName,
 				lastName : lastName,
 				telefon : telefon,
 				email : email,
@@ -153,11 +152,6 @@
 				alert('GET failed.');
 			}
 		});
-
-		while (typeof localSuccess === "undefined"
-				&& typeof remoteSuccess === "undefined") {
-			//wait for success of both storage
-		}
 
 		sessionStorage.removeItem('password');
 		sessionStorage.setItem('msg', 'Uspješna registracija :)');
@@ -221,8 +215,7 @@
 				<div class="field-wrap">
 					<label> Datum rođenja (u chromu dobis kalendar, u uputam za
 						instal to napumenut)<span class="req">*</span>
-					</label> <input class='registerInput' name="dateOfBirth" type="date"
-						required autocomplete="off" />
+					</label> <input name="dateOfBirth" type="date" autocomplete="off" />
 				</div>
 
 				<div class="field-wrap">

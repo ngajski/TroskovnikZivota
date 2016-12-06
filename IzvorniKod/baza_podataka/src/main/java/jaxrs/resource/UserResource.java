@@ -63,10 +63,10 @@ public class UserResource {
 		try {
 			em.createQuery("select b from User as b where b.username=:username").setParameter("username", username)
 					.getSingleResult();
+			answer = "true";
 		} catch (NoResultException e) {
 			answer = "false";
 		}
-		answer = "true";
 
 		finishTransaction(em);
 
@@ -86,12 +86,10 @@ public class UserResource {
 		try {
 			em.createQuery("select b from User as b where b.email=:email").setParameter("email", email)
 					.getSingleResult();
+			answer = "true";
 		} catch (NoResultException e) {
 			answer = "false";
 		}
-		answer = "true";
-		
-		
 
 		finishTransaction(em);
 

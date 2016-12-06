@@ -23,7 +23,7 @@ public class JPADAOImpl implements DAO {
 	}
 
 	@Override
-	public User getUser(String username) throws DAOException {
+	public User getUserByUsername(String username) throws DAOException {
 		EntityManager em = JPAEMProvider.getEntityManager();
 		try{
 			return (User) em.createQuery("select b from User as b where b.username=:username")

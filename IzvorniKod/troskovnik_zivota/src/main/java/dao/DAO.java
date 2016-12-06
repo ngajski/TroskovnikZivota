@@ -11,7 +11,7 @@ import model.User;
  */
 public interface DAO {
 
-	public User getUser(String username) throws DAOException;
+	public User getUserByUsername(String username) throws DAOException;
 	
 	/**
 	 * Adds new blog user to subsystem for data persistence.
