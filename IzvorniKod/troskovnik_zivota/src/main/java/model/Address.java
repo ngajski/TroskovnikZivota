@@ -11,9 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-
 @Entity
-@Table(name="addresses")
+@Table(name = "addresses")
 public class Address {
 
 	/**
@@ -23,25 +22,25 @@ public class Address {
 	@GeneratedValue
 	@Column
 	private Long id;
-	
+
+	/**
+	 * text of blog entry
+	 */
+	@Column(nullable = true, length = 30)
+	private String town;
+
+	@Column(nullable = true)
+	private int postCode;
+
 	@Column(nullable = true, length = 30)
 	private String street;
 
 	@Column(nullable = true)
 	private int houseNumber;
 
-	/**
-	 * text of blog entry
-	 */
-	@Column(nullable = true, length = 30)
-	private String city;
-
-	@Column(nullable = true)
-	private int postCode;
-	
 	@OneToMany(mappedBy = "address", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = false)
 	private List<User> userOwners;
-	
+
 	/**
 	 * @return the userOwners
 	 */
@@ -50,7 +49,8 @@ public class Address {
 	}
 
 	/**
-	 * @param userOwners the userOwners to set
+	 * @param userOwners
+	 *            the userOwners to set
 	 */
 	public void setUserOwners(List<User> userOwners) {
 		this.userOwners = userOwners;
@@ -72,12 +72,12 @@ public class Address {
 		this.houseNumber = houseNumber;
 	}
 
-	public String getCity() {
-		return city;
+	public String getTown() {
+		return town;
 	}
 
-	public void setCity(String city) {
-		this.city = city;
+	public void setTown(String town) {
+		this.town = town;
 	}
 
 	public int getPostCode() {
@@ -96,5 +96,4 @@ public class Address {
 		this.id = id;
 	}
 
-	
 }

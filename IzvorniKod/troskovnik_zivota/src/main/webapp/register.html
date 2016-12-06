@@ -51,6 +51,42 @@
 </head>
 
 <script type="text/javascript">
+	function createLocalUser() {
+		var username = $(" input[name='username'] ").val();
+		var password = $("input[name='password']").val()
+		var firstName = $("input[name='firstName']").val();
+		var lastName = $("input[name='lastName']").val();
+		var telefon = $("input[name='telefon']").val();
+		var email = $("input[name='email']").val();
+		var oib = $("input[name='oib']").val();
+		var dateOfBirth = $("input[name='dateOfBirth']").val();
+		var town = $("input[name='town']").val();
+		var postCode = $("input[name='postCode']").val();
+		var street = $("input[name='street']").val();
+		var houseNumber = $("input[name='houseNumber']").val();
+
+		var address = {
+			town : town,
+			postCode : postCode,
+			street : street,
+			houseNumber : houseNumber
+		}
+
+		var user = {
+			username : username,
+			password : password,
+			firstName : firstName,
+			lastName : lastName,
+			oib : oib,
+			dateOfBirth : dateOfBirth,
+			address : address,
+			email : email
+		}
+
+		return user;
+
+	}
+
 	/* This function checks if given email is unique in global DB. If it is it will add user to global and local DB*/
 	function validateForm() {
 		if (emptyExists('requiredInput')) {
@@ -75,9 +111,9 @@
 		$
 				.ajax({
 					type : 'GET',
-					url : "http://localhost:8080/baza-podataka/service/users/exists/email",
+					url : "http://localhost:8080/baza-podataka/service/users/exists/email/"
+							+ email,
 					crossDomain : true,
-					data : email,
 					contentType : "application/json",
 					success : function(responseData, textStatus, jqXHR) {
 						emailExists = responseData;
@@ -104,16 +140,16 @@
 
 		var remoteSuccess, localSuccess;
 
-		var user = {
+		var remoteUser = {
 			username : username,
 			firstName : firstName,
 			lastName : lastName,
 			email : email
 		};
-		var jsonUser = JSON.stringify(user);
+		var jsonUser = JSON.stringify(remoteUser);
 		$.ajax({
 			type : 'POST',
-			url : "http://localhost:8080/baza-podataka/service/users/",
+			url : "http://localhost:8080/baza-podataka/service/users",
 			crossDomain : true,
 			data : jsonUser,
 			dataType : "json",
@@ -126,10 +162,11 @@
 			}
 		});
 
+		var localUser = createLocalUser();
+
 		$.ajax({
 			type : 'POST',
-			url : "servlets/register/",
-			crossDomain : true,
+			url : "servlets/register",
 			data : {
 				username : username,
 				password : password,
@@ -149,13 +186,13 @@
 				localSuccess = responseData;
 			},
 			error : function(responseData, textStatus, errorThrown) {
-				alert('GET failed.');
+				alert('GET failed2.');
 			}
 		});
 
 		sessionStorage.removeItem('password');
 		sessionStorage.setItem('msg', 'Uspješna registracija :)');
-		changeWindow('home.html');
+		changeWindowUrl('home.html');
 	}
 </script>
 <body>

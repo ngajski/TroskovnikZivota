@@ -54,6 +54,7 @@ public class RegisterServlet extends HttpServlet {
 		String houseNumber = req.getParameter("houseNumber");
 		User user = new User(username, password, fn, ln, null, null, null, null, email);
 		
+		System.out.println(username + password + fn + email + town);
 		DAOProvider.getDAO().addUser(user);
 		System.out.println(fn + "/n" + ln);
 			

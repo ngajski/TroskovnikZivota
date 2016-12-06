@@ -52,14 +52,15 @@ public class UserResource {
 	}
 
 	@GET
-	@Path("/exists/username")
+	@Path("/exists/username/{username}")
 	@Produces({ MediaType.TEXT_PLAIN })
-	public String userExists(String username) throws NamingException {
+	public String userExists(@PathParam("username") String username) throws NamingException {
 		String answer = null;
 		EntityManager em = entityManagerFactory.createEntityManager();
 
 		prepareTransaction(em);
 
+		System.out.println(username);
 		try {
 			em.createQuery("select b from User as b where b.username=:username").setParameter("username", username)
 					.getSingleResult();
@@ -75,9 +76,9 @@ public class UserResource {
 	}
 
 	@GET
-	@Path("/exists/email")
+	@Path("/exists/email/{email}")
 	@Produces({ MediaType.TEXT_PLAIN })
-	public String emailExists(String email) throws NamingException {
+	public String emailExists(@PathParam("email") String email) throws NamingException {
 		String answer = null;
 		EntityManager em = entityManagerFactory.createEntityManager();
 

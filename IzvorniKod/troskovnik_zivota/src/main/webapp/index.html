@@ -36,24 +36,23 @@
 	/* This function checks if username is unique in remote DB, if it is it will store username
 	 and password in storage (session object) and change page to register.html*/
 	function validateRegisterForm() {
-		if (emptyExists('registerInput')){
+		if (emptyExists('registerInput')) {
 			return;
 		}
-		
+
 		var inputs = $('#formRegister :input');
 		var username = inputs[0].value;
 		var password = inputs[1].value;
 
 		var y = $('#formRegister').find("input[name='username']").value;
-		
 
 		$
 				.ajax({
 					type : 'GET',
-					url : "http://localhost:8080/baza-podataka/service/users/exists/username",
+					url : "http://localhost:8080/baza-podataka/service/users/exists/username/"
+							+ username,
 					crossDomain : true,
-					data : username,
-					contentType : "application/json",
+					contentType : "aplication/json",
 					success : function(responseData, textStatus, jqXHR) {
 						var exists = responseData;
 
@@ -75,10 +74,10 @@
 	/* This function checks if given username and password are valid (in local DB), if they are valid
 	 it will store username in storage (session) object and change page to home.html*/
 	function validateLoginForm() {
-		if (emptyExists('loginInput')){
+		if (emptyExists('loginInput')) {
 			return;
 		}
-		
+
 		var inputs = $('#loginRegister :input');
 		var username = inputs[0].value;
 		var password = inputs[1].value;
@@ -109,13 +108,14 @@
 
 					<div class="field-wrap">
 						<label> Korisničko ime<span class="req">*</span>
-						</label> <input class='loginInput' name="username" type="text" required autocomplete="off" />
+						</label> <input class='loginInput' name="username" type="text" required
+							autocomplete="off" />
 					</div>
 
 					<div class="field-wrap">
 						<label> Lozinka<span class="req">*</span>
-						</label> <input class='loginInput' name="password" type="password" required
-							autocomplete="off" />
+						</label> <input class='loginInput' name="password" type="password"
+							required autocomplete="off" />
 					</div>
 
 
@@ -133,13 +133,14 @@
 
 					<div class="field-wrap">
 						<label> Korisničko ime<span class="req">*</span>
-						</label> <input class='registerInput' name="username" type="text" required autocomplete="off" />
+						</label> <input class='registerInput' name="username" type="text" required
+							autocomplete="off" />
 					</div>
 
 					<div class="field-wrap">
 						<label> Lozinka<span class="req">*</span>
-						</label> <input class='registerInput' name="password" type="password" required
-							autocomplete="off" />
+						</label> <input class='registerInput' name="password" type="password"
+							required autocomplete="off" />
 					</div>
 
 					<button class="button button-block"
