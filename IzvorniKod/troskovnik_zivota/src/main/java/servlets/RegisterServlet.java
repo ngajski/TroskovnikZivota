@@ -57,6 +57,8 @@ public class RegisterServlet extends HttpServlet {
 		DAOProvider.getDAO().addUser(user);
 		System.out.println(fn + "/n" + ln);
 			
+		resp.getWriter().write("ok");
+		resp.getWriter().flush();
 	}
 
 	@Override
