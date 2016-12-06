@@ -1,7 +1,5 @@
 package dao.jpa;
 
-import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 

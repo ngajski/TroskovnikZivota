@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Home page</title>
+
 <style type="text/css">
 #title {
 	font-family: 'Titillium Web', sans-serif;
@@ -22,122 +23,142 @@
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
 <link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/loader.css">
 
 <!-- Jquery -->
 <script
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
 <script src="js/general.js"></script>
+
 </head>
-<script type="text/javascript">
-<!--
-	$(document).ready(function() {
-		var myVar = setTimeout(showPage, 1000);
 
-	});
-//-->
-</script>
-
-<!-- Methods for validation of data in forms -->
 <script type="text/javascript">
+	/* This function checks if username is unique in remote DB, if it is it will store username
+	 and password in storage (session object) and change page to register.html*/
 	function validateRegisterForm() {
-		var username = document.forms["registerForm"]["username"].value;
-		var password = document.forms["registerForm"]["password"].value;
+		if (emptyExists('registerInput')){
+			return;
+		}
+		
+		var inputs = $('#formRegister :input');
+		var username = inputs[0].value;
+		var password = inputs[1].value;
 
-		$.ajax({
-			type : 'GET',
-			url : "http://localhost:8080/baza-podataka/service/users/exists/"
-					+ username,
-			crossDomain : true,
-			dataType : 'json',
-			success : function(responseData, textStatus, jqXHR) {
-				var exists = responseData;
+		var y = $('#formRegister').find("input[name='username']").value;
+		
 
-				if (exists == "true"l) {
-					alert("Name already exists");
-				} else {
-					sessionStorage.setItem('username', 'username');
-					sessionStorage.setItem('password', 'password');
-					changeWindowUrl('register.html');
-				}
-			},
-			error : function(responseData, textStatus, errorThrown) {
-				alert('GET failed.');
-			}
-		});
+		$
+				.ajax({
+					type : 'GET',
+					url : "http://localhost:8080/baza-podataka/service/users/exists/username",
+					crossDomain : true,
+					data : username,
+					contentType : "application/json",
+					success : function(responseData, textStatus, jqXHR) {
+						var exists = responseData;
+
+						alert(exists);
+						if (exists == "true") {
+							alert("Korisnicko ime postoji, izaberite drugo!");
+						} else {
+							sessionStorage.setItem('username', username);
+							sessionStorage.setItem('password', password);
+							changeWindowUrl('register.html');
+						}
+					},
+					error : function(responseData, textStatus, errorThrown) {
+						alert('GET failed.');
+					}
+				});
+	}
+
+	/* This function checks if given username and password are valid (in local DB), if they are valid
+	 it will store username in storage (session) object and change page to home.html*/
+	function validateLoginForm() {
+		if (emptyExists('loginInput')){
+			return;
+		}
+		
+		var inputs = $('#loginRegister :input');
+		var username = inputs[0].value;
+		var password = inputs[1].value;
+		var url = "http://localhost:8080/baza-podataka/service/users/exists/"
+				+ username;
 
 	}
 </script>
 <body>
-	<!-- The loader -->
-	<div id="loader"></div>
 
-	<div style="display: none;" id="pageContent" class="animate-bottom">
-		<h1 id='title'>Troškovnik života</h1>
-		<div class="form">
+	<h1 id='title'>Troškovnik života</h1>
 
-			<ul class="tab-group">
-				<li class="tab active"><a href="#login">Prijava postojećeg
-						korisnika</a></li>
-				<li class="tab"><a href="#register">Registracija novog
-						korisnika</a></li>
-			</ul>
 
-			<div class="tab-content">
+	<div class="form">
 
-				<div id="login">
-					<h1>Dobro došli nazad!</h1>
+		<ul class="tab-group">
+			<li class="tab active"><a href="#login">Prijava postojećeg
+					korisnika</a></li>
+			<li class="tab"><a href="#register">Registracija novog
+					korisnika</a></li>
+		</ul>
 
-					<form action="/" method="post">
+		<div class="tab-content">
+			<div id="login">
+				<h1>Dobro došli nazad</h1>
 
-						<div class="field-wrap">
-							<label> Korisničko ime<span class="req">*</span>
-							</label> <input type="text" required autocomplete="off" />
-						</div>
+				<form action="javascript:void(0);" id="formLogin">
 
-						<div class="field-wrap">
-							<label> Lozinka<span class="req">*</span>
-							</label> <input type="password" required autocomplete="off" />
-						</div>
+					<div class="field-wrap">
+						<label> Korisničko ime<span class="req">*</span>
+						</label> <input class='loginInput' name="username" type="text" required autocomplete="off" />
+					</div>
 
-						<button class="button button-block">Prijavi se</button>
+					<div class="field-wrap">
+						<label> Lozinka<span class="req">*</span>
+						</label> <input class='loginInput' name="password" type="password" required
+							autocomplete="off" />
+					</div>
 
-					</form>
 
-				</div>
+					<button class="button button-block" onclick="validateLoginForm()">Registriraj
+						se</button>
 
-				<div id="register">
-					<h1>Besplatna registracija</h1>
-
-					<form name="registerForm" action="#" onsubmit="validateRegisterForm()">
-
-						<div class="field-wrap">
-							<label> Korisničko ime<span class="req">*</span>
-							</label> <input type="text" name="username" required autocomplete="off" />
-						</div>
-
-						<div class="field-wrap">
-							<label> Lozinka<span class="req">*</span>
-							</label> <input type="password" name="password" required
-								autocomplete="off" />
-						</div>
-
-						<button type="submit" class="button button-block">Registriraj
-							se</button>
-
-					</form>
-
-				</div>
+				</form>
 
 			</div>
-			<!-- tab-content -->
+
+			<div id="register">
+				<h1>Novi korisnik</h1>
+
+				<form action="javascript:void(0);" id="formRegister">
+
+					<div class="field-wrap">
+						<label> Korisničko ime<span class="req">*</span>
+						</label> <input class='registerInput' name="username" type="text" required autocomplete="off" />
+					</div>
+
+					<div class="field-wrap">
+						<label> Lozinka<span class="req">*</span>
+						</label> <input class='registerInput' name="password" type="password" required
+							autocomplete="off" />
+					</div>
+
+					<button class="button button-block"
+						onclick="validateRegisterForm()">Registriraj se</button>
+
+				</form>
+
+			</div>
 
 		</div>
-		<!-- /form -->
+		<!-- tab-content -->
+
 	</div>
+	<!-- /form -->
+
+	<script
+		src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+
+	<script src="js/index.js"></script>
 
 </body>
-<script
-	src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-<script src="js/index.js"></script>
 </html>

@@ -1,14 +1,11 @@
 package jaxrs.resource;
 
-import java.sql.SQLException;
 import java.util.Date;
-import java.util.List;
-
 import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
-import javax.persistence.Persistence;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -21,11 +18,10 @@ import model.User;
 @Path("/users")
 public class UserResource {
 
-	private EntityManager em;
+	private EntityManagerFactory entityManagerFactory;
 
-	protected EntityManager getEntityManager() throws NamingException {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("baza.podataka.udaljena");
-		return emf.createEntityManager();
+	public UserResource(EntityManagerFactory entityManagerFactory) {
+		this.entityManagerFactory = entityManagerFactory;
 	}
 
 	@GET
@@ -35,30 +31,101 @@ public class UserResource {
 		return "received ping on " + new Date().toString();
 	}
 
-	@GET
-	@Path("/exists/{username}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public String getUser(@PathParam("username") String username) throws NamingException {
-		String answer = null;
+	@POST
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.TEXT_PLAIN })
+	public String addUser(User user) throws Exception {
+		EntityManager em = entityManagerFactory.createEntityManager();
+
+		prepareTransaction(em);
 
 		try {
-			em = getEntityManager();
-			em.getTransaction().begin();
+			em.persist(user);
+		} catch (Exception ex) {
+			throw new DAOException("Could not store user", ex);
+		}
 
+		System.out.println("uspjesno dodao usera");
+
+		finishTransaction(em);
+		return "ok";
+	}
+
+	@GET
+	@Path("/exists/username")
+	@Produces({ MediaType.TEXT_PLAIN })
+	public String userExists(String username) throws NamingException {
+		String answer = null;
+		EntityManager em = entityManagerFactory.createEntityManager();
+
+		prepareTransaction(em);
+
+		try {
 			em.createQuery("select b from User as b where b.username=:username").setParameter("username", username)
 					.getSingleResult();
-
-			em.getTransaction().commit();
-			em.close();
-			
-			answer = "true";
 		} catch (NoResultException e) {
 			answer = "false";
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
+		answer = "true";
+
+		finishTransaction(em);
+
 		System.out.println(answer);
 		return answer;
+	}
+
+	@GET
+	@Path("/exists/email")
+	@Produces({ MediaType.TEXT_PLAIN })
+	public String emailExists(String email) throws NamingException {
+		String answer = null;
+		EntityManager em = entityManagerFactory.createEntityManager();
+
+		prepareTransaction(em);
+
+		try {
+			em.createQuery("select b from User as b where b.email=:email").setParameter("email", email)
+					.getSingleResult();
+		} catch (NoResultException e) {
+			answer = "false";
+		}
+		answer = "true";
+		
+		
+
+		finishTransaction(em);
+
+		System.out.println("email exists:" + answer);
+		return answer;
+	}
+
+	private void prepareTransaction(EntityManager em) {
+		try {
+			em.getTransaction().begin();
+		} catch (Exception ex) {
+			throw new DAOException("Could not begin transaction.", ex);
+		}
+
+	}
+
+	private void finishTransaction(EntityManager em) {
+		DAOException dex = null;
+
+		try {
+			em.getTransaction().commit();
+		} catch (Exception ex) {
+			dex = new DAOException("Unable to commit transaction.", ex);
+		}
+		try {
+			em.close();
+		} catch (Exception ex) {
+			if (dex != null) {
+				dex = new DAOException("Unable to close entity manager.", ex);
+			}
+		}
+
+		if (dex != null)
+			throw dex;
 	}
 
 }

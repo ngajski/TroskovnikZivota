@@ -3,6 +3,7 @@ dao\DAOException.class
 dao\DAO.class
 servlets\Constants.class
 init\Initialization.class
+servlets\RegisterServlet.class
 dao\jpa\JPAEMProvider$1.class
 model\IncomeItem.class
 dao\jpa\JPADAOImpl.class
