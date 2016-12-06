@@ -122,13 +122,13 @@
 				remoteSuccess = textStatus;
 			},
 			error : function(responseData, textStatus, errorThrown) {
-				alert('GET failed.');
+				alert('GET failed1.');
 			}
 		});
 
 		$.ajax({
 			type : 'POST',
-			url : "/servlets/register/",
+			url : "servlets/register/",
 			crossDomain : true,
 			data : {
 				username : username,

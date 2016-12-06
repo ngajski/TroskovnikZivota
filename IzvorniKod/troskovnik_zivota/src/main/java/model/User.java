@@ -26,8 +26,6 @@ public class User {
 	@Id
 	@GeneratedValue
 	private Long id;
-	
-	private String ime;
 
 	/**
 	 * username
