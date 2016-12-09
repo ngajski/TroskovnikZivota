@@ -1,4 +1,5 @@
-package jaxrs.resource;
+package dao;
+
 
 /**
  * Class which extends {@linkplain RuntimeException}. This class is thrown when

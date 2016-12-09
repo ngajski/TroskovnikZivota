@@ -132,5 +132,12 @@ public class User {
 		this.expenseLists = expenseLists;
 	}
 
+	@Override
+	public String toString() {
+		return "User [username=" + username + ", firstName=" + firstName + ", lastName=" + lastName
+				+ ", email=" + email + ", expenseLists=" + expenseLists + "]";
+	}
+
+	
 	
 }

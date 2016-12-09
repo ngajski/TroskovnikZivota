@@ -1,4 +1,4 @@
-package init;
+package dao.init;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -7,6 +7,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 import dao.jpa.JPAEMFProvider;
+
 
 
 /**
@@ -27,19 +28,21 @@ public class Initialization implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("baza.podataka.lokalna");
-		sce.getServletContext().setAttribute("my.application.emf", emf);
+		sce.getServletContext().setAttribute("emf", emf);
 		JPAEMFProvider.setEmf(emf);
 		
-		System.out.println("dada");
+		System.out.println("init local emf");
 		
 	}
 
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
 		JPAEMFProvider.setEmf(null);
-		EntityManagerFactory emf = (EntityManagerFactory) sce.getServletContext().getAttribute("my.application.emf");
+		EntityManagerFactory emf = (EntityManagerFactory) sce.getServletContext().getAttribute("emf");
 		if (emf != null) {
 			emf.close();
 		}
+		
+		System.out.println("closing local emf");
 	}
 }

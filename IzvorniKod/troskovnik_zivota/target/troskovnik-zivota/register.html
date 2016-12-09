@@ -43,7 +43,6 @@
 		} else {
 			$("input[name='username']").val(username);
 			$("input[name='password']").val(password);
-			alert(username);
 		}
 	});
 //-->
@@ -51,6 +50,22 @@
 </head>
 
 <script type="text/javascript">
+	function createRemoteUser(){
+		var username = $(" input[name='username'] ").val();
+		var firstName = $("input[name='firstName']").val();
+		var lastName = $("input[name='lastName']").val();
+		var email = $("input[name='email']").val();
+
+		var remoteUser = {
+			username : username,
+			firstName : firstName,
+			lastName : lastName,
+			email : email
+		};
+		
+		return remoteUser;
+	}
+
 	function createLocalUser() {
 		var username = $(" input[name='username'] ").val();
 		var password = $("input[name='password']").val()
@@ -87,26 +102,65 @@
 
 	}
 
-	/* This function checks if given email is unique in global DB. If it is it will add user to global and local DB*/
+	/*This function is called from function validateForm after unique restrictons are passed. Function 
+	will store user in local and remote DB.*/
+	function persistUser() {
+		var remoteUser = createRemoteUser();
+
+		$.ajax({
+			type : 'POST',
+			url : "http://localhost:8080/baza-podataka/service/users",
+			crossDomain : true,
+			data : JSON.stringify(remoteUser),
+			dataType : "json",
+			contentType : "application/json",
+			success : function(responseData, textStatus, jqXHR) {
+				console.log('remote success');
+			},
+			error : function(responseData, textStatus, errorThrown) {
+				console.log('GET failed1.');
+			}
+		});
+
+
+		var localUser = createLocalUser();
+
+		$.ajax({
+			type : 'POST',
+			url : "service/users",
+			data : JSON.stringify(localUser),
+			dataType : "json",
+			contentType : "application/json",
+			success : function(responseData, textStatus, jqXHR) {
+				console.log('local success');
+
+			},
+			error : function(responseData, textStatus, errorThrown) {
+				console.log('GET failed local.');
+			}
+		});
+		
+		sessionStorage.removeItem('password');
+		sessionStorage.setItem('msg', 'Uspješna registracija :)<br>Dobro došli ' + sessionStorage.getItem('username'));
+		changeWindowUrl('home.html');
+
+	}
+
+	/* This function checks if given email is unique in global DB. If it is it will call function persistUser*/
 	function validateForm() {
 		if (emptyExists('requiredInput')) {
 			return;
 		}
 
-		var username = $(" input[name='username'] ").val();
-		var password = $("input[name='password']").val()
-		var firstName = $("input[name='firstName']").val();
-		var lastName = $("input[name='lastName']").val();
-		var telefon = $("input[name='telefon']").val();
 		var email = $("input[name='email']").val();
-		var oib = $("input[name='oib']").val();
 		var dateOfBirth = $("input[name='dateOfBirth']").val();
-		var town = $("input[name='town']").val();
-		var postCode = $("input[name='postCode']").val();
-		var street = $("input[name='street']").val();
-		var houseNumber = $("input[name='houseNumber']").val();
 
-		var emailExists;
+		if (dateOfBirth != "") {
+			if (isValidateDate(dateOfBirth) == false) {
+				alert('Datum rođenja je krivo unesen. Popravite prije nastavka registracije');
+				return;
+			}
+		}
 
 		$
 				.ajax({
@@ -116,83 +170,19 @@
 					crossDomain : true,
 					contentType : "application/json",
 					success : function(responseData, textStatus, jqXHR) {
-						emailExists = responseData;
-						console.log('iz ajaxa email exists:' + emailExists);
+						var emailExists = responseData;
+						if (emailExists == "true") {
+							alert('Upisani email već postoji. Unesite drugi');
+						} else {
+							persistUser();
+						}
+
 					},
 					error : function(responseData, textStatus, errorThrown) {
 						alert('GET failed.');
 					}
 				});
 
-		console.log('email exists:' + emailExists);
-
-		if (emailExists == "true") {
-			alert('Upisani email već postoji. Unesite drugi');
-			return;
-		}
-
-		if (dateOfBirth != "") {
-			if (isValidateDate(dateOfBirth) == false) {
-				alert('Datum rođenja je krivo unesen. Popravite prije nastavka registracije');
-				return;
-			}
-		}
-
-		var remoteSuccess, localSuccess;
-
-		var remoteUser = {
-			username : username,
-			firstName : firstName,
-			lastName : lastName,
-			email : email
-		};
-		var jsonUser = JSON.stringify(remoteUser);
-		$.ajax({
-			type : 'POST',
-			url : "http://localhost:8080/baza-podataka/service/users",
-			crossDomain : true,
-			data : jsonUser,
-			dataType : "json",
-			contentType : "application/json",
-			success : function(responseData, textStatus, jqXHR) {
-				remoteSuccess = textStatus;
-			},
-			error : function(responseData, textStatus, errorThrown) {
-				alert('GET failed1.');
-			}
-		});
-
-		var localUser = createLocalUser();
-
-		$.ajax({
-			type : 'POST',
-			url : "servlets/register",
-			data : {
-				username : username,
-				password : password,
-				firstName : firstName,
-				lastName : lastName,
-				telefon : telefon,
-				email : email,
-				oib : oib,
-				dateOfBirth : dateOfBirth,
-				town : town,
-				postCode : postCode,
-				street : street,
-				houseNumber : houseNumber
-			},
-			contentType : "application/json",
-			success : function(responseData, textStatus, jqXHR) {
-				localSuccess = responseData;
-			},
-			error : function(responseData, textStatus, errorThrown) {
-				alert('GET failed2.');
-			}
-		});
-
-		sessionStorage.removeItem('password');
-		sessionStorage.setItem('msg', 'Uspješna registracija :)');
-		changeWindowUrl('home.html');
 	}
 </script>
 <body>

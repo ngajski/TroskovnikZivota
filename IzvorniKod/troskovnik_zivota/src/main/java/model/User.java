@@ -11,12 +11,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-@SuppressWarnings("unused")
 @Entity
 @Table(name = "users")
 public class User {
@@ -63,7 +61,7 @@ public class User {
 	 * razredu address nema nikakve notacije <br>
 	 * ---- pogledaj dolje list -----
 	 */
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	private Address address;
 
 	@Column(nullable = true)
@@ -81,7 +79,7 @@ public class User {
 	 * varijabla tipa ovaj razred na kojem pise ManyToOne (tak se realizira list
 	 * s jpa)
 	 */
-	@OneToMany(mappedBy = "userOwner", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+	@OneToMany(mappedBy = "userOwner", fetch = FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval = true)
 	private List<ExpenseList> expenseLists;
 
 	public User() {
@@ -192,6 +190,13 @@ public class User {
 
 	public void setExpenseLists(List<ExpenseList> expenseLists) {
 		this.expenseLists = expenseLists;
+	}
+
+	@Override
+	public String toString() {
+		return "User [username=" + username + ", password=" + password + ", firstName=" + firstName + ", lastName="
+				+ lastName + ", oib=" + oib + ", dateOfBirth=" + dateOfBirth + ", address=" + address + ", telefon="
+				+ telefon + ", email=" + email + ", expenseLists=" + expenseLists + "]";
 	}
 
 }

@@ -22,21 +22,36 @@
 	<cache name="org.hibernate.cache.spi.UpdateTimestampsCache"
 		maxElementsInMemory="10" eternal="true" overflowToDisk="true" />
 
-	<!-- Cache koji se koristi za entitete iz paketa hr.fer.zemris.java.tecaj_13.model. -->
-	<cache name="hr.fer.zemris.java.tecaj_13.model.BlogEntry" eternal="false"
+	<!-- Cache koji se koristi za entitete iz model. -->
+	<cache name="model.Address" eternal="false"
 			maxElementsInMemory="10"
 			timeToIdleSeconds="120" timeToLiveSeconds="120" diskSpoolBufferSizeMB="30"
 			maxElementsOnDisk="1000" diskExpiryThreadIntervalSeconds="120"
 			memoryStoreEvictionPolicy="LRU" statistics="true"/>
-	<cache name="hr.fer.zemris.java.tecaj_13.model.BlogComment" eternal="false"
+	<cache name="model.ExpenseCategory" eternal="false"
 			maxElementsInMemory="100"
 			timeToIdleSeconds="120" timeToLiveSeconds="120" diskSpoolBufferSizeMB="30"
 			maxElementsOnDisk="1000" diskExpiryThreadIntervalSeconds="120"
 			memoryStoreEvictionPolicy="LRU" statistics="true"/>
-	<cache name="hr.fer.zemris.java.tecaj_13.model.BlogUser" eternal="false"
+	<cache name="model.ExpenseItem" eternal="false"
 			maxElementsInMemory="10"
 			timeToIdleSeconds="120" timeToLiveSeconds="120" diskSpoolBufferSizeMB="30"
 			maxElementsOnDisk="1000" diskExpiryThreadIntervalSeconds="120"
 			memoryStoreEvictionPolicy="LRU" statistics="true"/>
-		
+	<cache name="model.ExpenseList" eternal="false"
+			maxElementsInMemory="100"
+			timeToIdleSeconds="120" timeToLiveSeconds="120" diskSpoolBufferSizeMB="30"
+			maxElementsOnDisk="1000" diskExpiryThreadIntervalSeconds="120"
+			memoryStoreEvictionPolicy="LRU" statistics="true"/>
+	<cache name="model.IncomeItem" eternal="false"
+			maxElementsInMemory="10"
+			timeToIdleSeconds="120" timeToLiveSeconds="120" diskSpoolBufferSizeMB="30"
+			maxElementsOnDisk="1000" diskExpiryThreadIntervalSeconds="120"
+			memoryStoreEvictionPolicy="LRU" statistics="true"/>
+	<cache name="model.User" eternal="false"
+			maxElementsInMemory="100"
+			timeToIdleSeconds="120" timeToLiveSeconds="120" diskSpoolBufferSizeMB="30"
+			maxElementsOnDisk="1000" diskExpiryThreadIntervalSeconds="120"
+			memoryStoreEvictionPolicy="LRU" statistics="true"/>
+	
 </ehcache>

@@ -1,10 +1,14 @@
 package dao.jpa;
 
+import java.util.Collections;
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 import dao.DAO;
 import dao.DAOException;
+import model.ExpenseList;
 import model.User;
 
 /**
@@ -19,20 +23,40 @@ public class JPADAOImpl implements DAO {
 	@Override
 	public void addUser(User user) throws DAOException {
 		EntityManager em = JPAEMProvider.getEntityManager();
-		em.persist(user);		
+		em.persist(user);
 	}
 
 	@Override
 	public User getUserByUsername(String username) throws DAOException {
 		EntityManager em = JPAEMProvider.getEntityManager();
-		try{
+		try {
 			return (User) em.createQuery("select b from User as b where b.username=:username")
-					.setParameter("username", username)
-					.getSingleResult();
-			
-		} catch (NoResultException e){
+					.setParameter("username", username).getSingleResult();
+
+		} catch (NoResultException e) {
 			return null;
 		}
-	}	
+	}
 
+	@Override
+	public User getUserByEmail(String email) throws DAOException {
+		EntityManager em = JPAEMProvider.getEntityManager();
+		try {
+			return (User) em.createQuery("select b from User as b where b.email=:email").setParameter("email", email)
+					.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+
+	}
+
+	@Override
+	public List<ExpenseList> getExpenseListsForUsername(String username) {
+		User user = getUserByUsername(username);
+		if (user == null){
+			return Collections.emptyList();
+		} else {
+			return user.getExpenseLists();
+		}
+	}
 }

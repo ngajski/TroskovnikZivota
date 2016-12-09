@@ -1,129 +1,221 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" 
+    xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>hr.fer.opp.projekt.teflja</groupId>
+    <artifactId>troskovnik_zivota</artifactId>
+    <packaging>war</packaging>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>troskovnik-zivota-rest</name>
   
-  <groupId>hr.fer.opp.projekt.teflja</groupId>
-  <artifactId>troskovnik_zivota</artifactId>
-  <packaging>war</packaging>
-  <version>0.0.1-SNAPSHOT</version>
-  
-  <name>troskovnik-zivota</name>
-  <url>http://maven.apache.org</url>
+	<properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+        <version.jdk>1.8</version.jdk>  <!-- 1.7 for JDK 7 -->
+        <version.mvn.compiler>3.2</version.mvn.compiler>
+        <version.mvn.war.plugin>2.6</version.mvn.war.plugin>
+        <version.jersey>2.15</version.jersey>
+        <version.servlet.api>3.1.0</version.servlet.api>  <!-- use 3.0.1 for Tomcat 7 or Java EE 6 (i.e. Glassfish 3.x) -->                
+	</properties>
 
- <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>  
-  
-  <dependencies>
-   	<dependency>
-  		<groupId>junit</groupId>
-  		<artifactId>junit</artifactId>
-  		<version>4.12</version>
-  		<scope>test</scope>
-  	</dependency>
-
-	<dependency>
-	    <groupId>org.hibernate</groupId>
-	    <artifactId>hibernate-entitymanager</artifactId>
-	    <version>5.1.0.Final</version>
-	</dependency>
+    
+      <repositories>
+ 
+        <repository>
+            <id>java.net-Public</id>
+            <name>Maven Java Net Snapshots and Releases</name>
+            <url>https://maven.java.net/content/groups/public/</url>
+            <layout>default</layout>
+        </repository>
+ 
+        <repository>
+            <id>Central</id>
+            <name>Maven Repository</name>
+            <url>http://repo1.maven.org/maven2</url>
+            <layout>default</layout>
+        </repository>
+ 
+        <repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>http://repo.maven.apache.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+ 
+        <repository>
+            <url>http://download.eclipse.org/rt/eclipselink/maven.repo/</url>
+            <id>eclipselink</id>
+            <layout>default</layout>
+            <name>Repository for library EclipseLink (JPA 2.0)</name>
+        </repository>
+ 
+    </repositories>
+      
+	<dependencies>
+    
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${version.servlet.api}</version>
+            <scope>provided</scope>
+        </dependency>
+            
+        
+        <!-- Jersey -->       
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet</artifactId>
+            <version>${version.jersey}</version>
+        </dependency>
+        
+        <!-- do not use jettison, prefer jackson
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jettison</artifactId>
+            <version>${version.jersey}</version>
+        </dependency>
+        -->
+        
+        <!-- do not use Jackson because moxy is jersey default
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <version>${version.jersey}</version>
+        </dependency>
+        -->
+        
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-moxy</artifactId>
+            <version>${version.jersey}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-processing</artifactId>
+            <version>${version.jersey}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-multipart</artifactId>
+            <version>${version.jersey}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-sse</artifactId>
+            <version>${version.jersey}</version>
+        </dependency>
+        <!-- if you are using Jersey client specific features -->
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>${version.jersey}</version>
+        </dependency>
+        
+        <!-- https://mvnrepository.com/artifact/javax.ejb/javax.ejb-api -->
+		<dependency>
+    		<groupId>javax.ejb</groupId>
+    		<artifactId>javax.ejb-api</artifactId>
+    		<version>3.2</version>
+		</dependency>
+        
+        <!-- https://mvnrepository.com/artifact/org.json/json -->
+		<dependency>
+	    	<groupId>org.json</groupId>
+	    	<artifactId>json</artifactId>
+	    	<version>20160212</version>
+		</dependency>
 	
-	<dependency>
-	    <groupId>org.hibernate</groupId>
-	    <artifactId>hibernate-ehcache</artifactId>
-	    <version>5.1.0.Final</version>
-	</dependency>	
+		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+		<dependency>
+	    	<groupId>com.google.code.gson</groupId>
+	    	<artifactId>gson</artifactId>
+	    	<version>2.7</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.hibernate</groupId>
+		    <artifactId>hibernate-entitymanager</artifactId>
+		    <version>5.1.0.Final</version>
+		</dependency>
 	
-	<dependency>
-	    <groupId>org.hibernate</groupId>
-	    <artifactId>hibernate-c3p0</artifactId>
-	    <version>5.1.0.Final</version>
-	</dependency>
+		<dependency>
+		    <groupId>org.hibernate</groupId>
+		    <artifactId>hibernate-ehcache</artifactId>
+		    <version>5.1.0.Final</version>
+		</dependency>	
 	
-	<dependency>
-    	<groupId>org.apache.derby</groupId>
-   		<artifactId>derbyclient</artifactId>
-    	<version>10.12.1.1</version>
-	</dependency>
-  
-  	<dependency>
-  		<groupId>javax.servlet</groupId>
-  		<artifactId>javax.servlet-api</artifactId>
-  		<version>3.1.0</version>
-  		<scope>provided</scope>
-  	</dependency>
-  	
-  	<dependency>
-  		<groupId>javax.servlet.jsp</groupId>
-  		<artifactId>javax.servlet.jsp-api</artifactId>
-  		<version>2.3.1</version>
-  		<scope>provided</scope>
-  	</dependency>
-  	
-  	<dependency>
-  		<groupId>javax.servlet.jsp.jstl</groupId>
-  		<artifactId>javax.servlet.jsp.jstl-api</artifactId>
-  		<version>1.2.1</version>
-  	</dependency>
-  	
-  	<dependency>
-  		<groupId>org.glassfish.web</groupId>
-  		<artifactId>javax.servlet.jsp.jstl</artifactId>
-  		<version>1.2.1</version>
-  		<exclusions>
-  			<exclusion>
-  				<artifactId>jstl-api</artifactId>
-  				<groupId>javax.servlet.jsp.jstl</groupId>
-  			</exclusion>
-  		</exclusions>
-  	</dependency>
-  	
-  	<dependency>
+		<dependency>
+	    	<groupId>org.hibernate</groupId>
+	    	<artifactId>hibernate-c3p0</artifactId>
+		    <version>5.1.0.Final</version>
+		</dependency>
+	
+		<dependency>
+    		<groupId>org.apache.derby</groupId>
+   			<artifactId>derbyclient</artifactId>
+    		<version>10.12.1.1</version>
+		</dependency>
+		
+		<dependency>
     		<groupId>org.apache.poi</groupId>
     		<artifactId>poi</artifactId>
     		<version>3.14</version>
-	</dependency>
+		</dependency>
 
-	<dependency>
-    		<groupId>com.mchange</groupId>
-    		<artifactId>c3p0</artifactId>
-    		<version>0.9.5.2</version>
-	</dependency>
-  	
-  </dependencies>
-  
-  
-  <build>
-      <plugins>
-      	<plugin>
-        	<groupId>org.apache.maven.plugins</groupId>
-        	<artifactId>maven-compiler-plugin</artifactId>
-        	<version>3.5.1</version>
-        	<configuration>
-          		<source>1.8</source>
-          		<target>1.8</target>
-        	</configuration>
-      	</plugin>
+    </dependencies>      
       
-      	<plugin>
-        	<groupId>org.eclipse.jetty</groupId>
-        	<artifactId>jetty-maven-plugin</artifactId>
-        	<version>9.3.9.v20160517</version>
-        	<configuration>
-          		<scanIntervalSeconds>10</scanIntervalSeconds>
-          		<connectors>
-           			<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-              			<port>8080</port>
-              			<maxIdleTime>60000</maxIdleTime>
-           	 		</connector>
-          		</connectors>
-          		<webApp>
-            		<contextPath>/troskovnik-zivota</contextPath>
-          		</webApp>
-        	</configuration>
-      	</plugin>
-      </plugins>
+	<build>
+    	<plugins>
+    
+     		<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${version.mvn.compiler}</version>
+                <configuration>
+                    <source>${version.jdk}</source>
+                    <target>${version.jdk}</target>
+                </configuration>
+            </plugin>
+            
+                        
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>${version.mvn.war.plugin}</version>
+                <configuration>
+                    <failOnMissingWebXml>true</failOnMissingWebXml>
+                    <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                    </archive>
+                </configuration>
+            </plugin>
+      
+      		<plugin>
+        		<groupId>org.eclipse.jetty</groupId>
+        		<artifactId>jetty-maven-plugin</artifactId>
+        		<version>9.3.9.v20160517</version>
+        		<configuration>
+          			<scanIntervalSeconds>10</scanIntervalSeconds>
+          			<connectors>
+           				<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+              				<port>8080</port>
+              				<maxIdleTime>60000</maxIdleTime>
+           	 			</connector>
+          			</connectors>
+          		
+          			<webApp>
+            			<contextPath>/troskovnik-zivota-rest</contextPath>
+          			</webApp>
+        		</configuration>
+      		</plugin>
+		</plugins>
+   		
+     <finalName>troskovnik-zivota</finalName>
+  </build>
   
-    	<finalName>troskovnik-zivota</finalName>
-  	</build>
 </project>

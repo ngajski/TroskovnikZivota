@@ -96,4 +96,11 @@ public class Address {
 		this.id = id;
 	}
 
+	@Override
+	public String toString() {
+		return "Address [town=" + town + ", postCode=" + postCode + ", street=" + street
+				+ ", houseNumber=" + houseNumber + ", userOwners=" + userOwners + "]";
+	}
+
+	
 }

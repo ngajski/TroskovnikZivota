@@ -11,6 +11,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 
+
 /**
  * Filter used to close {@linkplain EntityManager} object after client's request
  * has been processed this thread has used for accessing subsytem for data
@@ -19,7 +20,7 @@ import javax.servlet.annotation.WebFilter;
  * @author Filip
  * @version 1.0
  */
-@WebFilter("/servlets/*")
+@WebFilter("/service/users/*")
 public class JPAFilter implements Filter {
 
 	@Override

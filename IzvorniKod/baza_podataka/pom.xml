@@ -116,6 +116,13 @@
             <version>${version.jersey}</version>
         </dependency>
         
+        <!-- https://mvnrepository.com/artifact/javax.ejb/javax.ejb-api -->
+		<dependency>
+    		<groupId>javax.ejb</groupId>
+    		<artifactId>javax.ejb-api</artifactId>
+    		<version>3.2</version>
+		</dependency>
+        
         <!-- https://mvnrepository.com/artifact/org.json/json -->
 		<dependency>
 	    	<groupId>org.json</groupId>
@@ -159,15 +166,7 @@
     		<artifactId>poi</artifactId>
     		<version>3.14</version>
 		</dependency>
-
-		<dependency>
-    			<groupId>com.mchange</groupId>
-    			<artifactId>c3p0</artifactId>
-    			<version>0.9.5.2</version>
-		</dependency>
-		
-	
-                
+            
     </dependencies>
       
       

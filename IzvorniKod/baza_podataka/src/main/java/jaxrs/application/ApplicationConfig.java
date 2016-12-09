@@ -1,19 +1,14 @@
 package jaxrs.application;
 
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-import jaxrs.resource.UserResource;
-
 @ApplicationPath("/service")
 public class ApplicationConfig extends Application {
-
 
 	@Override
 	public Set<Class<?>> getClasses() {
@@ -40,17 +35,7 @@ public class ApplicationConfig extends Application {
 
 	@Override
 	public Set<Object> getSingletons() {
-		
-		System.out.println("Singletons configuration starting");
-		
-		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("baza.podataka.udaljena");
-		UserResource contactService = new UserResource(entityManagerFactory);
-		Set<Object> singletons = new HashSet<Object>();
-		singletons.add(contactService);
-		
-		System.out.println("Singletons configuration ended successfully");
-		
-		return singletons;
+		return Collections.emptySet();
 	}
 
 	@Override

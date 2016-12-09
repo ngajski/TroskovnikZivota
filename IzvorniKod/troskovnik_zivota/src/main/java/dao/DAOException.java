@@ -1,5 +1,6 @@
 package dao;
 
+
 /**
  * Class which extends {@linkplain RuntimeException}. This class is thrown when
  * any error occurs during one of {@link DAO} methods.
