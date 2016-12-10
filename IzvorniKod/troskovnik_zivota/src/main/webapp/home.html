@@ -16,7 +16,6 @@
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 </style>
 <script type="text/javascript">
-<!--
 	$(document).ready(function() {
 		var username = sessionStorage.getItem('username');
 		if (typeof username === "undefined") {
@@ -52,12 +51,16 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 			}
 		});
 	}
-//-->
 </script>
 <script type="text/javascript">
 
+	function swapToEditExpenseListDiv(){
+		$('#displayExpenseListsDiv').hide();
+		$('#editExpenseListDiv').removeAttr('style');
+	}
+	
 	function logout(){
-		sessionStorage.removeItem('username');
+		sessionStorage.clear();
 		changeWindowUrl('index.html');
 	}
 </script>
@@ -88,7 +91,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   </div>
   <a href="#" class="w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
   <a href="#" class="w3-padding w3-blue"><i class="fa fa-eye"></i>  Pregledaj troškovnik</a>
-  <a href="#" class="w3-padding"><i class="fa fa-plus-circle"></i>  Novi troškovnik</a>
+  <a href="#" class="w3-padding" onclick="swapToEditExpenseListDiv()"><i class="fa fa-plus-circle"></i>  Novi troškovnik</a>
   <a href="#" class="w3-padding"><i class="fa fa-edit"></i>  Uredi postojeći</a>
   <a href="#" class="w3-padding"><i class="fa fa-send-o"></i>  Pošalji troškovnik</a>
   <a href="#" class="w3-padding"><i class="fa fa-file-pdf-o"></i>  Generiraj PDF</a>
@@ -109,7 +112,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   <div class="w3-row-padding w3-margin-bottom">
     <div class="w3-quarter">
       <div class="w3-container w3-red w3-padding-16">
-        <div class="w3-left"><i class="fa fa-inbox w3-xxxlarge"></i></div>
+        <div class="w3-left"><i class="fa fa-envelope w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3 id="messageNumberHolder">0</h3>
         </div>
@@ -150,16 +153,18 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   </div>
   <hr>
   
-  <div class="w3-container" id="expenseLists">
+  <div class="w3-container" id="displayExpenseListsDiv">
     <h5>Postojeći troškovnici</h5>
     <table class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white" id="expenseListsTable">
     <tbody></tbody>
     </table><br>
-    <button class="w3-btn">More Countries  <i class="fa fa-arrow-right"></i></button>
+  </div>
+
+  <div class="w3-container" id="editExpenseListDiv"  style="display:none;">
+    
   </div>
   <hr>
-
-
+  
   <!-- Footer -->
   <footer class="w3-container w3-padding-16 w3-light-grey">
     <h4>FOOTER</h4>

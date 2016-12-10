@@ -44,30 +44,28 @@
 		var username = inputs[0].value;
 		var password = inputs[1].value;
 
-		var y = $('#formRegister').find("input[name='username']").value;
+	
+		$.ajax({
+				type : 'GET',
+				url : "http://localhost:8080/baza-podataka/service/users/exists/username/"
+						+ username,
+				crossDomain : true,
+				contentType : "application/json",
+				success : function(responseData, textStatus, jqXHR) {
+					var exists = responseData;
 
-		$
-				.ajax({
-					type : 'GET',
-					url : "http://localhost:8080/baza-podataka/service/users/exists/username/"
-							+ username,
-					crossDomain : true,
-					contentType : "aplication/json",
-					success : function(responseData, textStatus, jqXHR) {
-						var exists = responseData;
-
-						if (exists == "true") {
-							alert("Korisnicko ime postoji, izaberite drugo!");
-						} else {
-							sessionStorage.setItem('username', username);
-							sessionStorage.setItem('password', password);
-							changeWindowUrl('register.html');
-						}
-					},
-					error : function(responseData, textStatus, errorThrown) {
-						alert('GET failed.');
+					if (exists == "true") {
+						alert("Korisnicko ime postoji, izaberite drugo!");
+					} else {
+						sessionStorage.setItem('username', username);
+						sessionStorage.setItem('password', password);
+						changeWindowUrl('register.html');
 					}
-				});
+				},
+				error : function(responseData, textStatus, errorThrown) {
+					alert('GET failed.');
+				}
+			});
 	}
 
 	/* This function checks if given username and password are valid (in local DB), if they are valid
@@ -77,11 +75,32 @@
 			return;
 		}
 
-		var inputs = $('#loginRegister :input');
+		var inputs = $('#formLogin :input');
 		var username = inputs[0].value;
 		var password = inputs[1].value;
-		var url = "http://localhost:8080/baza-podataka/service/users/exists/"
-				+ username;
+		var user = {
+				username : username,
+				password: password,
+		};
+		
+		$.ajax({
+			type : 'POST',
+			url : "service/users/validateLogin",
+			data : JSON.stringify(user),
+			dataType : "json",
+			contentType : "application/json",
+			success : function(responseData, textStatus, jqXHR) {
+				if(responseData == true){
+					sessionStorage.setItem('username', username);
+					changeWindowUrl('home.html');
+				} else {
+					alert("Ne točna kombinacija korisničkog imena i lozinke");
+				}
+			},
+			error : function(responseData, textStatus, errorThrown) {
+				alert('POST failed.');
+			}
+		});
 
 	}
 </script>

@@ -19,5 +19,21 @@ public class UserResource {
 
 		return "ok";
 	}
+	
+	
+	
+	@POST
+	@Path("/validateLogin")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.TEXT_PLAIN })
+	public Boolean validateLogin(User user) throws Exception {
+		System.out.println(user);
+		User dbUser = 	DAOProvider.getDAO().getUserByUsername(user.getUsername());
+		System.out.println(dbUser);
+		if (dbUser == null || !dbUser.getPassword().equals(user.getPassword())){
+			return false;
+		} 
+		return true;
+	}
 
 }
