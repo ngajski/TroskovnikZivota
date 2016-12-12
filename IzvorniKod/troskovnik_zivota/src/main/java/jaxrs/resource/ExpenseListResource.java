@@ -1,6 +1,8 @@
 package jaxrs.resource;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.naming.NamingException;
@@ -27,8 +29,17 @@ public class ExpenseListResource {
 	@GET
 	@Path("/{username}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public List<ExpenseList> userExists(@PathParam("username") String username) throws NamingException {
+	public List<ExpenseList> getExpenseListsForUsername(@PathParam("username") String username) throws NamingException {
 		return DAOProvider.getDAO().getExpenseListsForUsername(username);
+	}
+	
+	@GET
+	@Path("/defaultCategories")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<String> getDefaultExpenseCategories() throws NamingException {
+		List<String> defaultCategories = new LinkedList<>();
+		defaultCategories.addAll(Arrays.asList("Nekretnine", "Hrana", "Pokretnine", "Kozmetika"));
+		return defaultCategories;
 	}
 
 }
