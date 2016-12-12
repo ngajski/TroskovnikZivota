@@ -54,9 +54,15 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 </script>
 <script type="text/javascript">
 
-	function swapToEditExpenseListDiv(){
+	function swapToNewExpenseListDiv(){
 		$('#displayExpenseListsDiv').hide();
 		$('#editExpenseListDiv').removeAttr('style');
+		
+		$("#viewExpenseListsLink").attr('class', 'w3-padding');
+		$("#newExpenseListLink").attr('class', 'w3-padding w3-blue');
+		$("#editExpenseListLink").attr('class', 'w3-padding');
+		$("#sendExpenseListLink").attr('class','w3-padding');
+		$("#generatePDFLink").attr('class','w3-padding');
 	}
 	
 	function logout(){
@@ -90,11 +96,11 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     <h5>Izbornik</h5>
   </div>
   <a href="#" class="w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
-  <a href="#" class="w3-padding w3-blue"><i class="fa fa-eye"></i>  Pregledaj troškovnik</a>
-  <a href="#" class="w3-padding" onclick="swapToEditExpenseListDiv()"><i class="fa fa-plus-circle"></i>  Novi troškovnik</a>
-  <a href="#" class="w3-padding"><i class="fa fa-edit"></i>  Uredi postojeći</a>
-  <a href="#" class="w3-padding"><i class="fa fa-send-o"></i>  Pošalji troškovnik</a>
-  <a href="#" class="w3-padding"><i class="fa fa-file-pdf-o"></i>  Generiraj PDF</a>
+  <a href="#" class="w3-padding w3-blue" id="viewExpenseListsLink"><i class="fa fa-eye"></i>  Pregledaj troškovnik</a>
+  <a href="#" class="w3-padding" id="newExpenseListLink" onclick="swapToNewExpenseListDiv()"><i class="fa fa-plus-circle"></i>  Novi troškovnik</a>
+  <a href="#" class="w3-padding" id="editExpenseListLink"><i class="fa fa-edit"></i>  Uredi postojeći</a>
+  <a href="#" class="w3-padding" id="sendExpenseListLink"><i class="fa fa-send-o"></i>  Pošalji troškovnik</a>
+  <a href="#" class="w3-padding" id="generatePDFLink"><i class="fa fa-file-pdf-o"></i>  Generiraj PDF</a>
 </nav>
 
 
@@ -161,7 +167,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   </div>
 
   <div class="w3-container" id="editExpenseListDiv"  style="display:none;">
-    
+    <h5>Kreiraj novi troškovnik</h5>
   </div>
   <hr>
   

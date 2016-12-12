@@ -70,9 +70,12 @@ public class JPAEMProvider {
 				dex = new DAOException("Unable to close entity manager.", ex);
 			}
 		}
+		
 		locals.remove();
-		if (dex != null)
+		if (dex != null){
+			dex.printStackTrace();
 			throw dex;
+		}
 	}
 
 	/**

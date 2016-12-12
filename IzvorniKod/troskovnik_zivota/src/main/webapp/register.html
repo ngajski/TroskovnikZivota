@@ -33,7 +33,6 @@
 <script src="js/general.js"></script>
 
 <script type="text/javascript">
-<!--
 	$(document).ready(function() {
 		var username = sessionStorage.getItem('username');
 		var password = sessionStorage.getItem('password');
@@ -45,7 +44,6 @@
 			$("input[name='password']").val(password);
 		}
 	});
-//-->
 </script>
 </head>
 
@@ -102,51 +100,46 @@
 
 	}
 
-	/*This function is called from function validateForm after unique restrictons are passed. Function 
-	will store user in local and remote DB.*/
-	function persistUser() {
+	function persistUserToRemote(){
 		var remoteUser = createRemoteUser();
 
+		//contentType ono kaj se salje
+		//dataType ono kaj dobijem nazad ako primam text/plain ostavit prazno
 		$.ajax({
 			type : 'POST',
 			url : "http://localhost:8080/baza-podataka/service/users",
 			crossDomain : true,
 			data : JSON.stringify(remoteUser),
-			dataType : "json",
 			contentType : "application/json",
 			success : function(responseData, textStatus, jqXHR) {
-				console.log('remote success');
+				sessionStorage.removeItem('password');
+				sessionStorage.setItem('msg', 'Uspješna registracija :)<br>Dobro došli ' + sessionStorage.getItem('username'));
+				changeWindowUrl('home.html');
 			},
 			error : function(responseData, textStatus, errorThrown) {
-				console.log('GET failed1.');
+				alert('POST remote failed.');
 			}
 		});
-
-
+	
+	}
+	
+	function persistUserToLocal() {
 		var localUser = createLocalUser();
 
 		$.ajax({
 			type : 'POST',
 			url : "service/users",
 			data : JSON.stringify(localUser),
-			dataType : "json",
 			contentType : "application/json",
 			success : function(responseData, textStatus, jqXHR) {
-				console.log('local success');
-
+				persistUserToRemote();
 			},
 			error : function(responseData, textStatus, errorThrown) {
-				console.log('GET failed local.');
+				alert('POST local failed.');
 			}
 		});
-		
-		sessionStorage.removeItem('password');
-		sessionStorage.setItem('msg', 'Uspješna registracija :)<br>Dobro došli ' + sessionStorage.getItem('username'));
-		changeWindowUrl('home.html');
-
 	}
 
-	/* This function checks if given email is unique in global DB. If it is it will call function persistUser*/
 	function validateForm() {
 		if (emptyExists('requiredInput')) {
 			return;
@@ -168,13 +161,12 @@
 					url : "http://localhost:8080/baza-podataka/service/users/exists/email/"
 							+ email,
 					crossDomain : true,
-					contentType : "application/json",
 					success : function(responseData, textStatus, jqXHR) {
 						var emailExists = responseData;
 						if (emailExists == "true") {
 							alert('Upisani email već postoji. Unesite drugi');
 						} else {
-							persistUser();
+							persistUserToLocal();
 						}
 
 					},

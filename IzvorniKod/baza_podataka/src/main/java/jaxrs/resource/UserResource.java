@@ -28,15 +28,15 @@ public class UserResource {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.TEXT_PLAIN })
 	public String addUser(User user) throws Exception {
+		System.out.println("Dodajem user u udaljenu: " + user);
 		DAOProvider.getDAO().addUser(user);
-
 		return "ok";
 	}
 
 	@GET
 	@Path("/exists/username/{username}")
 	@Produces({ MediaType.TEXT_PLAIN })
-	public Boolean userExists(@PathParam("username") String username) throws NamingException {
+	public Boolean userExists(@PathParam("username") String username) {
 		User user = DAOProvider.getDAO().getUserByUsername(username);
 		System.out.println(user);
 		if (user == null) {
@@ -49,7 +49,7 @@ public class UserResource {
 	@GET
 	@Path("/exists/email/{email}")
 	@Produces({ MediaType.TEXT_PLAIN })
-	public Boolean emailExists(@PathParam("email") String email) throws NamingException {
+	public Boolean emailExists(@PathParam("email") String email) {
 		User user = DAOProvider.getDAO().getUserByEmail(email);
 		if (user == null) {
 			return false;
