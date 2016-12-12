@@ -39,16 +39,27 @@ public class ExpenseListResource {
 	@Path("/defaultCategories")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<StringWrapper> getDefaultExpenseCategories() {
-		//System.out.println("Tu sam 1");
 		List<StringWrapper> defaultCategories = new LinkedList<>();
-		defaultCategories.add(new StringWrapper("Nekretnine"));//, "Hrana", "Pokretnine", "Kozmetika"));
 		defaultCategories.add(new StringWrapper("Hrana"));
+		defaultCategories.add(new StringWrapper("Nekretnine"));//, "Hrana", "Pokretnine", "Kozmetika"));
 		defaultCategories.add(new StringWrapper("Pokretnine"));
 		defaultCategories.add(new StringWrapper("Kozmetika"));
-		//System.out.println(defaultCategories);
-		//System.out.println("Tu sam 2");
 		return defaultCategories;
 	}
+	
+	@GET
+	@Path("/defaultPeriods")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<StringWrapper> getDefaultPeriods() {
+		List<StringWrapper> defaultCategories = new LinkedList<>();
+		defaultCategories.add(new StringWrapper("Hrana"));
+		defaultCategories.add(new StringWrapper("Nekretnine"));//, "Hrana", "Pokretnine", "Kozmetika"));
+		defaultCategories.add(new StringWrapper("Pokretnine"));
+		defaultCategories.add(new StringWrapper("Kozmetika"));
+		return defaultCategories;
+	}
+	
+	
 
 	
 }

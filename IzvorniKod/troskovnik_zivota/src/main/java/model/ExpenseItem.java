@@ -1,12 +1,17 @@
 package model;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.CollectionId;
 
 @Entity
 @Table(name = "expenses_items")
@@ -17,18 +22,20 @@ public class ExpenseItem {
 	 */
 	@Id
 	@GeneratedValue
+	@Column
 	private Long id;
 
-	
+	@Column
 	private String name;
 	
+	@Column
 	private float amount;
 		
-	@Enumerated(EnumType.STRING)
+	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	private Period period;
 	
+	@Column
 	private String comment;
-
 
 	@ManyToOne
 	private ExpenseCategory expenseCategoryOwner;

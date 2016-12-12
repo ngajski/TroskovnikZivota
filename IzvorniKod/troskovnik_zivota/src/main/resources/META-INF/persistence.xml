@@ -12,7 +12,8 @@
   		<class>model.IncomeItem</class>
   		<class>model.User</class>
   		<class>model.Address</class>
-  
+  		<class>model.Period</class>
+  		
   		<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode> <!-- NONE, ALL, ENABLE_SELECTIVE, DISABLE_SELECTIVE -->
   		
 		<properties>
@@ -22,7 +23,7 @@
 			<!-- http://docs.jboss.org/hibernate/orm/4.3/manual/en-US/html_single/ -->
 			<!-- ============================== -->
 			<property name="hibernate.archive.autodetection" value="class" />
-			<property name="hibernate.hbm2ddl.auto" value="create" /> <!-- mogućnosti: create, create-drop, update OVO ZA ZADACU, validate -->
+			<property name="hibernate.hbm2ddl.auto" value="update" /> <!-- mogućnosti: create, create-drop, update OVO ZA ZADACU, validate -->
 			<property name="hibernate.format_sql" value="false" /> <!-- kasnije na false -->
 			<property name="hibernate.show_sql" value="false" /> <!-- kasnije na false -->
 			<property name="hibernate.use_sql_comments" value="false" />  <!-- kasnije staviti na false -->

@@ -3,6 +3,8 @@ package model;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -21,6 +23,9 @@ public class ExpenseCategory {
 	private Long id;
 	
 	private String name;
+	
+	private boolean fixed;
+	
 		
 	@ManyToOne
 	private ExpenseCategory superCategory;
@@ -103,6 +108,25 @@ public class ExpenseCategory {
 	public void setSubCategories(List<ExpenseCategory> subCategories) {
 		this.subCategories = subCategories;
 	}
+
+	public boolean isFixed() {
+		return fixed;
+	}
+
+	public void setFixed(boolean fixed) {
+		this.fixed = fixed;
+	}
+
+
+	public ExpenseList getExpenseListOwner() {
+		return expenseListOwner;
+	}
+
+	public void setExpenseListOwner(ExpenseList expenseListOwner) {
+		this.expenseListOwner = expenseListOwner;
+	}
+	
+	
 
 
 
