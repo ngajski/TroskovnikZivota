@@ -10,10 +10,12 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 
 import dao.DAOProvider;
 import model.ExpenseList;
+import wrappers.StringWrapper;
 import model.User;
 
 @Path("/expenseList")
@@ -36,10 +38,17 @@ public class ExpenseListResource {
 	@GET
 	@Path("/defaultCategories")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public List<String> getDefaultExpenseCategories() throws NamingException {
-		List<String> defaultCategories = new LinkedList<>();
-		defaultCategories.addAll(Arrays.asList("Nekretnine", "Hrana", "Pokretnine", "Kozmetika"));
+	public List<StringWrapper> getDefaultExpenseCategories() {
+		//System.out.println("Tu sam 1");
+		List<StringWrapper> defaultCategories = new LinkedList<>();
+		defaultCategories.add(new StringWrapper("Nekretnine"));//, "Hrana", "Pokretnine", "Kozmetika"));
+		defaultCategories.add(new StringWrapper("Hrana"));
+		defaultCategories.add(new StringWrapper("Pokretnine"));
+		defaultCategories.add(new StringWrapper("Kozmetika"));
+		//System.out.println(defaultCategories);
+		//System.out.println("Tu sam 2");
 		return defaultCategories;
 	}
 
+	
 }

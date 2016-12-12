@@ -16,8 +16,32 @@
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 </style>
 <script type="text/javascript">
-	
+function mojaFunkcija(){
+	$.ajax({
+		type : 'GET',
+		url : "service/expenseList/defaultCategories",
+		dataType : "json",
+		success : function(responseData, textStatus, jqXHR) {
+			var defaultCategories = responseData;
+			if (defaultCategories.length == 0){
+				$("#mojaDivizija2").html('Trenutno ne postoji niti jedna kategorija!');
+			} else {
+				var html = "";
+				for(var i = 0; i < defaultCategories.length; i++) {
+					//html += defaultCategories[i].string + "<br>";
+					html += "<button class = 'w3-btn w3-round-large' style='width:200px;'>" + defaultCategories[i].string + "</button><br><br>";
+				}
+				$("#mojaDivizija2").html(html);
+			}
+		},
+		error : function(responseData, textStatus, errorThrown) {
+			console.log('GET failed expense lists.');
+		}
+	});
+}
 </script>
+
+
 <script type="text/javascript">
 
 	function swapToNewExpenseListDiv(){
@@ -131,6 +155,14 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     <tbody></tbody>
     </table><br>
   </div>
+  
+  <div class="w3-container" id="mojaDivizija2" onclick="mojaFunkcija()">
+    <h3>Vilimova divizija</h3>
+    <table class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white" id="expenseListsTable">
+    <tbody></tbody>
+    </table><br>
+  </div>
+  
 
   <hr>
   

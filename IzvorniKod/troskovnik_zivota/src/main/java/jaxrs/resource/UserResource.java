@@ -14,8 +14,7 @@ import model.User;
 public class UserResource {
 
 	@POST
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces({ MediaType.TEXT_PLAIN })
+	@Produces({ MediaType.APPLICATION_JSON })
 	public String addUser(User user) {
 		System.out.println("Dodajem user u lokalnu" + user);
 		DAOProvider.getDAO().addUser(user);
@@ -24,7 +23,7 @@ public class UserResource {
 
 	@POST
 	@Path("/validateLogin")
-	@Produces({ MediaType.TEXT_PLAIN })
+	@Produces({ MediaType.APPLICATION_JSON})
 	public Boolean getUser(User user) {
 		User userDB = DAOProvider.getDAO().getUserByUsername(user.getUsername());
 		if (userDB == null || !userDB.getPassword().equals(user.getPassword())){
