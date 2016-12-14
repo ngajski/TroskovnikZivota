@@ -111,13 +111,14 @@
 			crossDomain : true,
 			data : JSON.stringify(remoteUser),
 			contentType : "application/json",
+			dataType: 'text',
 			success : function(responseData, textStatus, jqXHR) {
 				sessionStorage.removeItem('password');
 				sessionStorage.setItem('msg', 'Uspješna registracija :)<br>Dobro došli ' + sessionStorage.getItem('username'));
 				changeWindowUrl('home.html');
 			},
 			error : function(responseData, textStatus, errorThrown) {
-				alert('POST remote failed.');
+				alert('POST remote failed.' + textStatus + errorTrhown);
 			}
 		});
 	
@@ -131,11 +132,12 @@
 			url : "service/users",
 			data : JSON.stringify(localUser),
 			contentType : "application/json",
+			dataType: 'text',
 			success : function(responseData, textStatus, jqXHR) {
 				persistUserToRemote();
 			},
 			error : function(responseData, textStatus, errorThrown) {
-				alert('POST local failed.');
+				alert('POST local failed.'+ textStatus + errorTrhown);
 			}
 		});
 	}
@@ -161,6 +163,7 @@
 					url : "http://localhost:8080/baza-podataka/service/users/exists/email/"
 							+ email,
 					crossDomain : true,
+					dataType: 'text',
 					success : function(responseData, textStatus, jqXHR) {
 						var emailExists = responseData;
 						if (emailExists == "true") {

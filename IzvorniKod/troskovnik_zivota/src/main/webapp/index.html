@@ -50,6 +50,7 @@
 					url : "http://localhost:8080/baza-podataka/service/users/exists/username/"
 							+ username,
 					crossDomain : true,
+					dataType: 'text',
 					success : function(responseData, textStatus, jqXHR) {
 						var exists = responseData;
 
@@ -88,6 +89,7 @@
 			url : "service/users/validateLogin",
 			data : JSON.stringify(user),
 			contentType : "application/json",
+			dataType: 'text',
 			success : function(responseData, textStatus, jqXHR) {
 				var isValid = responseData;
 				if (isValid == "false") {
