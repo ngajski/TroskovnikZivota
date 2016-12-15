@@ -148,14 +148,6 @@
 		}
 
 		var email = $("input[name='email']").val();
-		var dateOfBirth = $("input[name='dateOfBirth']").val();
-
-		if (dateOfBirth != "") {
-			if (isValidateDate(dateOfBirth) == false) {
-				alert('Datum rođenja je krivo unesen. Popravite prije nastavka registracije');
-				return;
-			}
-		}
 
 		$
 				.ajax({
@@ -237,7 +229,7 @@
 				<div class="field-wrap">
 					<label> Datum rođenja (u chromu dobis kalendar, u uputam za
 						instal to napumenut)<span class="req">*</span>
-					</label> <input name="dateOfBirth" type="date" autocomplete="off" />
+					</label> <input name="dateOfBirth" type="text" autocomplete="off" />
 				</div>
 
 				<div class="field-wrap">
