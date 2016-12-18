@@ -101,25 +101,48 @@ html, body, h1, h2, h3, h4, h5 {
 <!-- Skup fj za navigaciju po stranici. -->
 <script type="text/javascript">
 
-	function swap(activeLinkID, callback) {
-		var activeDivID = activeLinkID.substr(0, activeLinkID.length - 4) + "Div";
+	function displayExpenseListHide(){
+		console.log('hide display f');
+	}
+	
+	function newExpenseListHide(){
+		console.log('hide new f');
+	}
+	
+	function editExpenseListHide(){
+		console.log('hide edit f');
+	}
+	
+	function sendExpenseListHide(){
+		console.log('hide send f');
+	}
+	
+	function generatePDFHide(){
+		console.log('hide generatePDF f');
+	}
+
+	
+	function swap(activeBaseName, prepareDivFunctionName) {
+		var activeDivID = activeBaseName + "Div";
 		$('#dynamicContainer').children().each(
 				function(index, element) {
 					var currentDivID = $(this).attr('id');
-					var currentLinkID = currentDivID.substr(0,
-							currentDivID.length - 3)
-							+ "Link";
+					var currentLinkID = currentDivID.substr(0, currentDivID.length - 3)	+ "Link";
+					
 					if ($(this).attr('id') == activeDivID) {
-						$(this).removeAttr('style');
+						$(this).show(750);
 						$('#' + currentLinkID).attr('class',
 								'w3-padding  w3-blue');
 					} else {
-						$(this).hide();
+						var currentFunctionName = currentDivID.substr(0, currentDivID.length - 3) + "Hide";
+						$(this).hide(750, window[currentFunctionName]());
 						$('#' + currentLinkID).attr('class', 'w3-padding');
 					}
 				});
 		
-		callback();
+		if (!(typeof prepareDivFunctionName === "undefined")) {
+			window[prepareDivFunctionName]();	
+		}
 	}
 
 	function logout() {
@@ -241,11 +264,11 @@ html, body, h1, h2, h3, h4, h5 {
 			<h5>Izbornik</h5>
 		</div>
 		<a href="#"	class="w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black"	onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i> Close Menu</a>
-		<a href="#"	class="w3-padding w3-blue" id="displayExpenseListLink" onclick="swap($(this).attr('id'))"><i class="fa fa-eye"></i> Pregledaj troškovnik</a>
-		<a href="#" class="w3-padding" id="newExpenseListLink" onclick="swap($(this).attr('id'))"><i class="fa fa-plus-circle"></i>Novi troškovnik</a>
-		<a href="#" class="w3-padding" id="editExpenseListLink" onclick="swap($(this).attr('id'))"><i class="fa fa-edit"></i> Uredi postojeći</a>
-		<a href="#" class="w3-padding" id="sendExpenseListLink" onclick="swap($(this).attr('id'), searchForExpenseLists)"><i class="fa fa-send-o"></i> Pošalji troškovnik</a>
-		<a href="#" class="w3-padding" id="generatePDFLink" ><i	class="fa fa-file-pdf-o"></i> Generiraj PDF</a>
+		<a href="#"	class="w3-padding w3-blue" id="displayExpenseListLink" onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4))"><i class="fa fa-eye"></i> Pregledaj troškovnik</a>
+		<a href="#" class="w3-padding" id="newExpenseListLink" onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4))"><i class="fa fa-plus-circle"></i>Novi troškovnik</a>
+		<a href="#" class="w3-padding" id="editExpenseListLink" onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4))"><i class="fa fa-edit"></i> Uredi postojeći</a>
+		<a href="#" class="w3-padding" id="sendExpenseListLink" onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4), 'searchForExpenseLists')"><i class="fa fa-send-o"></i> Pošalji troškovnik</a>
+		<a href="#" class="w3-padding" id="generatePDFLink" onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4))"><i	class="fa fa-file-pdf-o"></i> Generiraj PDF</a>
 	</nav>
 
 
@@ -271,34 +294,36 @@ html, body, h1, h2, h3, h4, h5 {
 						<i class="fa fa-envelope w3-xxxlarge"></i>
 					</div>
 					<div class="w3-right">
-						<h3 id="messageNumberHolder">0</h3>
+						<h3 id="messageNumberHolder"></h3>
 					</div>
 					<div class="w3-clear"></div>
 					<h4>Obavijesti</h4>
 				</div>
 			</div>
-			<div class="w3-quarter">
+			<div class="w3-quarter" id="sendExpenseListQuarter"
+				onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 7))">
 				<div class="w3-container w3-blue w3-padding-16">
 					<div class="w3-left">
-						<i class="fa fa-eye w3-xxxlarge"></i>
+						<i class="fa fa-send-o w3-xxxlarge"></i>
 					</div>
 					<div class="w3-right">
-						<h3>99</h3>
+						<h3> </h3>
 					</div>
 					<div class="w3-clear"></div>
-					<h4>Views</h4>
+					<h4>Posalji troskovnik</h4>
 				</div>
 			</div>
-			<div class="w3-quarter">
+			<div class="w3-quarter" id="generatePDFQuarter"
+				onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 7))">
 				<div class="w3-container w3-teal w3-padding-16">
 					<div class="w3-left">
-						<i class="fa fa-share-alt w3-xxxlarge"></i>
+						<i class="fa fa-file-pdf-o w3-xxxlarge"></i>
 					</div>
 					<div class="w3-right">
-						<h3>23</h3>
+						<h3></h3>
 					</div>
 					<div class="w3-clear"></div>
-					<h4>Shares</h4>
+					<h4>Generiraj PDF</h4>
 				</div>
 			</div>
 			<div class="w3-quarter">
@@ -307,10 +332,10 @@ html, body, h1, h2, h3, h4, h5 {
 						<i class="fa fa-users w3-xxxlarge"></i>
 					</div>
 					<div class="w3-right">
-						<h3>50</h3>
+						<h3></h3>
 					</div>
 					<div class="w3-clear"></div>
-					<h4>Users</h4>
+					<h4>Izmjeni osobne podatake</h4>
 				</div>
 			</div>
 		</div>
@@ -368,6 +393,13 @@ html, body, h1, h2, h3, h4, h5 {
 
 
 				</form>
+			</div>
+			
+			<div class="w3-container" id="generatePDFDiv"
+				style="display: none;">
+
+				<h4>generiraj troskovnik //TODO</h4>
+
 			</div>
 
 		</div>
