@@ -1,6 +1,7 @@
 package jaxrs.resource;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
@@ -56,6 +57,16 @@ public class UserResource {
 		} else {
 			return true;
 		}
+	}
+
+	
+	//Methods used for searching through database.
+	@GET
+	@Path("username/{username}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<User> usersByUsername(@PathParam("username") String username) {
+		return DAOProvider.getDAO().getUsersByUsername(username);
+		
 	}
 
 }

@@ -1,5 +1,7 @@
 package dao.jpa;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
@@ -45,4 +47,32 @@ public class JPADAOImpl implements DAO {
 		}
 
 	}
+
+	@Override
+	public List<User> getUsersByUsername(String username) {
+		return getUsersBySearchParamter("username", username);
+	}
+
+	@Override
+	public List<User> getUsersByFirstName(String firstName) {
+		return getUsersBySearchParamter("firstName", firstName);
+	}
+
+	@Override
+	public List<User> getUsersByLastName(String lastName) {
+		return getUsersBySearchParamter("lastName", lastName);
+
+	}
+
+	@Override
+	public List<User> getUsersByEmail(String email) {
+		return getUsersBySearchParamter("email", email);
+	}
+
+	private List<User> getUsersBySearchParamter(String searchParamter, String searchValue) {
+		EntityManager em = JPAEMProvider.getEntityManager();
+		return em.createQuery(" select b from User as b where b." + searchParamter + " LIKE :searchKeyword", User.class)
+				.setParameter("searchKeyword", searchValue + "%").getResultList();
+	}
+
 }
