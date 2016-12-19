@@ -1,6 +1,11 @@
 package model;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -23,8 +28,16 @@ public class IncomeItem {
 
 	private String name;
 	
-	private float amount;
-
+	@Column
+	private Date startDate;
+	
+	@Column
+	private Date endDate;
+	
+	@ElementCollection
+	private List<Double> amount;
+	
+	@Column
 	private boolean fixed;
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
@@ -60,13 +73,13 @@ public class IncomeItem {
 		this.period = period;
 	}
 
-	public float getAmount() {
-		return amount;
-	}
-
-	public void setAmount(float amount) {
-		this.amount = amount;
-	}
+//	public float getAmount() {
+//		return amount;
+//	}
+//
+//	public void setAmount(float amount) {
+//		this.amount = amount;
+//	}
 
 	public boolean isFixed() {
 		return fixed;

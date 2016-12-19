@@ -1,7 +1,11 @@
 package model;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -26,10 +30,16 @@ public class ExpenseItem {
 	private Long id;
 
 	@Column
-	private String name;
+	private Date startDate;
 	
 	@Column
-	private float amount;
+	private Date endDate;
+	
+	@Column
+	private String name;
+	
+	@ElementCollection
+	private List<Double> amount;
 		
 	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	private Period period;
@@ -71,16 +81,16 @@ public class ExpenseItem {
 	/**
 	 * @return the amount
 	 */
-	public float getAmount() {
-		return amount;
-	}
-
-	/**
-	 * @param amount the amount to set
-	 */
-	public void setAmount(float amount) {
-		this.amount = amount;
-	}
+//	public float getAmount() {
+//		return amount;
+//	}
+//
+//	/**
+//	 * @param amount the amount to set
+//	 */
+//	public void setAmount(float amount) {
+//		this.amount = amount;
+//	}
 
 	/**
 	 * @return the period

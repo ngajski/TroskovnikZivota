@@ -1,5 +1,10 @@
 package model;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -21,7 +26,14 @@ public class IncomeItem {
 
 	private String name;
 	
-	private float amount;
+	@Column
+	private Date startDate;
+	
+	@Column
+	private Date endDate;
+	
+	@ElementCollection
+	private List<Double> amount;
 
 	private boolean fixed;
 	
@@ -56,14 +68,6 @@ public class IncomeItem {
 
 	public void setPeriod(Period period) {
 		this.period = period;
-	}
-
-	public float getAmount() {
-		return amount;
-	}
-
-	public void setAmount(float amount) {
-		this.amount = amount;
 	}
 
 	public boolean isFixed() {

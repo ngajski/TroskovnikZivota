@@ -1,5 +1,10 @@
 package model;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -22,13 +27,19 @@ public class ExpenseItem {
 	
 	private String name;
 	
-	private float amount;
+	@ElementCollection
+	private List<Double> amount;
 		
 	@Enumerated(EnumType.STRING)
 	private Period period;
 	
 	private String comment;
-
+	
+	@Column
+	private Date startDate;
+	
+	@Column
+	private Date endDate;
 
 	@ManyToOne
 	private ExpenseCategory expenseCategoryOwner;
@@ -59,20 +70,6 @@ public class ExpenseItem {
 	 */
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	/**
-	 * @return the amount
-	 */
-	public float getAmount() {
-		return amount;
-	}
-
-	/**
-	 * @param amount the amount to set
-	 */
-	public void setAmount(float amount) {
-		this.amount = amount;
 	}
 
 	/**
