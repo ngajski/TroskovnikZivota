@@ -1,14 +1,12 @@
 package model;
 
 public enum Period {
-	
-	WEEKLY,
-	
-	MONTHLY,
-	
-	ANUALY,
-	
-	ONE_TIME,
 
-	MANUALY
+	MONTHLY,
+
+	QUARTARLY,
+
+	ANUALY,
+
+	ONE_TIME
 }
