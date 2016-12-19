@@ -40,8 +40,8 @@ public class IncomeItem {
 	@Column
 	private boolean fixed;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-	private Period period;
+	  @Enumerated(EnumType.STRING)
+		private Period period;
 		
 	private String comment;
 	

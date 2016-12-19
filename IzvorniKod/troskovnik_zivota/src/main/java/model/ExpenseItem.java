@@ -41,9 +41,9 @@ public class ExpenseItem {
 	@ElementCollection
 	private List<Double> amount;
 		
-	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	@Enumerated(EnumType.STRING)
 	private Period period;
-	
+
 	@Column
 	private String comment;
 
