@@ -2,7 +2,10 @@ package model;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -20,7 +23,11 @@ public class ExpenseCategory {
 	@GeneratedValue
 	private Long id;
 	
+	@Column
 	private String name;
+	
+	@Column
+	private boolean fixed;
 		
 	@ManyToOne
 	private ExpenseCategory superCategory;
@@ -33,76 +40,83 @@ public class ExpenseCategory {
 	
 	@ManyToOne
 	private ExpenseList expenseListOwner;
+
 	
-	/**
-	 * @return the id
-	 */
+	public ExpenseCategory() {
+		super();
+	}
+
+	public ExpenseCategory(Long id, String name, boolean fixed, ExpenseCategory superCategory,
+			List<ExpenseCategory> subCategories, List<ExpenseItem> expenseItems, ExpenseList expenseListOwner) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.fixed = fixed;
+		this.superCategory = superCategory;
+		this.subCategories = subCategories;
+		this.expenseItems = expenseItems;
+		this.expenseListOwner = expenseListOwner;
+	}
+
 	public Long getId() {
 		return id;
 	}
 
-	/**
-	 * @param id the id to set
-	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	/**
-	 * @return the name
-	 */
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * @param name the name to set
-	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	/**
-	 * @return the expenseItems
-	 */
-	public List<ExpenseItem> getExpenseItems() {
-		return expenseItems;
+	public boolean isFixed() {
+		return fixed;
 	}
 
-	/**
-	 * @param expenseItems the expenseItems to set
-	 */
-	public void setExpenseItems(List<ExpenseItem> expenseItems) {
-		this.expenseItems = expenseItems;
+	public void setFixed(boolean fixed) {
+		this.fixed = fixed;
 	}
 
-	/**
-	 * @return the superCategory
-	 */
 	public ExpenseCategory getSuperCategory() {
 		return superCategory;
 	}
 
-	/**
-	 * @param superCategory the superCategory to set
-	 */
 	public void setSuperCategory(ExpenseCategory superCategory) {
 		this.superCategory = superCategory;
 	}
 
-	/**
-	 * @return the subCategories
-	 */
 	public List<ExpenseCategory> getSubCategories() {
 		return subCategories;
 	}
 
-	/**
-	 * @param subCategories the subCategories to set
-	 */
 	public void setSubCategories(List<ExpenseCategory> subCategories) {
 		this.subCategories = subCategories;
 	}
+
+	public List<ExpenseItem> getExpenseItems() {
+		return expenseItems;
+	}
+
+	public void setExpenseItems(List<ExpenseItem> expenseItems) {
+		this.expenseItems = expenseItems;
+	}
+
+	public ExpenseList getExpenseListOwner() {
+		return expenseListOwner;
+	}
+
+	public void setExpenseListOwner(ExpenseList expenseListOwner) {
+		this.expenseListOwner = expenseListOwner;
+	}
+	
+
+	
+	
 
 
 
