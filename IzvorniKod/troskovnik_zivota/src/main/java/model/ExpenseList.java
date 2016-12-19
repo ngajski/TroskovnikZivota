@@ -25,7 +25,7 @@ public class ExpenseList {
 
 	@Column(nullable = false, unique = true)
 	private String name;
-
+	
 	/**
 	 * KADA VIDIS ATTR mappedBy to znaci da se razredu koji je el liste(razred
 	 * A) nalazi FK na ovaj razred i zato se dodatno u razredu A (u ovom sadu
@@ -42,11 +42,25 @@ public class ExpenseList {
 	 * kojem pise ManyToOne (tak se realizira list s jpa)
 	 */
 	@OneToMany(mappedBy = "expenseListOwner", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
-	private List<IncomeItem> incomes;
+	private List<IncomeItem> incomeItems;
 
-	
 	@ManyToOne
 	private User userOwner;
+
+	
+	public ExpenseList() {
+		super();
+	}
+
+	public ExpenseList(Long id, String name, List<ExpenseCategory> expenseCategories, List<IncomeItem> incomeItems,
+			User userOwner) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.expenseCategories = expenseCategories;
+		this.incomeItems = incomeItems;
+		this.userOwner = userOwner;
+	}
 
 	public Long getId() {
 		return id;
@@ -64,8 +78,6 @@ public class ExpenseList {
 		this.name = name;
 	}
 
-	
-
 	public List<ExpenseCategory> getExpenseCategories() {
 		return expenseCategories;
 	}
@@ -74,29 +86,27 @@ public class ExpenseList {
 		this.expenseCategories = expenseCategories;
 	}
 
-	public List<IncomeItem> getIncomes() {
-		return incomes;
+	public List<IncomeItem> getIncomeItems() {
+		return incomeItems;
 	}
 
-	public void setIncomes(List<IncomeItem> incomes) {
-		this.incomes = incomes;
+	public void setIncomeItems(List<IncomeItem> incomeItems) {
+		this.incomeItems = incomeItems;
 	}
 
-	/**
-	 * @return the userOwner
-	 */
 	public User getUserOwner() {
 		return userOwner;
 	}
 
-	/**
-	 * @param userOwner the userOwner to set
-	 */
 	public void setUserOwner(User userOwner) {
 		this.userOwner = userOwner;
 	}
 
-
+	@Override
+	public String toString() {
+		return "ExpenseList [id=" + id + ", name=" + name + ", expenseCategories=" + expenseCategories
+				+ ", incomeItems=" + incomeItems + ", userOwner=" + userOwner + "]";
+	}
 
 	
 }

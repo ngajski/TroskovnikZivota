@@ -59,4 +59,10 @@ public class JPADAOImpl implements DAO {
 			return user.getExpenseLists();
 		}
 	}
+
+	@Override
+	public void addExpenseList(ExpenseList expenseList) {
+		EntityManager em = JPAEMProvider.getEntityManager();
+		em.persist(expenseList);
+	}
 }

@@ -57,4 +57,6 @@ public interface DAO {
 	 */
 	public List<ExpenseList> getExpenseListsForUsername(String username);
 
+	public void addExpenseList(ExpenseList expenseList);
+
 }

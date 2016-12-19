@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -197,6 +198,13 @@ public class User {
 		return "User [username=" + username + ", password=" + password + ", firstName=" + firstName + ", lastName="
 				+ lastName + ", oib=" + oib + ", dateOfBirth=" + dateOfBirth + ", address=" + address + ", telefon="
 				+ telefon + ", email=" + email + ", expenseLists=" + expenseLists + "]";
+	}
+	
+	public void addExpenseList(ExpenseList expenseList){
+		if (expenseLists == null){
+			expenseLists = new LinkedList<>();
+		}
+		expenseLists.add(expenseList);
 	}
 
 }

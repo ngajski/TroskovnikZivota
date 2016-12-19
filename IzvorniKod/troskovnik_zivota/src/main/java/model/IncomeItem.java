@@ -26,28 +26,47 @@ public class IncomeItem {
 	@GeneratedValue
 	private Long id;
 
+	@Column
 	private String name;
 	
 	@Column
-	private Date startDate;
+	private String startDate;
 	
 	@Column
-	private Date endDate;
+	private String endDate;
 	
 	@ElementCollection
-	private List<Double> amount;
+	private List<Double> amounts;
+	
+	@Enumerated(EnumType.STRING)
+	private Period period;
 	
 	@Column
 	private boolean fixed;
 	
-	  @Enumerated(EnumType.STRING)
-		private Period period;
-		
+	@Column
 	private String comment;
 	
 	@ManyToOne
 	private ExpenseList expenseListOwner;
 
+	public IncomeItem() {
+		super();
+	}
+	
+	public IncomeItem(Long id, String name, String startDate, String endDate, List<Double> amounts, Period period,
+			boolean fixed, String comment, ExpenseList expenseListOwner) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.amounts = amounts;
+		this.period = period;
+		this.fixed = fixed;
+		this.comment = comment;
+		this.expenseListOwner = expenseListOwner;
+	}
 
 	public Long getId() {
 		return id;
@@ -65,6 +84,30 @@ public class IncomeItem {
 		this.name = name;
 	}
 
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	public List<Double> getAmounts() {
+		return amounts;
+	}
+
+	public void setAmounts(List<Double> amounts) {
+		this.amounts = amounts;
+	}
+
 	public Period getPeriod() {
 		return period;
 	}
@@ -72,14 +115,6 @@ public class IncomeItem {
 	public void setPeriod(Period period) {
 		this.period = period;
 	}
-
-//	public float getAmount() {
-//		return amount;
-//	}
-//
-//	public void setAmount(float amount) {
-//		this.amount = amount;
-//	}
 
 	public boolean isFixed() {
 		return fixed;
@@ -96,6 +131,22 @@ public class IncomeItem {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+
+	public ExpenseList getExpenseListOwner() {
+		return expenseListOwner;
+	}
+
+	public void setExpenseListOwner(ExpenseList expenseListOwner) {
+		this.expenseListOwner = expenseListOwner;
+	}
+
+	@Override
+	public String toString() {
+		return "IncomeItem [id=" + id + ", name=" + name + ", startDate=" + startDate + ", endDate=" + endDate
+				+ ", amounts=" + amounts + ", period=" + period + ", fixed=" + fixed + ", comment=" + comment
+				+ ", expenseListOwner=" + expenseListOwner + "]";
+	}
+
 
 
 	

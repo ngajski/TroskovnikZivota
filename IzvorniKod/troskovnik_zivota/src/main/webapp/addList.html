@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+
+<!-- Jquery -->
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- Constructors -->
+<script type="text/javascript">
+	function createIncomeItem(name, startDate, endDate, amounts, period, fixed) {
+		var x = {
+			name : name,
+			startDate : startDate,
+			endDate : endDate,
+			amounts : amounts,
+			period : period,
+			fixed : fixed
+		}
+		return x;
+	}
+
+	function createExpenseItem(name, startDate, endDate, amounts, period) {
+		var x = {
+			name : name,
+			startDate : startDate,
+			endDate : endDate,
+			amounts : amounts,
+			period : period
+		}
+		return x;
+	}
+
+	function createExpenseCategory(name, fixed, subCategories) {
+		var x = {
+			name : name,
+			fixed : fixed,
+			subCategories : subCategories,
+
+		}
+		return x;
+	}
+
+	function createExpenseList(name, expenseCategories, incomeItems) {
+		var x = {
+			name : name,
+			expenseCategories : expenseCategories,
+			incomeItems : incomeItems
+
+		}
+		return x;
+	}
+	
+	function persistExpenseList() {
+		var list = createExpenseList($('#name').val(), null, null);
+		var json = JSON.stringify(list);
+		var username = 'filip';
+		$
+		.ajax({
+			type : 'POST',
+			url : "service/expenseList/" + username,
+			data : json,
+			contentType : "application/json",
+			dataType: 'text',
+			contentType : "application/json",
+			success : function(responseData, textStatus, jqXHR) {
+				console.log('Dodao troskovnik')
+			},
+			error : function(responseData, textStatus, errorThrown) {
+				console.log('POST failed nisam dodao troskovnik.');
+			}
+		});
+		
+	}
+	
+	
+</script>
+
+<body>
+
+	Ime troskovnika
+	<input type="text" id="name">
+	<button onclick="persistExpenseList()">Posalji</button>
+
+</body>
+</html>
