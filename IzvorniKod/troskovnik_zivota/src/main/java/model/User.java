@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -80,7 +81,7 @@ public class User {
 	 * varijabla tipa ovaj razred na kojem pise ManyToOne (tak se realizira list
 	 * s jpa)
 	 */
-	@OneToMany(mappedBy = "userOwner", fetch = FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "userOwner", fetch = FetchType.LAZY, cascade=CascadeType.PERSIST, orphanRemoval = true)
 	private List<ExpenseList> expenseLists;
 
 	public User() {
@@ -196,8 +197,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [username=" + username + ", password=" + password + ", firstName=" + firstName + ", lastName="
-				+ lastName + ", oib=" + oib + ", dateOfBirth=" + dateOfBirth + ", address=" + address + ", telefon="
-				+ telefon + ", email=" + email + ", expenseLists=" + expenseLists + "]";
+				+ lastName + "]";
 	}
 	
 	public void addExpenseList(ExpenseList expenseList){

@@ -25,10 +25,18 @@ public class JPADAOImpl implements DAO {
 		EntityManager em = JPAEMProvider.getEntityManager();
 		em.persist(user);
 	}
+	
+	@Override
+	public void addExpenseList(ExpenseList expenseList) {
+		EntityManager em = JPAEMProvider.getEntityManager();
+		System.out.println("addExpenseList:  " + Thread.currentThread());
+		em.persist(expenseList);
+	}
 
 	@Override
 	public User getUserByUsername(String username) throws DAOException {
 		EntityManager em = JPAEMProvider.getEntityManager();
+		System.out.println("getUserByUsername:  " + Thread.currentThread());
 		try {
 			return (User) em.createQuery("select b from User as b where b.username=:username")
 					.setParameter("username", username).getSingleResult();
@@ -60,9 +68,4 @@ public class JPADAOImpl implements DAO {
 		}
 	}
 
-	@Override
-	public void addExpenseList(ExpenseList expenseList) {
-		EntityManager em = JPAEMProvider.getEntityManager();
-		em.persist(expenseList);
-	}
 }

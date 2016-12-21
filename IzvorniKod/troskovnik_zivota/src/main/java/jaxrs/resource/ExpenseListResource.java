@@ -41,13 +41,10 @@ public class ExpenseListResource {
 	@Path("/{username}")
 	@Produces({ MediaType.TEXT_PLAIN})
 	public String addExpenseListToUser(@PathParam("username") String username, ExpenseList expenseList) {
-		System.out.println(expenseList.toString());
-
 		User user = DAOProvider.getDAO().getUserByUsername(username);
 		expenseList.setUserOwner(user);
-		
 		DAOProvider.getDAO().addExpenseList(expenseList);
-		return "received ping on " + new Date().toString();
+		return "ok";
 	}
 	
 	@GET
