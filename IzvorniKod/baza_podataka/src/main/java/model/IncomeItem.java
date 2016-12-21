@@ -1,135 +1,63 @@
 package model;
 
-import java.util.Date;
+
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import model.time.Date;
+import model.time.Period;
+
 @Entity
 @Table(name = "income_items")
-public class IncomeItem {
-
-	/**
-	 * id
-	 */
-	@Id
-	@GeneratedValue
-	private Long id;
-
-	@Column
-	private String name;
-	
-	@Column
-	private String startDate;
-	
-	@Column
-	private String endDate;
-	
-	@ElementCollection
-	private List<Double> amounts;
-	
-	@Enumerated(EnumType.STRING)
-	private Period period;
-	
-	@Column
-	private boolean fixed;
-	
-	@Column
-	private String comment;
+public class IncomeItem extends Item {
 	
 	@ManyToOne
+	@JoinColumn
 	private ExpenseList expenseListOwner;
 
+	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	private Date startDate;
+	
+	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	private Date endDate;
+	
 	public IncomeItem() {
 		super();
 	}
 	
-	public IncomeItem(Long id, String name, String startDate, String endDate, List<Double> amounts, Period period,
-			boolean fixed, String comment, ExpenseList expenseListOwner) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.startDate = startDate;
+	public IncomeItem(Long id, String name, Date startDate, Date endDate, List<Double> amounts, Period period,
+			boolean fixed, String comment,ExpenseList expenseListOwner) {
+	super(id, name, amounts, period, fixed, comment);
+		
 		this.endDate = endDate;
-		this.amounts = amounts;
-		this.period = period;
-		this.fixed = fixed;
-		this.comment = comment;
+		this.startDate = startDate;
 		this.expenseListOwner = expenseListOwner;
+		
+		if (period == Period.ONE_TIME) {
+			endDate = startDate;
+		}
 	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getStartDate() {
+	
+	public Date getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(String startDate) {
+	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
 
-	public String getEndDate() {
+	public Date getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(String endDate) {
+	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
-	}
-
-	public List<Double> getAmounts() {
-		return amounts;
-	}
-
-	public void setAmounts(List<Double> amounts) {
-		this.amounts = amounts;
-	}
-
-	public Period getPeriod() {
-		return period;
-	}
-
-	public void setPeriod(Period period) {
-		this.period = period;
-	}
-
-	public boolean isFixed() {
-		return fixed;
-	}
-
-	public void setFixed(boolean fixed) {
-		this.fixed = fixed;
-	}
-
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
 	}
 
 	public ExpenseList getExpenseListOwner() {
@@ -139,15 +67,6 @@ public class IncomeItem {
 	public void setExpenseListOwner(ExpenseList expenseListOwner) {
 		this.expenseListOwner = expenseListOwner;
 	}
-
-	@Override
-	public String toString() {
-		return "IncomeItem [id=" + id + ", name=" + name + ", startDate=" + startDate + ", endDate=" + endDate
-				+ ", amounts=" + amounts + ", period=" + period + ", fixed=" + fixed + ", comment=" + comment
-				+ ", expenseListOwner=" + expenseListOwner + "]";
-	}
-
-
 
 	
 }

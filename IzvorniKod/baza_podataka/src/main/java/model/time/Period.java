@@ -1,4 +1,4 @@
-package model;
+package model.time;
 
 public enum Period {
 
