@@ -1,6 +1,9 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import model.time.Date;
 
 @Entity
 @Table(name = "expenses_lists")
@@ -61,13 +66,91 @@ public class ExpenseList {
 		this.incomeItems = incomeItems;
 		this.userOwner = userOwner;
 	}
-
-	public Long getId() {
-		return id;
+	
+	public ExpenseList(Long id, String name, User userOwner) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.expenseCategories = new ArrayList<>();
+		this.incomeItems = new ArrayList<>();
+		this.userOwner = userOwner;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	
+	/**
+	 * Adds new category to this {@link ExpenseList}, and sets this to be
+	 * the owner of given {@link ExpenseCategory}.
+	 * 
+	 * @param category {@link ExpenseCategory}
+	 */
+	public void addNewCategory(ExpenseCategory category) {
+		if (category != null) {
+			category.setExpenseListOwner(this);
+			expenseCategories.add(category);
+		}
+	}
+	
+	/**
+	 * Returns map of all months and their summed expenses. 
+	 * KEY = month (int)
+	 * VALUE = amount (double)
+	 * 
+	 * USE: 
+	 * If you want to sum  fixed expenses, function parameter <code>fixed</code> must be true.
+	 * If you want to sum  variable expenses, function parameter <code>fixed</code> must be false.
+	 * If you want to sum  all expenses, function parameter <code>fixed</code> must be null.
+	 *
+	 * @param startDate
+	 * @param stopDate
+	 * @param expenseByMonth MUST be new {@link HashMap}.
+	 * @param categories
+	 * @param fixed true or false
+	 * @return
+	 */
+	public Map<Date,Double> findExpenseAmount(Date startDate, Date stopDate,Map<Date,Double> expenseByMonth,
+			List<ExpenseCategory> categories, Boolean fixed) {
+		
+		if (categories == null || categories.isEmpty()) {
+			return expenseByMonth;
+		}
+		
+		for (ExpenseCategory expenseCategory : categories) {
+			findExpenseAmount(startDate, stopDate, expenseByMonth, expenseCategory.getSubCategories(),fixed);
+		}
+
+		for (ExpenseCategory expenseCategory : categories) {
+			List<ExpenseItem> items = expenseCategory.getExpenseItems();
+			for (ExpenseItem item : items) {
+				
+				if (fixed != null) {
+					if (item.isFixed() != fixed) {
+						continue;
+					}
+				}
+				
+				int payingMonths = startDate.difference(stopDate) + 1;
+				
+				Date date = new Date(startDate);
+				for (Integer monthNumber = 0; monthNumber < payingMonths; monthNumber = monthNumber+1) {
+					Double oldExpense = expenseByMonth.get(date);
+					if (oldExpense == null) {
+						oldExpense = new Double(0.0);
+					}
+					
+					Double expense = item.getExpenseForDate(date);
+					expenseByMonth.put(new Date(date), oldExpense + expense); 
+					date.nextMonth();
+					
+				}
+			}
+		}
+		
+		return expenseByMonth;
+	}
+	
+	
+	public Long getId() {
+		return id;
 	}
 
 	public String getName() {
@@ -97,15 +180,17 @@ public class ExpenseList {
 	public User getUserOwner() {
 		return userOwner;
 	}
-
-	public void setUserOwner(User userOwner) {
-		this.userOwner = userOwner;
-	}
+	
+	
 
 	@Override
 	public String toString() {
 		return "ExpenseList [id=" + id + ", name=" + name + ", expenseCategories=" + expenseCategories
 				+ ", incomeItems=" + incomeItems + ", userOwner=" + userOwner + "]";
+	}
+
+	public void setUserOwner(User user) {
+		this.userOwner = user;
 	}
 
 	
