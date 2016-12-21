@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -46,24 +47,72 @@ public class ExpenseCategory {
 		super();
 	}
 
-	public ExpenseCategory(Long id, String name, boolean fixed, ExpenseCategory superCategory,
-			List<ExpenseCategory> subCategories, List<ExpenseItem> expenseItems, ExpenseList expenseListOwner) {
+//	public ExpenseCategory(Long id, String name, boolean fixed, ExpenseCategory superCategory,
+//			List<ExpenseCategory> subCategories, List<ExpenseItem> expenseItems, ExpenseList expenseListOwner) {
+//		super();
+//		this.id = id;
+//		this.name = name;
+//		this.fixed = fixed;
+//		this.superCategory = superCategory;
+//		this.subCategories = subCategories;
+//		this.expenseItems = expenseItems;
+//		this.expenseListOwner = expenseListOwner;
+//	}
+	
+	public ExpenseCategory(Long id, String name, boolean fixed, ExpenseList expenseListOwner) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.fixed = fixed;
-		this.superCategory = superCategory;
-		this.subCategories = subCategories;
-		this.expenseItems = expenseItems;
+		this.superCategory = null;
+		this.subCategories = new ArrayList<>();
+		this.expenseItems = new ArrayList<>();
 		this.expenseListOwner = expenseListOwner;
 	}
 
+	
+	/**
+	 * Adds new sub category to this {@link ExpenseCategory}, and sets
+	 * {@link ExpenseList} owner of this to be the owner of given
+	 * {@link ExpenseCategory}.
+	 * 
+	 * @param category
+	 *            {@link ExpenseCategory}
+	 */
+	public void addExpenseSubcategory(ExpenseCategory category) {
+		if (category == null) {
+			return;
+		}
+		
+		if (fixed) {
+			category.setFixed(fixed);
+		}
+		
+		category.setSuperCategory(this);
+		category.setExpenseListOwner(this.getExpenseListOwner());
+		subCategories.add(category);
+	}
+	
+	/**
+	 * Adds new {@link ExpenseItem} to the list of {@link #expenseItems} and
+	 * sets fixed of this to given item.
+	 * 
+	 * @param item
+	 */
+	public void addExpenseItem(ExpenseItem item) {
+		if (expenseItems == null) {
+			expenseItems = new ArrayList<>();
+		}
+		
+		item.setExpenseCategoryOwner(this);
+		if (this.fixed) {
+			item.setFixed(this.fixed);
+		}
+		expenseItems.add(item);
+	}
+	
 	public Long getId() {
 		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getName() {
@@ -79,6 +128,12 @@ public class ExpenseCategory {
 	}
 
 	public void setFixed(boolean fixed) {
+		if (fixed) {
+			for (ExpenseCategory subCategory : subCategories) {
+				subCategory.setFixed(fixed);
+			}
+		}
+		
 		this.fixed = fixed;
 	}
 
@@ -86,16 +141,8 @@ public class ExpenseCategory {
 		return superCategory;
 	}
 
-	public void setSuperCategory(ExpenseCategory superCategory) {
-		this.superCategory = superCategory;
-	}
-
 	public List<ExpenseCategory> getSubCategories() {
 		return subCategories;
-	}
-
-	public void setSubCategories(List<ExpenseCategory> subCategories) {
-		this.subCategories = subCategories;
 	}
 
 	public List<ExpenseItem> getExpenseItems() {
@@ -114,9 +161,17 @@ public class ExpenseCategory {
 		this.expenseListOwner = expenseListOwner;
 	}
 	
+	public void setSuperCategory(ExpenseCategory superCategory) {
+		this.superCategory = superCategory;
+	}
 
 	
 	
+	
+	@Override
+	public String toString() {
+		return this.name + " fixed: " + fixed;
+	}
 
 
 
