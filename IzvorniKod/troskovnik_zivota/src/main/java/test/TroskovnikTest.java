@@ -18,9 +18,9 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import model.ExpenseCategory;
 import model.ExpenseItem;
 import model.ExpenseList;
-import model.Period;
 import model.User;
 import model.time.Date;
+import model.time.Period;
 
 public class TroskovnikTest {
 

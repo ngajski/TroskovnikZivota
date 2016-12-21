@@ -8,10 +8,15 @@
   		
   		<class>model.ExpenseList</class>
       	<class>model.ExpenseCategory</class>
-  		<class>model.ExpenseItem</class>
-  		<class>model.IncomeItem</class>
   		<class>model.User</class>
   		<class>model.Address</class>
+  		<class>model.IncomeItem</class>
+  		<class>model.ExpenseItem</class>
+  		<class>model.time.Date</class>
+  		
+  		
+  		
+  		
   		
   		<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode> <!-- NONE, ALL, ENABLE_SELECTIVE, DISABLE_SELECTIVE -->
   		

@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -47,17 +45,17 @@ public class ExpenseCategory {
 		super();
 	}
 
-//	public ExpenseCategory(Long id, String name, boolean fixed, ExpenseCategory superCategory,
-//			List<ExpenseCategory> subCategories, List<ExpenseItem> expenseItems, ExpenseList expenseListOwner) {
-//		super();
-//		this.id = id;
-//		this.name = name;
-//		this.fixed = fixed;
-//		this.superCategory = superCategory;
-//		this.subCategories = subCategories;
-//		this.expenseItems = expenseItems;
-//		this.expenseListOwner = expenseListOwner;
-//	}
+	public ExpenseCategory(Long id, String name, boolean fixed, ExpenseCategory superCategory,
+			List<ExpenseCategory> subCategories, List<ExpenseItem> expenseItems, ExpenseList expenseListOwner) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.fixed = fixed;
+		this.superCategory = superCategory;
+		this.subCategories = subCategories;
+		this.expenseItems = expenseItems;
+		this.expenseListOwner = expenseListOwner;
+	}
 	
 	public ExpenseCategory(Long id, String name, boolean fixed, ExpenseList expenseListOwner) {
 		super();

@@ -3,11 +3,17 @@ package model.time;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import model.Item;
+import model.User;
 
 @Entity
 @Table(name = "dates")
@@ -22,6 +28,12 @@ public class Date {
 	
 	@Column
 	private Integer month;
+	
+	@OneToMany(mappedBy = "startDate", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = false)
+	private List<Item> startDateOwners;
+	
+	@OneToMany(mappedBy = "endDate", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = false)
+	private List<Item> endDateOwners;
 	
 	private static final List<String> MONTHS = Arrays.asList("January", "February", "March","April","May",
 			"June","July","August","October","September","November","December");
@@ -151,7 +163,22 @@ public class Date {
 
 	@Override
 	public String toString() {
-		return year + " - " + month;
+		return "Date: " + year + " - " + month;
 	}
-	
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setYear(Integer year) {
+		this.year = year;
+	}
+
+	public void setMonth(Integer month) {
+		this.month = month;
+	}
 }
