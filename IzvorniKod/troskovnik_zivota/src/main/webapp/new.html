@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<title>Novi troškovnik</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css?family=Montserrat">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<link rel="stylesheet" type="text/css" href="css/set2.css" />
+
+
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="js/general.js"></script>
+
+
+<style>
+
+.input--nao {
+	overflow: hidden;
+	padding-top: 1em;
+}
+
+.input__field--nao {
+	padding: 0.5em 0em 0.25em;
+	width: 100%;
+	background: transparent;
+	color: #262626;
+	font-size: 1.25em;
+	text-align: center;
+}
+
+.input__label--nao {
+	position: absolute;
+	top: 0.95em;
+	font-size: 0.85em;
+	left: 0;
+	display: block;
+	width: 100%;
+	text-align: left;
+	padding: 0em;
+	pointer-events: none;
+	-webkit-transform-origin: 0 0;
+	transform-origin: 0 0;
+	-webkit-transition: -webkit-transform 0.3s 0.1s, color 1s;
+	transition: transform 0.3s 0.1s, color 1s;
+	-webkit-transition-timing-function: cubic-bezier(0, 0.25, 0.5, 1);
+	transition-timing-function: cubic-bezier(0, 0.25, 0.5, 1);
+}
+
+.graphic--nao {
+	stroke: #92989e;
+	pointer-events: none;
+	-webkit-transition: -webkit-transform 0.7s, stroke 0.7s;
+	transition: transform 0.7s, stroke 0.7s;
+	-webkit-transition-timing-function: cubic-bezier(0, 0.25, 0.5, 1);
+	transition-timing-function: cubic-bezier(0, 0.25, 0.5, 1);
+} 
+
+.input__field--nao:focus + .input__label--nao,
+.input--filled .input__label--nao {
+	color: #333;
+	-webkit-transform: translate3d(0, -1.25em, 0) scale3d(0.75, 0.75, 1);
+	transform: translate3d(0, -1.25em, 0) scale3d(0.75, 0.75, 1);
+}
+
+.input__field--nao:focus ~ .graphic--nao,
+.input--filled .graphic--nao {
+	stroke: #333;
+	-webkit-transform: translate3d(-66.6%, 0, 0);
+	transform: translate3d(-66.6%, 0, 0);
+}
+
+
+.w3-sidenav a {
+	font-family: "Roboto", sans-serif
+}
+
+body, h1, h2, h3, h4, h5, h6, .w3-wide {
+	font-family: "Montserrat", sans-serif;
+}
+</style>
+
+
+<script type="text/javascript">
+
+
+	function getLayout() {
+		$("#navMenu").removeAttr("style");
+		$("#newExpenseListDivision").attr("style", "display:none;");
+		var val = $("#input-1").val();
+		$("#navMenu1").children("#imeHeader").html("<b>" + val + "</b>");
+	}
+
+	function addCategory() {
+		$("#testing").show(750);
+
+	}
+	
+	function addCategoryToList(){
+		
+		$('#testing').hide(750);
+		var val = $("#categoryName").val();
+		if (val.length != 0){
+			var html = $("#Kategorije").html();
+			$('#Kategorije').html("<a href='#'>"+val+"</a>"+html);
+		}
+		}
+
+	
+	
+</script>
+
+
+
+
+<body class="w3-content" style="max-width: 1200px">
+
+	<div class="w3-container" id="newExpenseListDivision">
+		<div class="w3-display-middle">
+			<h1 class="w3-jumbo w3-animate-top" style="text-align: center;">Ime
+				troškovnika</h1>
+			<hr class="w3-border-grey" style="margin: auto; width: 40%">
+			<br>
+			<span class="input input--nao" style="margin-left:10%">
+					<input class="input__field input__field--nao" type="text" id="input-1" />
+					<svg class="graphic graphic--nao" width="300%" height="100%" viewBox="0 0 1200 60" preserveAspectRatio="none">
+						<path d="M0,56.5c0,0,298.666,0,399.333,0C448.336,56.5,513.994,46,597,46c77.327,0,135,10.5,200.999,10.5c95.996,0,402.001,0,402.001,0"/>
+					</svg> 
+				</span>
+		
+		<!-- 	 <input class="w3-input w3-animate-input" id="inputExpenseListNameID"
+				type="text"
+				style="width: 175px; text-align: center; background-color: AliceBlue; outline: none;">  -->
+			<br> <br>
+			<button
+				class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
+				style="margin-left: 42.5%;" onClick="getLayout()">Dalje</button>
+		</div>
+	</div>
+
+
+
+
+	<!-- Sidenav/menu -->
+	<nav class="w3-sidenav w3-white w3-collapse w3-top"
+		style="z-index: 3; width: 250px; margin-left:-225px" id="mySidenav">
+		<div id="navMenu" style="display: none">
+			<div class="w3-container w3-padding-16" id="navMenu1">
+				<i onclick="w3_close()"
+					class="fa fa-remove w3-hide-large w3-closebtn w3-hover-text-red"></i>
+				<h3 class="w3-wide" id="imeHeader">
+					<b>LOGO</b>
+				</h3>
+			</div>
+			<div class="w3-padding-64 w3-large w3-text-black"
+				style="font-weight: bold">
+				<div class="w3-accordion" id ="kategorijeDropdown">
+					<a onclick="myAccFunc()" href="javascript:void(0)"
+						class="w3-text-black" id="myBtn"> Kategorije troškova <i
+						class="fa fa-caret-down"></i>
+					</a>
+					<div id="Kategorije"
+						class="w3-accordion-content w3-padding-large w3-medium">
+						<a href="#" onClick="addCategory()">Dodaj kategoriju <i
+							class="fa fa-plus w3-margin-right"></i></a>
+					</div>
+				</div>
+				<div class="w3-accordion">
+					<a onclick="myAccFunc1()" href="javascript:void(0)"
+						class="w3-text-black" id="myBtn1"> Prihodi <i
+						class="fa fa-caret-down"></i>
+					</a>
+					<div id="Prihodi"
+						class="w3-accordion-content w3-padding-large w3-medium">
+						<a href="#">Dodaj prihod<i class="fa fa-plus w3-margin-right"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+
+	<div class="w3-container" style="margin-left: 25px; display: none" id="testing">
+		<div class="w3-container w3-card" id = "expenseItem">
+			<h3>Kategorija</h3>
+
+			<div class="w3.container">
+				<form class="w3-container">
+					<div class="w3-row">
+						<div class="w3-col s3">
+							<h4 style="margin-top: 3px">Ime kategorije</h4>
+						</div>
+						<div class="w3-col s9 w3-center">
+							<input id="categoryName" class="w3-input w3-border w3-animate-input" type="text"
+								style="width: 30%">
+						</div>
+					</div>
+				</form>
+				<form class="w3-container">
+					<div class="w3-row">
+						<div class="w3-col s3"><h4 style="margin-top: 15px">Fiksnost</h4></div>
+					
+						<div class="w3-col s9 w3-center">
+							<p>
+								<input class="w3-radio" type="radio" name="gender" value="yes">
+								<label class="w3-validate">Da</label></p>
+							<p>
+								<input class="w3-radio" type="radio" name="gender" value="no"
+								checked> <label class="w3-validate">Ne</label></p>
+						</div>
+						</div>
+				</form>
+				<div class="w3.container">
+				<form class="w3-container">
+					<div class="w3-row">
+						<div class="w3-col s3">
+							<button
+				class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
+				 onClick="addCategoryToList()">Spremi</button>
+						</div>
+					</div>
+				</form>
+				
+				
+			</div>
+		<br>
+		<br>
+		</div>
+
+	</div>
+	</div>
+
+
+
+
+
+	<script>
+		// Accordion 
+		function myAccFunc1() {
+			var x = document.getElementById("Prihodi");
+			if (x.className.indexOf("w3-show") == -1) {
+				x.className += " w3-show";
+			} else {
+				x.className = x.className.replace(" w3-show", "");
+			}
+		}
+		function myAccFunc() {
+			var x = document.getElementById("Kategorije");
+			if (x.className.indexOf("w3-show") == -1) {
+				x.className += " w3-show";
+			} else {
+				x.className = x.className.replace(" w3-show", "");
+			}
+		}
+		
+
+		// Script to open and close sidenav
+		function w3_open() {
+			document.getElementById("mySidenav").style.display = "block";
+			document.getElementById("myOverlay").style.display = "block";
+		}
+
+		function w3_close() {
+			document.getElementById("mySidenav").style.display = "none";
+			document.getElementById("myOverlay").style.display = "none";
+		}
+	</script>
+
+</body>
+</html>
