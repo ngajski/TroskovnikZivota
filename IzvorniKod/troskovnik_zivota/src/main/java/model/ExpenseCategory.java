@@ -3,16 +3,19 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "expenses_categories")
+@Table(name = "expense_categories")
 public class ExpenseCategory {
 
 	/**
@@ -29,15 +32,17 @@ public class ExpenseCategory {
 	private boolean fixed;
 		
 	@ManyToOne
+	@JoinColumn
 	private ExpenseCategory superCategory;
 	
-	@OneToMany(mappedBy="superCategory")
+	@OneToMany(mappedBy="superCategory", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = false)
 	private List<ExpenseCategory> subCategories;
 
-	@OneToMany(mappedBy="expenseCategoryOwner")
+	@OneToMany(mappedBy="expenseCategoryOwner", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = false)
 	private List<ExpenseItem> expenseItems;
 	
 	@ManyToOne
+	@JoinColumn
 	private ExpenseList expenseListOwner;
 
 	

@@ -16,9 +16,9 @@ import javax.ws.rs.core.MediaType;
 
 import dao.DAOProvider;
 import model.ExpenseList;
-import model.Period;
 import wrappers.StringWrapper;
 import model.User;
+import model.time.Period;
 
 @Path("/expenseList")
 public class ExpenseListResource {

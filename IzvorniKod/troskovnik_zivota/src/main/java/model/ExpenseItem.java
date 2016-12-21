@@ -3,8 +3,11 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Entity;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -13,12 +16,19 @@ import model.time.Period;
 
 
 @Entity
-@Table(name = "expenses_items")
+@Table(name = "expense_items")
 public class ExpenseItem extends Item {
 
 	@ManyToOne
+	@JoinColumn
 	private ExpenseCategory expenseCategoryOwner;
 
+	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	private Date startDate;
+	
+	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	private Date endDate;
+	
 	public ExpenseItem() {
 		super();
 	}
@@ -27,14 +37,17 @@ public class ExpenseItem extends Item {
 	
 	public ExpenseItem(Long id, String name, Date startDate, Date endDate, List<Double> amounts, Period period,
 			boolean fixed, String comment, ExpenseCategory owner) {
-		super(id, name, startDate, endDate, amounts, period, fixed, comment);
+		super(id, name, amounts, period, fixed, comment);
 		
-		expenseCategoryOwner = owner;
+		this.endDate = endDate;
+		this.startDate = startDate;
+		this.expenseCategoryOwner = owner;
+		
+		if (period == Period.ONE_TIME) {
+			endDate = startDate;
+		}
 	}
 	
-	public ExpenseItem(Long id, String name, Date startDate, Date endDate, Period period, String comment, boolean fixed) {
-		super(id, name, startDate, endDate, new ArrayList<>(), period, fixed, comment);
-	}
 
 
 
@@ -52,6 +65,48 @@ public class ExpenseItem extends Item {
 		} else {
 			return fixed;
 		}
+	}
+	
+	/**
+	 * Returns expense amount for selected month.
+	 * 
+	 * @param date selected {@link Date}
+	 * @return expense amount {@link Double}
+	 * 
+	 */
+	public Double getExpenseForDate(Date date) {
+		
+		if (period == Period.ONE_TIME && date.equals(startDate)) {
+			return amounts.get(0);
+		} else if (period != Period.ONE_TIME && 
+				date.happenedAfter(startDate) && date.happenedBefore(endDate)) {
+
+			if (fixed) {
+				return amounts.get(0);
+			}
+			
+			int payingMonth = date.difference(startDate);
+			
+			return amounts.get(payingMonth);
+		} else {
+			return new Double(0.0);
+		}
+	}
+	
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 	
 	public ExpenseCategory getExpenseCategoryOwner() {

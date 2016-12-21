@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -18,7 +19,7 @@ import javax.persistence.Table;
 import model.time.Date;
 
 @Entity
-@Table(name = "expenses_lists")
+@Table(name = "expense_lists")
 public class ExpenseList {
 
 	/**
@@ -50,6 +51,7 @@ public class ExpenseList {
 	private List<IncomeItem> incomeItems;
 
 	@ManyToOne
+	@JoinColumn
 	private User userOwner;
 
 	

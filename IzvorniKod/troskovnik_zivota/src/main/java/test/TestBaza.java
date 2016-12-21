@@ -12,14 +12,21 @@ import model.User;
 
 public class TestBaza {
 	
-	private static User user = new User("nikola", "nikola", "Nikola", "Gajski", "12345", null, null, null,
-			"nikola.gajski@fer.hr");
-	
-	private static ExpenseList expenseList = new ExpenseList(new Long(12345),"Troškovnik 2015",user);
-
 	public static void main(String[] args) {
+		User user = new User();
+		user.setUsername("fic123");
+		user.setPassword("123");
+		user.setFirstName("Filip");
+		user.setLastName("Bozic");
+		user.setEmail("fbozic@gmail.com");
+		
+		ExpenseList expenseList = new ExpenseList();
+		expenseList.setName("Troškovnik 2");
+		expenseList.setUserOwner(user);
+		
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("baza.podataka.lokalna");
 		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
 		
 		em.persist(user);
 		
@@ -37,13 +44,14 @@ public class TestBaza {
 				dex = new DAOException("Unable to close entity manager.", ex);
 			}
 		}
-		
 		if (dex != null) {
-			dex.printStackTrace();
+			throw dex;
 		}
 		
-		EntityManager em2 = emf.createEntityManager();
+		System.out.println("Dao user uspjesno");
 		
+		EntityManager em2 = emf.createEntityManager();
+		em2.getTransaction().begin();
 		em2.persist(expenseList);
 		try {
 			em2.getTransaction().commit();
@@ -60,9 +68,11 @@ public class TestBaza {
 		}
 		
 		if (dex != null) {
-			dex.printStackTrace();
+			throw dex;
 		}
 	
+		System.out.println("dao troskovnik uspjesno");
+		emf.close();
 	}
 
 }

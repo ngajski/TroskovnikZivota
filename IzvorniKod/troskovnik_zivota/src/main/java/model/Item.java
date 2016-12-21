@@ -15,11 +15,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 
-import model.time.Date;
 import model.time.Period;
 
 
-@Entity
+@MappedSuperclass
 public abstract class Item {
 
 	@Id
@@ -29,20 +28,14 @@ public abstract class Item {
 	@Column
 	private String name;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-	private Date startDate;
-	
-	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-	private Date endDate;
-	
 	@ElementCollection
-	private List<Double> amounts;
+	protected List<Double> amounts;
 	
 	@Enumerated(EnumType.STRING)
-	private Period period;
+	protected Period period;
 	
 	@Column
-	private boolean fixed;
+	protected boolean fixed;
 	
 	@Column
 	private String comment;
@@ -51,50 +44,17 @@ public abstract class Item {
 		super();
 	}
 	
-	public Item(Long id, String name, Date startDate, Date endDate, List<Double> amounts, Period period,
+	public Item(Long id, String name, List<Double> amounts, Period period,
 			boolean fixed, String comment) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.startDate = startDate;
-		this.endDate = endDate;
 		this.amounts = amounts;
 		this.period = period;
 		this.fixed = fixed;
 		this.comment = comment;
 		
-		if (period == Period.ONE_TIME) {
-			endDate = startDate;
-		}
-	}
-	
-	/**
-	 * Returns expense amount for selected month.
-	 * 
-	 * @param date selected {@link Date}
-	 * @return expense amount {@link Double}
-	 * 
-	 */
-	public Double getExpenseForDate(Date date) {
-		
-		if (period == Period.ONE_TIME && date.equals(startDate)) {
-			return amounts.get(0);
-		} else if (period != Period.ONE_TIME && 
-				date.happenedAfter(startDate) && date.happenedBefore(endDate)) {
-
-			if (fixed) {
-				return amounts.get(0);
-			}
-			
-			int payingMonth = date.difference(startDate);
-			
-			return amounts.get(payingMonth);
-		} else {
-			return new Double(0.0);
-		}
-	}
-	
-	
+	}	
 
 	public Long getId() {
 		return id;
@@ -110,22 +70,6 @@ public abstract class Item {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
 	}
 
 	public List<Double> getAmounts() {
