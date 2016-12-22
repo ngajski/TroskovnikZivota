@@ -10,6 +10,13 @@ function emptyExists(className){
 	}).length > 0;
 }
 
+/*Function which opens modal box with given id, and sets given text to text holder in that modal*/
+function openModal(modalID, text) {
+	var textHolders = $('#' + modalID).find('.textHolder');
+	textHolders[0].innerHTML = text;
+	$('#' + modalID).show();
+}
+
 /*Function which validates date. Valid formats are dd/mm/yyyy,dd-mm-yyyy or dd.mm.yyyy*/
 function isValidateDate(date) {
 	return date
