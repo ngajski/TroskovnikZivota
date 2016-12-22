@@ -68,10 +68,15 @@ public class Date {
 	 * @return true if this happened after givent date
 	 */
 	public boolean happenedAfter(Date date) {
-		if (this.year >= date.getYear() && this.month >= date.getMonth()) {
+		if (this.year > date.getYear()) {
 			return true;
+		} else if (this.year < date.getYear()) {
+			return false;
+		} else if (this.month >= date.getMonth()) {
+			return true;
+		} else {
+			return false;
 		}
-		return false;
 	}
 	
 	/**
@@ -83,11 +88,13 @@ public class Date {
 	public boolean happenedBefore(Date date) {
 		if (this.year < date.getYear()) {
 			return true;
-		} else if (this.year.equals(date.getYear()) && this.month <= date.getMonth()) {
+		} else if (this.year > date.getYear()) {
+			return false;
+		}else if (this.month <= date.getMonth()) {
 			return true;
+		} else {
+			return false;
 		}
-		
-		return false;
 	}
 	
 	/**
@@ -95,10 +102,12 @@ public class Date {
 	 * 
 	 * @param date {@link Date}
 	 * @return difference in months
+	 * 
+	 * 
 	 */
 	public int difference(Date date) {
 		int yearDif = Math.abs(this.year - date.year);
-		int monthDif = Math.abs(this.month - date.month);
+		int monthDif = this.month - date.month;
 		return yearDif * 12 + monthDif;
 	}
 	

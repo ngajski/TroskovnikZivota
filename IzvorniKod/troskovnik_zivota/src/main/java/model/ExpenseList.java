@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -93,7 +94,21 @@ public class ExpenseList {
 	}
 	
 	/**
+	 * Adds new category to this {@link ExpenseList}, and sets this to be
+	 * the owner of given {@link ExpenseCategory}.
+	 * 
+	 * @param category {@link ExpenseCategory}
+	 */
+	public void addNewIncomeItem(IncomeItem item) {
+		if (item != null) {
+			item.setExpenseListOwner(this);
+			incomeItems.add(item);
+		}
+	}
+	
+	/**
 	 * Returns map of all months and their summed expenses. 
+	 * 
 	 * KEY = month (int)
 	 * VALUE = amount (double)
 	 * 
@@ -106,7 +121,7 @@ public class ExpenseList {
 	 * @param stopDate
 	 * @param expenseByMonth MUST be new {@link HashMap}.
 	 * @param categories
-	 * @param fixed true or false
+	 * @param fixed true, false, or null
 	 * @return
 	 */
 	public Map<Date,Double> findExpenseAmount(Date startDate, Date stopDate,Map<Date,Double> expenseByMonth,
@@ -148,6 +163,51 @@ public class ExpenseList {
 		}
 		
 		return expenseByMonth;
+	}
+	
+	/**
+	 * Returns map of all months and their summed incomes. 
+	 * 
+	 * KEY = month (int)
+	 * VALUE = amount (double)
+	 * 
+	 * USE: 
+	 * If you want to sum  salary incomes, function parameter <code>salary</code> must be true.
+	 * If you want to sum  other incomes, function parameter <code>salary</code> must be false.
+	 * If you want to sum  all incomes, function parameter <code>salary</code> must be null.
+	 *
+	 * @param startDate
+	 * @param stopDate
+	 * @param salary true,false or null
+	 * @return
+	 */
+	public Map<Date, Double> findIncomeAmount(Date startDate, Date stopDate, Boolean sallary) {
+		Map<Date, Double> incomeByMonth = new LinkedHashMap<>();
+
+		for (IncomeItem item : incomeItems) {
+
+			if (sallary != null) {
+				if (item.isSallary() != sallary) {
+					continue;
+				}
+			}
+
+			int payingMonths = startDate.difference(stopDate) + 1;
+
+			Date date = new Date(startDate);
+			for (Integer monthNumber = 0; monthNumber < payingMonths; monthNumber = monthNumber + 1) {
+				Double oldExpense = incomeByMonth.get(date);
+				if (oldExpense == null) {
+					oldExpense = new Double(0.0);
+				}
+
+				Double expense = item.getIncomeForDate(date);
+				incomeByMonth.put(new Date(date), oldExpense + expense);
+				date.nextMonth();
+
+			}
+		}
+		return incomeByMonth;
 	}
 	
 	

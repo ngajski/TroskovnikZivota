@@ -48,6 +48,9 @@ public class ExpenseItem extends Item {
 		}
 	}
 	
+	public ExpenseItem(Long id, String name, Date startDate, Date endDate, Period period, String comment, boolean fixed) {
+		this(id, name, startDate, endDate, new ArrayList<>(), period, fixed, comment, null);
+	}
 
 
 
