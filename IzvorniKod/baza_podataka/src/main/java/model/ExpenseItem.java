@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import model.time.Date;
 import model.time.Period;
 
@@ -19,6 +21,7 @@ import model.time.Period;
 @Table(name = "expense_items")
 public class ExpenseItem extends Item {
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn
 	private ExpenseCategory expenseCategoryOwner;
@@ -33,8 +36,6 @@ public class ExpenseItem extends Item {
 		super();
 	}
 
-	
-	
 	public ExpenseItem(Long id, String name, Date startDate, Date endDate, List<Double> amounts, Period period,
 			boolean fixed, String comment, ExpenseCategory owner) {
 		super(id, name, amounts, period, fixed, comment);

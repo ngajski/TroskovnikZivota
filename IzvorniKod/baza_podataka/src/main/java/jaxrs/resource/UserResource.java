@@ -66,7 +66,26 @@ public class UserResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<User> usersByUsername(@PathParam("username") String username) {
 		return DAOProvider.getDAO().getUsersByUsername(username);
-		
 	}
 
+	@GET
+	@Path("firstName/{firstName}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<User> usersByFirstName(@PathParam("firstName") String firstName) {
+		return DAOProvider.getDAO().getUsersByUsername(firstName);
+	}
+	
+	@GET
+	@Path("lastName/{lastName}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<User> usersByLastName(@PathParam("lastName") String lastName) {
+		return DAOProvider.getDAO().getUsersByUsername(lastName);
+	}
+	
+	@GET
+	@Path("email/{email}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<User> usersByEmail(@PathParam("email") String email) {
+		return DAOProvider.getDAO().getUsersByUsername(email);
+	}
 }

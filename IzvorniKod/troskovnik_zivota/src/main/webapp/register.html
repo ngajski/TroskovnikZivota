@@ -44,6 +44,7 @@ html, body, h1, h2, h3, h4, h5 {
 					dataType : 'json',
 					success : function(responseData, textStatus, jqXHR) {
 						var user = responseData;
+						sessionStorage.setItem('user', JSON.stringify(user));
 						$("input[name='firstName']").val(user.firstName);
 						$("input[name='lastName']").val(user.lastName);
 						$("input[name='email']").val(user.email);
@@ -188,27 +189,37 @@ html, body, h1, h2, h3, h4, h5 {
 		if (sessionStorage.getItem('register') == 'true'){
 			checkIfEmailExists();
 		} else {
+			var user = JSON.parse(sessionStorage.getItem('user'));
+			var newUsername = $(" input[name='username'] ").val();
+			if (user.username != newUsername ){
 			$.ajax({
-				type : 'GET',
-				url : "http://localhost:8080/baza-podataka/service/users/exists/username/"
-						+ username,
-				crossDomain : true,
-				dataType: 'text',
-				success : function(responseData, textStatus, jqXHR) {
-					var exists = responseData;
-					if (exists == "true") {
-						openModal('modal2', "Korisnicko ime postoji, izaberite drugo!");
-					} else {
-						checkIfEmailExists();
+					type : 'GET',
+					url : "http://localhost:8080/baza-podataka/service/users/exists/username/"
+							+ username,
+					crossDomain : true,
+					dataType: 'text',
+					success : function(responseData, textStatus, jqXHR) {
+						var exists = responseData;
+						if (exists == "true") {
+							openModal('modal2', "Korisnicko ime postoji, izaberite drugo!");
+						} else {
+							checkIfEmailExists();
+						}
+					},
+					error : function(responseData, textStatus, errorThrown) {
+						alert('GET failed.');
 					}
-				},
-				error : function(responseData, textStatus, errorThrown) {
-					alert('GET failed.');
 				}
-			});
+			);
+			} else {
+				var newEmail = $(" input[name='email'] ").val();
+				if (newEmail != user.email){
+					checkIfEmailExists();
+				} else {
+					persistUserToLocal();
+				}
+			}
 		}
-
-
 	}
 </script>
 <body class="w3-white">

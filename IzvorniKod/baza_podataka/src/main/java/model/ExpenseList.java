@@ -16,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import model.time.Date;
 
 @Entity
@@ -50,9 +52,11 @@ public class ExpenseList {
 	@OneToMany(mappedBy = "expenseListOwner", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<IncomeItem> incomeItems;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn
 	private User userOwner;
+
 	
 	public ExpenseList() {
 		super();
@@ -96,6 +100,7 @@ public class ExpenseList {
 	 * KEY = month (int)
 	 * VALUE = amount (double)
 	 * 
+	 * <p>
 	 * USE: 
 	 * If you want to sum  fixed expenses, function parameter <code>fixed</code> must be true.
 	 * If you want to sum  variable expenses, function parameter <code>fixed</code> must be false.
@@ -149,9 +154,12 @@ public class ExpenseList {
 		return expenseByMonth;
 	}
 	
-	
 	public Long getId() {
 		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getName() {

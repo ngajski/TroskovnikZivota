@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import model.time.Date;
 import model.time.Period;
 
@@ -17,6 +19,7 @@ import model.time.Period;
 @Table(name = "income_items")
 public class IncomeItem extends Item {
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn
 	private ExpenseList expenseListOwner;

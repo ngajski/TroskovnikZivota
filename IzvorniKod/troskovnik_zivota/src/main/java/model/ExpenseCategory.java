@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "expense_categories")
 public class ExpenseCategory {
@@ -31,6 +33,7 @@ public class ExpenseCategory {
 	@Column
 	private boolean fixed;
 		
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn
 	private ExpenseCategory superCategory;
@@ -41,10 +44,10 @@ public class ExpenseCategory {
 	@OneToMany(mappedBy="expenseCategoryOwner", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = false)
 	private List<ExpenseItem> expenseItems;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn
 	private ExpenseList expenseListOwner;
-
 	
 	public ExpenseCategory() {
 		super();
@@ -117,6 +120,10 @@ public class ExpenseCategory {
 	public Long getId() {
 		return id;
 	}
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getName() {
 		return name;
@@ -144,9 +151,18 @@ public class ExpenseCategory {
 		return superCategory;
 	}
 
+	public void setSuperCategory(ExpenseCategory superCategory) {
+		this.superCategory = superCategory;
+	}
+	
 	public List<ExpenseCategory> getSubCategories() {
 		return subCategories;
 	}
+
+	public void setSubCategories(List<ExpenseCategory> subCategories) {
+		this.subCategories = subCategories;
+	}
+
 
 	public List<ExpenseItem> getExpenseItems() {
 		return expenseItems;
@@ -164,18 +180,11 @@ public class ExpenseCategory {
 		this.expenseListOwner = expenseListOwner;
 	}
 	
-	public void setSuperCategory(ExpenseCategory superCategory) {
-		this.superCategory = superCategory;
-	}
-
-	
-	
 	
 	@Override
 	public String toString() {
-		return this.name + " fixed: " + fixed;
+		return "ExpenseCategory [id=" + id + ", name=" + name + ", fixed=" + fixed + ", superCategory=" + superCategory
+				+ ", subCategories=" + subCategories + ", expenseItems=" + expenseItems + ", expenseListOwner="
+				+ expenseListOwner + "]";
 	}
-
-
-
 }

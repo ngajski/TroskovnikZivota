@@ -63,7 +63,7 @@ public class User {
 	 * razredu address nema nikakve notacije <br>
 	 * ---- pogledaj dolje list -----
 	 */
-	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	private Address address;
 
 	@Column(nullable = true)

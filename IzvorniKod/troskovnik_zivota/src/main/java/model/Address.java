@@ -10,6 +10,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlTransient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "addresses")
@@ -38,8 +41,23 @@ public class Address {
 	@Column(nullable = true)
 	private int houseNumber;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "address", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = false)
 	private List<User> userOwners;
+	
+	public Address() {
+		super();
+	}
+
+	public Address(Long id, String town, int postCode, String street, int houseNumber, List<User> userOwners) {
+		super();
+		this.id = id;
+		this.town = town;
+		this.postCode = postCode;
+		this.street = street;
+		this.houseNumber = houseNumber;
+		this.userOwners = userOwners;
+	}
 
 	/**
 	 * @return the userOwners

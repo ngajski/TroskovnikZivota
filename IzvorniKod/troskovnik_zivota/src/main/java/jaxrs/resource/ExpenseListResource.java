@@ -33,7 +33,7 @@ public class ExpenseListResource {
 	@GET
 	@Path("/{username}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public List<ExpenseList> getExpenseListsForUsername(@PathParam("username") String username) throws NamingException {
+	public List<ExpenseList> getExpenseListsForUsername(@PathParam("username") String username){
 		return DAOProvider.getDAO().getExpenseListsForUsername(username);
 	}
 

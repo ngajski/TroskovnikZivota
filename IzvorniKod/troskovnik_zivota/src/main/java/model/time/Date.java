@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import model.ExpenseItem;
 import model.IncomeItem;
 
@@ -29,15 +31,19 @@ public class Date {
 	@Column
 	private Integer month;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "startDate", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = false)
 	private List<ExpenseItem> startDateExpenseOwners;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "endDate", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = false)
 	private List<ExpenseItem> endDateExpenseOwners;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "startDate", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = false)
 	private List<IncomeItem> startDateIncomeOwners;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "endDate", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = false)
 	private List<IncomeItem> endDateIncomeOwners;
 	
@@ -196,4 +202,38 @@ public class Date {
 	public void setMonth(Integer month) {
 		this.month = month;
 	}
+
+	public List<ExpenseItem> getStartDateExpenseOwners() {
+		return startDateExpenseOwners;
+	}
+
+	public void setStartDateExpenseOwners(List<ExpenseItem> startDateExpenseOwners) {
+		this.startDateExpenseOwners = startDateExpenseOwners;
+	}
+
+	public List<ExpenseItem> getEndDateExpenseOwners() {
+		return endDateExpenseOwners;
+	}
+
+	public void setEndDateExpenseOwners(List<ExpenseItem> endDateExpenseOwners) {
+		this.endDateExpenseOwners = endDateExpenseOwners;
+	}
+
+	public List<IncomeItem> getStartDateIncomeOwners() {
+		return startDateIncomeOwners;
+	}
+
+	public void setStartDateIncomeOwners(List<IncomeItem> startDateIncomeOwners) {
+		this.startDateIncomeOwners = startDateIncomeOwners;
+	}
+
+	public List<IncomeItem> getEndDateIncomeOwners() {
+		return endDateIncomeOwners;
+	}
+
+	public void setEndDateIncomeOwners(List<IncomeItem> endDateIncomeOwners) {
+		this.endDateIncomeOwners = endDateIncomeOwners;
+	}
+	
+	
 }
