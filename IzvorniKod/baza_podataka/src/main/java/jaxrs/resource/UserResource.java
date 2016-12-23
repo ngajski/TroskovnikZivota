@@ -29,8 +29,16 @@ public class UserResource {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.TEXT_PLAIN })
 	public String addUser(User user) throws Exception {
-		System.out.println("Dodajem user u udaljenu: " + user);
-		DAOProvider.getDAO().addUser(user);
+		Long existingUserId = user.getId();
+		if (existingUserId != null) {
+			User existingUser = DAOProvider.getDAO().getUserByID(existingUserId);
+			existingUser.setUsername(user.getUsername());
+			existingUser.setFirstName(user.getFirstName());
+			existingUser.setLastName(user.getLastName());
+			existingUser.setEmail(user.getEmail());
+		} else {
+			DAOProvider.getDAO().addUser(user);
+		}
 		return "ok";
 	}
 

@@ -85,7 +85,7 @@ public abstract class Item {
 		this.period = period;
 	}
 
-	public boolean isFixed() {
+	public boolean getFixed() {
 		return fixed;
 	}
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Home page</title>
+<title>Prijava | Registracija</title>
 
 <style type="text/css">
 #title {
@@ -31,7 +31,11 @@
 <script src="js/general.js"></script>
 
 </head>
-
+<script type="text/javascript">
+	$(document).ready(function() {
+		validateBackButton();
+	})
+</script>
 <script type="text/javascript">
 	/* This function checks if username is unique in remote DB, if it is it will store username
 	 and password in storage (session object) and change page to register.html*/
@@ -58,6 +62,7 @@
 						sessionStorage.setItem('register', 'true');
 						sessionStorage.setItem('username', username);
 						sessionStorage.setItem('password', password);
+						removeNoBackButton();
 						changeWindowUrl('register.html');
 					}
 				},
@@ -83,6 +88,8 @@
 		};
 		
 		var json = JSON.stringify(user);
+		
+		/*We use method post for validation so we can send data in request body not URL*/
 		$.ajax({
 			type : 'POST',
 			url : "service/users/validateLogin",
@@ -95,6 +102,7 @@
 					alert("Ne točna kombinacija korisničkog imena i lozinke");
 				} else {
 					sessionStorage.setItem('username', username);
+					removeNoBackButton();
 					changeWindowUrl('home.html');
 				}
 

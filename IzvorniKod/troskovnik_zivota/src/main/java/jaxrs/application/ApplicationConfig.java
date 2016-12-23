@@ -21,4 +21,5 @@ public class ApplicationConfig extends ResourceConfig {
         property("jersey.config.server.wadl.disableWadl", true);
     	System.out.println("Finished application config");
     }
+    
 }

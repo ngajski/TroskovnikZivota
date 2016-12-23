@@ -15,6 +15,7 @@
 <script
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="js/general.js"></script>
+<script src="js/htmlescaping.js"></script>
 
 <style>
 html, body, h1, h2, h3, h4, h5 {
@@ -22,66 +23,29 @@ html, body, h1, h2, h3, h4, h5 {
 }
 </style>
 <script type="text/javascript">
-
-	$(document)
-			.ready(
-					function() {
+	$(document).ready(function() {
 						var username = sessionStorage.getItem('username');
-						if (typeof username === "undefined") {
-							alert('Nemate ovlasti biti ovdje');
-							changeWindow('index.html');
+						if (isEmpty(username)) {
+							addNoBackButton();
+							openModal('modal1', 'Nemate ovlasti biti ovdje');
 						} else {
 							$('#usernameHolder').html(username);
-							var expenseLists = getExpenseLists();
-							if (expenseLists.length == 0) {
-								$("#expenseListsTable")
-										.find('tbody')
-										.append(
-												$('<tr>')
-														.append(
-																$('<td>')
-																		.html(
-																				'Trenutno ne postoji niti jedan troškovnik u bazi podataka!')));
-							} else {
-								for (var i = 0; i < expenseLists.length; ++i) {
-									$("#expenseListsTable")
-											.find('tbody')
-											.append(
-													$('<tr>')
-															.append(
-																	$('<td>')
-																			.html(
-																					expenseLists[i].name)));
-								}
-							}
+							getExpenseLists(username, generateTableOfExpenseLists);
 						}
 					});
 
-	function getExpenseLists(username, callback) {
-		return [ {
-			name : 'Troskovnik 2017'
-		}, {
-			name : 'Troskovnik 2015'
-		}, {
-			name : 'Troskovnik 2014'
-		}, {
-			name : 'Troskovnik 2013'
-		} ];
-
-		/* Dok nebude stvarno troškovnika 
-			$
-				.ajax({
-					type : 'GET',
-					url : "service/expenseList/" + username,
-					data: 'json',
-					success : function(responseData, textStatus, jqXHR) {
-						callback(responseData);
-						}
-					},
-					error : function(responseData, textStatus, errorThrown) {
-						console.log('GET failed expense lists.');
-					}
-				});*/
+	function generateTableOfExpenseLists(expenseLists){
+		if (expenseLists.length == 0) {
+			$("#expenseListsTable")
+					.find('tbody')
+					.append($('<tr>').append($('<td>').html('Trenutno ne postoji niti jedan troškovnik u bazi podataka!')));
+		} else {
+			for (var i = 0; i < expenseLists.length; ++i) {
+				$("#expenseListsTable")
+						.find('tbody')
+						.append($('<tr>').append($('<td>').html(expenseLists[i].name)));
+			}
+		}
 	}
 </script>
 
@@ -121,10 +85,9 @@ html, body, h1, h2, h3, h4, h5 {
 						$('#' + currentLinkID).attr('class',
 								'w3-padding  w3-blue');
 					} else {
-						var currentClassName = $(this).attr('class');
-						if (currentClassName.endsWith("w3-blue")){
+						var currentLinkClassName = $('#' + currentLinkID).attr('class');
+						if (currentLinkClassName.endsWith("w3-blue")){
 							var currentFunctionName = currentDivID.substr(0, currentDivID.length - 3) + "Hide";
-							if ($(this).attr('class'))
 							$(this).hide(750, window[currentFunctionName]());
 							$('#' + currentLinkID).attr('class', 'w3-padding');
 						}
@@ -138,6 +101,7 @@ html, body, h1, h2, h3, h4, h5 {
 
 	function logout() {
 		sessionStorage.clear();
+		addNoBackButton();
 		changeWindowUrl('index.html');
 	}
 </script>
@@ -193,13 +157,9 @@ html, body, h1, h2, h3, h4, h5 {
 		});
 
 	}
-
-	function searchForExpenseLists() {
+	
+	function generateExpenseListsCheckBox(expenseLists){
 		var hookup = $("#expenseListCheckboxHookup").empty();
-
-		var expenseLists = getExpenseLists();
-		//u pravoj imp ce se zvat getExpenseLists(username, callback);
-		//u callback ces umotat ono kae od tuda pa do dolje
 		if (expenseLists.length != 0) {
 			hookup
 					.append("<h5>Troškovnici za slanje</h5>");
@@ -214,6 +174,11 @@ html, body, h1, h2, h3, h4, h5 {
 			hookup
 					.append("<label style='font-size: 20px'>Za slanje troškovnika potrebno je prvo izraditi jedan. </label>");
 		}
+	}
+
+	function searchForExpenseLists() {
+		var username = sessionStorage.getItem('username');
+		getExpenseLists(username, generateExpenseListsCheckBox);
 	}
 </script>
 <script type="text/javascript">
@@ -371,8 +336,8 @@ html, body, h1, h2, h3, h4, h5 {
 
 				<form class="w3-container w3-card-4 w3-white" id="searchContainter"
 					action="javascript:void(0);">
-					<h5>Parametar pretrage</h5> <select
-						class="w3-select w3-border w3-hover-blue w3-round"
+					<h5>Parametar pretrage</h5>
+					<select class="w3-select w3-border w3-hover-blue w3-round"
 						name="searchParametersOptions"
 						onchange="$('parameterValueLable').html(this.options[this.selectedIndex].innerHTML)">
 						<option value="username" selected>Korisničko ime</option>
@@ -381,9 +346,10 @@ html, body, h1, h2, h3, h4, h5 {
 						<option value="email">Email adresa</option>
 					</select>
 					<p>
-						<h5 id="parameterValueLable">Korisničko ime</h5> <input
-							class="w3-input w3-border w3-animate-input  w3-round" type="text"
-							style="width: 30%" id="parameterValue" required="required">
+					<h5 id="parameterValueLable">Korisničko ime</h5>
+					<input class="w3-input w3-border w3-animate-input  w3-round"
+						type="text" style="width: 30%" id="parameterValue"
+						required="required">
 					<p>
 						<button class="w3-btn w3-teal w3-round-large"
 							onclick="searchForUsers()">Pretrazi</button>
@@ -393,9 +359,8 @@ html, body, h1, h2, h3, h4, h5 {
 
 				</form>
 			</div>
-			
-			<div class="w3-container" id="generatePDFDiv"
-				style="display: none;">
+
+			<div class="w3-container" id="generatePDFDiv" style="display: none;">
 
 				<h4>Izaberi troškovnik koji želiš generirati</h4>
 
@@ -413,8 +378,27 @@ html, body, h1, h2, h3, h4, h5 {
 			</p>
 		</footer>
 		<!-- End page content -->
+
+		<div id="modal1" class="w3-modal">
+			<div class="w3-modal-content w3-card-4 w3-animate-zoom">
+				<header class="w3-container w3-red">
+					<span onclick="$('#modal1').hide(); changeWindowUrl('index.html')"
+						class="w3-closebtn w3-padding-top">&times;</span>
+					<h2>
+						Greška <i class="w3-xxlarge fa fa-exclamation-circle"></i>
+					</h2>
+				</header>
+				<div class="w3-container">
+					<h4 class="textHolder"></h4>
+				</div>
+				<div class="w3-container w3-light-grey w3-padding">
+					<button class="w3-btn w3-right w3-white w3-border"
+						onclick="$('#modal1').hide(); changeWindowUrl('index.html')">Zatvori</button>
+				</div>
+			</div>
+		</div>
 	</div>
-	
+
 	<!-- TEMPLATES -->
 	<p style="display: none" id="checkboxTemplate">
 		<input class="w3-check" type="checkbox"> <label

@@ -10,342 +10,38 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 	rel="stylesheet">
-	
-<link rel="stylesheet" type="text/css" href="css/set2.css" />	
-	
-	
-	
+
+<link rel="stylesheet" type="text/css" href="css/set2.css" />
+
+
+
 <!-- Jquery -->
 <script
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="js/general.js"></script>
 
-<style>
-
-.input--nao {
-	overflow: hidden;
-	padding-top: 1em;
-}
-
-.input__field--nao {
-	padding: 0.5em 0em 0.25em;
-	width: 100%;
-	background: transparent;
-	color: #262626;
-	font-size: 1.25em;
-	text-align: center;
-}
-
-.input__label--nao {
-	position: absolute;
-	top: 0.95em;
-	font-size: 0.85em;
-	left: 0;
-	display: block;
-	width: 100%;
-	text-align: left;
-	padding: 0em;
-	pointer-events: none;
-	-webkit-transform-origin: 0 0;
-	transform-origin: 0 0;
-	-webkit-transition: -webkit-transform 0.3s 0.1s, color 1s;
-	transition: transform 0.3s 0.1s, color 1s;
-	-webkit-transition-timing-function: cubic-bezier(0, 0.25, 0.5, 1);
-	transition-timing-function: cubic-bezier(0, 0.25, 0.5, 1);
-}
-
-.graphic--nao {
-	stroke: #92989e;
-	pointer-events: none;
-	-webkit-transition: -webkit-transform 0.7s, stroke 0.7s;
-	transition: transform 0.7s, stroke 0.7s;
-	-webkit-transition-timing-function: cubic-bezier(0, 0.25, 0.5, 1);
-	transition-timing-function: cubic-bezier(0, 0.25, 0.5, 1);
-} 
-
-.input__field--nao:focus + .input__label--nao,
-.input--filled .input__label--nao {
-	color: #333;
-	-webkit-transform: translate3d(0, -1.25em, 0) scale3d(0.75, 0.75, 1);
-	transform: translate3d(0, -1.25em, 0) scale3d(0.75, 0.75, 1);
-}
-
-.input__field--nao:focus ~ .graphic--nao,
-.input--filled .graphic--nao {
-	stroke: #333;
-	-webkit-transform: translate3d(-66.6%, 0, 0);
-	transform: translate3d(-66.6%, 0, 0);
-}
-
-
-
-
-
-html, body, h1, h2, h3, h4, h5 {
-	font-family: "Lucida Typewriter";
-}
-#posebno {
-font-family: "Lucida Typewriter";
-	font-size: 25px;
-	font-style: italic;
-	font-variant: small-caps;
-	font-weight: 100;
-	line-height: 45.1px;
-	text-align: center;
-	margin-top : 0px;
-}
-</style>
 <script type="text/javascript">
-	function getLayout() {
-		$("#newExpenseListDivision").attr("style", "display:none;");
-		$
-				.ajax({
-					type : 'GET',
-					url : "service/expenseList/defaultCategories",
-					dataType : "json",
-					success : function(responseData, textStatus, jqXHR) {
-						var defaultCategories = responseData;
-						if (defaultCategories.length == 0) {
-							$("#mojaDivizija2")
-									.html(
-											'Trenutno ne postoji niti jedna kategorija!');
-						} else {
-							
-							
-							var value = $("#input-1").val();
-							var html = "<div class='w3-animate-right'> <p id='posebno'>"
-									+ value
-									+ "</p><hr class='w3-border-grey' style='width:100%;margin-top:-30px;'>";
-							html += "<div class='w3-col s3 w3-left'><p>Kategorije troškova</p><hr class='w3-border-grey' style='margin-top:-17px;width:50%;'>";
-							
-							for (var i = 0; i < defaultCategories.length; i++) {
-								html += "<div class='w3-row s4'>";
-								html += " <div class='w3-dropdown-hover'>";
-								html += "<button class = 'w3-btn w3-light-blue' style='width:200px;'>"
-										+ defaultCategories[i].string
-										+ "</button><br><br><div class='w3-dropdown-content w3-card-4 w3-animate-zoom' style='position:absolute;top:-50px;left:220px;'><a href='#'>Auto</a> <a href='#'>Kuća</a></div></div></div>";
-							}
-
-							html+="<button class='w3-btn w3-blue' style='width:200px;' onClick='addExpenseItem()'>Dodaj kategoriju <i class='fa fa-plus'></i></button></div>";
-							html+="<div class='w3-col s6 w3-center'><p>Workspace</p><hr class='w3-border-grey' style='margin-top:-17px;width:50%;margin-left:22.5%;'><div class='w3-row s4 w3-center' id='workspaceRow'></div></div>";
-							html+="<div class='w3-col s3 w3-right-align'><p>Prihodi</p><hr class='w3-border-grey w3-right' style='margin-top:-17px;width:50%;'><div class='w3-row s4'><button class='w3-btn w3-blue' style='width:200px;float:right;position:absolute;right:0;' onClick='addExpenseItem()'>Dodaj prihod <i class='fa fa-plus'></i></button></div></div></div>";
-						
-						
-							$("#layoutContainer").append(html);
-							
-							
-							
-						}
-					},
-					error : function(responseData, textStatus, errorThrown) {
-						console.log('GET failed expense lists.');
-					}
-				});
-
+	function isValidDate(date) {
+		if (typeof date === "undefined" || date == null || date == "") {
+			return true;
+		}
+		var reg = /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g;
+		if (reg.test(date)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
-
-	/* 	function addCategory()
-	 {
-	 var html = $('#mojaDivizija3').html();
-	 html +="<button class='w3-btn w3-blue' onClick='addExpenseItem()'>Dodaj stavku <i class='fa fa-plus'></i></button>";
-	 $("#mojaDivizija3").html(html);
-	
-	 }
-	 */
-	function addExpenseItem() {
-		var itemHolder = $("#expenseItemHolder");
-		var item = $("#expenseItem");
-		var cloned = item.clone().removeAttr("style").removeAttr("id");
-		cloned.css("margin-top", "10px");
-		$("#workspaceRow").prepend(cloned);
-
+	function validate() {
+		var dateOfBirth = $("input[name='dateOfBirth']").val();
+		$('p').html(isValidDate(dateOfBirth));
 	}
 </script>
-
-
-<body class="w3-light-grey">
-
-	<div class="w3-container" id="newExpenseListDivision">
-		<div class="w3-display-middle">
-			<h1 class="w3-jumbo w3-animate-top" style="text-align: center;">Ime
-				troškovnika</h1>
-			<hr class="w3-border-grey" style="margin: auto; width: 40%">
-			<br>
-
-			
-			
-			<span class="input input--nao">
-					<input class="input__field input__field--nao" type="text" id="input-1" />
-					<svg class="graphic graphic--nao" width="300%" height="100%" viewBox="0 0 1200 60" preserveAspectRatio="none">
-						<path d="M0,56.5c0,0,298.666,0,399.333,0C448.336,56.5,513.994,46,597,46c77.327,0,135,10.5,200.999,10.5c95.996,0,402.001,0,402.001,0"/>
-					</svg> 
-				</span>
-			
-			
-			 <!-- <input class="w3-input w3-animate-input"
-				id="inputExpenseListNameID" type="text" style="width: 175px; text-align: center; background-color: AliceBlue; outline:none;">
-			 -->
-			
-			
-			
-			
-			
-			<br> <br>
-			<button
-				class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
-				style="margin-left: 42.5%;" onClick="getLayout()">Dalje</button>
-		</div>
-
-	</div>
-
-	<div class="w3-container" id="layoutContainer"></div>
-
-	<!--  
-	<div class="w3-container">
-		<form class="w3-container">
-			<div class="w3-row">
-				<div class="w3-col s3">
-					<h4 style="margin-top: 3px">Ime troškovnika</h4>
-				</div>
-				<div class="w3-col s9 w3-center">
-					<input class="w3-input w3-border w3-animate-input" type="text"
-						style="width: 30%">
-				</div>
-			</div>
-		</form>
-
-		<div class="w3-container" id="fixedRadioBtnGroup">
-			<h4>Fiksnost</h4>
-			<p>
-				<input class="w3-radio" type="radio" name="gender" value="yes">
-				<label class="w3-validate">Da</label>
-			</p>
-			<p>
-				<input class="w3-radio" type="radio" name="gender" value="no"
-					checked> <label class="w3-validate">Ne</label>
-			</p>
-		</div>
-
-		<button class="w3-btn w3-blue" onClick="addExpenseItem()">
-			Dodaj prihod <i class="fa fa-plus"></i>
-		</button>
-		
-		<button class="w3-btn w3-blue" onClick="chooseExpenseCategory()">
-			Izaberi kategoriju troška<i class="fa fa-plus"></i>
-		</button>
-		
-		<div class="w-container" id="mojaDivizija3">
-		</div>-->
-		
-		
-		<div class="w-container" id="expenseItemHolder">
-	
-		</div>
-		
-		
-		<div class="w3-container w3-card" id = "expenseItem" style="display:none;">
-			<h3>Stavka troška</h3>
-
-			<div class="w3.container">
-				<form class="w3-container">
-					<div class="w3-row">
-						<div class="w3-col s3">
-							<h4 style="margin-top: 3px">Ime stavke</h4>
-						</div>
-						<div class="w3-col s9 w3-center">
-							<input class="w3-input w3-border w3-animate-input" type="text"
-								style="width: 30%">
-						</div>
-					</div>
-				</form>
-				<form class="w3-container">
-					<div class="w3-row">
-						<div class="w3-col s3">
-							<h4 style="margin-top: 15px">Vrijednost</h4>
-						</div>
-						<div class="w3-col s9 w3-center" style="margin-top: 15px">
-							<input class="w3-input w3-border w3-animate-input" type="text"
-								style="width: 30%">
-						</div>
-					</div>
-				</form>
-
-				<form class="w3-container">
-					<div class="w3-row">
-						<div class="w3-col s3">
-							<h4 style="margin-top: 15px">Komentar</h4>
-						</div>
-						<div class="w3-col s9 w3-center" style="margin-top: 15px">
-							<input class="w3-input w3-border w3-animate-input" type="text"
-								style="width: 30%">
-						</div>
-					</div>
-				</form>
-
-
-				<form class="w3-container">
-					<div class="w3-row">
-						<div class="w3-col s3">
-							<h4 style="margin-top: 15px">Period</h4>
-						</div>
-						<div class="w3-col s9 w3-center">
-								<select class="w3-select w3-border" name="option"
-					style="margin-top: 20px">
-					<option value="1">Jednokračno</option>
-					<option value="2">Jednom mjesečno</option>
-					<option value="3">Jednom godišnje</option>
-				</select>				
-						</div>
-					</div>
-				</form>
-				
-				<form class="w3-container">
-					<div class="w3-row">
-						<div class="w3-col s3"><h4 style="margin-top: 15px">Fiksnost</h4></div>
-					
-						<div class="w3-col s9 w3-center">
-							<p>
-								<input class="w3-radio" type="radio" name="gender" value="yes">
-								<label class="w3-validate">Da</label></p>
-							<p>
-								<input class="w3-radio" type="radio" name="gender" value="no"
-								checked> <label class="w3-validate">Ne</label></p>
-						</div>
-						</div>
-				</form>
-				
-				
-				
-			</div>
-		<br>
-		<br>
-		</div>
-	
-
-	<script>
-		// Get the Sidenav
-		var mySidenav = document.getElementById("mySidenav");
-
-		// Get the DIV with overlay effect
-		var overlayBg = document.getElementById("myOverlay");
-
-		// Toggle between showing and hiding the sidenav, and add overlay effect
-		function w3_open() {
-			if (mySidenav.style.display === 'block') {
-				mySidenav.style.display = 'none';
-				overlayBg.style.display = "none";
-			} else {
-				mySidenav.style.display = 'block';
-				overlayBg.style.display = "block";
-			}
-		}
-
-		// Close the sidenav with the close button
-		function w3_close() {
-			mySidenav.style.display = "none";
-			overlayBg.style.display = "none";
-		}
-	</script>
+<body>
+	<input class="w3-input w3-border w3-round" name="dateOfBirth"
+		type="text" placeholder="Datum rođenja">
+	<button onclick="validate()">Click me</button>
+	<p>
 </body>
 </html>

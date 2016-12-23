@@ -1,6 +1,5 @@
 package model;
 
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,12 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "users")
@@ -40,55 +36,58 @@ public class User {
 	private String password;
 
 	/**
-	 * password
+	 * Firts name.
 	 */
 	@Column(nullable = false)
 	private String firstName;
 
 	/**
-	 * password
+	 * Last name.
 	 */
 	@Column(nullable = false)
 	private String lastName;
 
+	/**
+	 * OIB
+	 */
 	@Column(nullable = true)
 	private String oib;
 
-	@Temporal(TemporalType.TIMESTAMP)
+	/**
+	 * Date of birth in format dd/mm/yyyy.
+	 */
 	@Column(nullable = true)
-	private Date dateOfBirth;
+	private String dateOfBirth;
 
 	/**
-	 * ovdje ne pise mappedBy pa je ovaj razred sadrzi FK na address, ni u
-	 * razredu address nema nikakve notacije <br>
-	 * ---- pogledaj dolje list -----
+	 * Address.
 	 */
-	@ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	private Address address;
 
+	/**
+	 * Telefon.
+	 */
 	@Column(nullable = true)
 	private String telefon;
 
 	/**
-	 * password
+	 * Email.
 	 */
 	@Column(nullable = false)
 	private String email;
 
 	/**
-	 * KADA VIDIS ATTR mappedBy to znaci da se razredu koji je el liste(razred
-	 * A) nalazi FK na ovaj razred i zato se dodatno razredu A pise clanska
-	 * varijabla tipa ovaj razred na kojem pise ManyToOne (tak se realizira list
-	 * s jpa)
+	 * List of {@linkplain ExpenseList}s that belong to this User.
 	 */
-	@OneToMany(mappedBy = "userOwner", fetch = FetchType.LAZY, cascade=CascadeType.PERSIST, orphanRemoval = true)
+	@OneToMany(mappedBy = "userOwner", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<ExpenseList> expenseLists;
 
 	public User() {
 		super();
 	}
 
-	public User(String username, String password, String firstName, String lastName, String oib, Date dateOfBirth,
+	public User(String username, String password, String firstName, String lastName, String oib, String dateOfBirth,
 			Address address, String telefon, String email) {
 		super();
 		this.username = username;
@@ -150,24 +149,20 @@ public class User {
 		this.oib = oib;
 	}
 
-	public void setAddress(Address address) {
-		this.address = address;
-	}
-
-	public Date getDateOfBirth() {
-		return dateOfBirth;
-	}
-
-	public void setDateOfBirth(Date dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
-	}
-
 	public Address getAddress() {
 		return address;
 	}
 
-	public void setAdress(Address address) {
+	public void setAddress(Address address) {
 		this.address = address;
+	}
+
+	public String getDateOfBirth() {
+		return dateOfBirth;
+	}
+
+	public void setDateOfBirth(String dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
 	}
 
 	public String getTelefon() {
@@ -199,9 +194,9 @@ public class User {
 		return "User [username=" + username + ", password=" + password + ", firstName=" + firstName + ", lastName="
 				+ lastName + "]";
 	}
-	
-	public void addExpenseList(ExpenseList expenseList){
-		if (expenseLists == null){
+
+	public void addExpenseList(ExpenseList expenseList) {
+		if (expenseLists == null) {
 			expenseLists = new LinkedList<>();
 		}
 		expenseLists.add(expenseList);

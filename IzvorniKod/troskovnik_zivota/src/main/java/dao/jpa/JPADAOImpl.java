@@ -27,10 +27,9 @@ public class JPADAOImpl implements DAO {
 	}
 	
 	@Override
-	public void addExpenseList(ExpenseList expenseList) {
-		EntityManager em = JPAEMProvider.getEntityManager();
-		System.out.println("addExpenseList:  " + Thread.currentThread());
-		em.persist(expenseList);
+	public User getUserByID(Long id) throws DAOException {
+		User user = JPAEMProvider.getEntityManager().find(User.class, id);
+		return user;
 	}
 
 	@Override
@@ -59,6 +58,13 @@ public class JPADAOImpl implements DAO {
 	}
 
 	@Override
+	public void addExpenseList(ExpenseList expenseList) {
+		EntityManager em = JPAEMProvider.getEntityManager();
+		System.out.println("addExpenseList:  " + Thread.currentThread());
+		em.persist(expenseList);
+	}
+	
+	@Override
 	public List<ExpenseList> getExpenseListsForUsername(String username) {
 		User user = getUserByUsername(username);
 		if (user == null){
@@ -67,5 +73,9 @@ public class JPADAOImpl implements DAO {
 			return user.getExpenseLists();
 		}
 	}
+
+
+
+
 
 }

@@ -35,22 +35,10 @@ public class ExpenseList {
 	@Column(nullable = false, unique = true)
 	private String name;
 	
-	/**
-	 * KADA VIDIS ATTR mappedBy to znaci da se razredu koji je el liste(razred
-	 * A) nalazi FK na ovaj razred i zato se dodatno u razredu A (u ovom sadu
-	 * slucaju u nadrazredu Item) pise clanska varijabla tipa ovaj razred na
-	 * kojem pise ManyToOne (tak se realizira list s jpa)
-	 */
-	@OneToMany(mappedBy = "expenseListOwner", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+	@OneToMany(mappedBy = "expenseListOwner", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<ExpenseCategory> expenseCategories;
 
-	/**
-	 * KADA VIDIS ATTR mappedBy to znaci da se razredu koji je el liste(razred
-	 * A) nalazi FK na ovaj razred i zato se dodatno u razredu A (u ovom sadu
-	 * slucaju u nadrazredu Item) pise clanska varijabla tipa ovaj razred na
-	 * kojem pise ManyToOne (tak se realizira list s jpa)
-	 */
-	@OneToMany(mappedBy = "expenseListOwner", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+	@OneToMany(mappedBy = "expenseListOwner", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<IncomeItem> incomeItems;
 
 	@JsonIgnore
@@ -143,7 +131,7 @@ public class ExpenseList {
 			for (ExpenseItem item : items) {
 				
 				if (fixed != null) {
-					if (item.isFixed() != fixed) {
+					if (item.getFixed() != fixed) {
 						continue;
 					}
 				}
@@ -258,10 +246,7 @@ public class ExpenseList {
 	@Override
 	public String toString() {
 		return "ExpenseList [id=" + id + ", name=" + name + ", expenseCategories=" + expenseCategories
-				+ ", incomeItems=" + incomeItems + ", userOwner=" + userOwner + "]";
+				+ ", incomeItems=" + incomeItems + "]";
 	}
-
-
-
 	
 }

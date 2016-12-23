@@ -38,10 +38,10 @@ public class ExpenseCategory {
 	@JoinColumn
 	private ExpenseCategory superCategory;
 	
-	@OneToMany(mappedBy="superCategory", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = false)
+	@OneToMany(mappedBy="superCategory", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = false)
 	private List<ExpenseCategory> subCategories;
 
-	@OneToMany(mappedBy="expenseCategoryOwner", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = false)
+	@OneToMany(mappedBy="expenseCategoryOwner", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = false)
 	private List<ExpenseItem> expenseItems;
 	
 	@JsonIgnore
@@ -133,7 +133,7 @@ public class ExpenseCategory {
 		this.name = name;
 	}
 
-	public boolean isFixed() {
+	public boolean getFixed() {
 		return fixed;
 	}
 

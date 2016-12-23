@@ -26,10 +26,10 @@ public class ExpenseItem extends Item {
 	@JoinColumn
 	private ExpenseCategory expenseCategoryOwner;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	private Date startDate;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	private Date endDate;
 	
 	public ExpenseItem() {
@@ -49,6 +49,9 @@ public class ExpenseItem extends Item {
 		}
 	}
 	
+	public ExpenseItem(Long id, String name, Date startDate, Date endDate, Period period, String comment, boolean fixed) {
+		this(id, name, startDate, endDate, new ArrayList<>(), period, fixed, comment, null);
+	}
 
 
 
@@ -61,7 +64,7 @@ public class ExpenseItem extends Item {
 	 * @return is it fixed
 	 */
 	public boolean checkOwnerCategory(boolean fixed) {
-		if (expenseCategoryOwner != null && expenseCategoryOwner.isFixed()) {
+		if (expenseCategoryOwner != null && expenseCategoryOwner.getFixed()) {
 			return true;
 		} else {
 			return fixed;

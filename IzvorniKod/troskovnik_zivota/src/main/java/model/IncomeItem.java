@@ -25,10 +25,10 @@ public class IncomeItem extends Item {
 	@JoinColumn
 	private ExpenseList expenseListOwner;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	private Date startDate;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	private Date endDate;
 	
 	@Column

@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,22 +35,10 @@ public class ExpenseList {
 	@Column(nullable = false, unique = true)
 	private String name;
 	
-	/**
-	 * KADA VIDIS ATTR mappedBy to znaci da se razredu koji je el liste(razred
-	 * A) nalazi FK na ovaj razred i zato se dodatno u razredu A (u ovom sadu
-	 * slucaju u nadrazredu Item) pise clanska varijabla tipa ovaj razred na
-	 * kojem pise ManyToOne (tak se realizira list s jpa)
-	 */
-	@OneToMany(mappedBy = "expenseListOwner", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+	@OneToMany(mappedBy = "expenseListOwner", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<ExpenseCategory> expenseCategories;
 
-	/**
-	 * KADA VIDIS ATTR mappedBy to znaci da se razredu koji je el liste(razred
-	 * A) nalazi FK na ovaj razred i zato se dodatno u razredu A (u ovom sadu
-	 * slucaju u nadrazredu Item) pise clanska varijabla tipa ovaj razred na
-	 * kojem pise ManyToOne (tak se realizira list s jpa)
-	 */
-	@OneToMany(mappedBy = "expenseListOwner", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+	@OneToMany(mappedBy = "expenseListOwner", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<IncomeItem> incomeItems;
 
 	@JsonIgnore
@@ -57,7 +46,6 @@ public class ExpenseList {
 	@JoinColumn
 	private User userOwner;
 
-	
 	public ExpenseList() {
 		super();
 	}
@@ -96,7 +84,21 @@ public class ExpenseList {
 	}
 	
 	/**
+	 * Adds new category to this {@link ExpenseList}, and sets this to be
+	 * the owner of given {@link ExpenseCategory}.
+	 * 
+	 * @param category {@link ExpenseCategory}
+	 */
+	public void addNewIncomeItem(IncomeItem item) {
+		if (item != null) {
+			item.setExpenseListOwner(this);
+			incomeItems.add(item);
+		}
+	}
+	
+	/**
 	 * Returns map of all months and their summed expenses. 
+	 * 
 	 * KEY = month (int)
 	 * VALUE = amount (double)
 	 * 
@@ -110,7 +112,7 @@ public class ExpenseList {
 	 * @param stopDate
 	 * @param expenseByMonth MUST be new {@link HashMap}.
 	 * @param categories
-	 * @param fixed true or false
+	 * @param fixed true, false, or null
 	 * @return
 	 */
 	public Map<Date,Double> findExpenseAmount(Date startDate, Date stopDate,Map<Date,Double> expenseByMonth,
@@ -154,6 +156,52 @@ public class ExpenseList {
 		return expenseByMonth;
 	}
 	
+	/**
+	 * Returns map of all months and their summed incomes. 
+	 * 
+	 * KEY = month (int)
+	 * VALUE = amount (double)
+	 * 
+	 * USE: 
+	 * If you want to sum  salary incomes, function parameter <code>salary</code> must be true.
+	 * If you want to sum  other incomes, function parameter <code>salary</code> must be false.
+	 * If you want to sum  all incomes, function parameter <code>salary</code> must be null.
+	 *
+	 * @param startDate
+	 * @param stopDate
+	 * @param salary true,false or null
+	 * @return
+	 */
+	public Map<Date, Double> findIncomeAmount(Date startDate, Date stopDate, Boolean sallary) {
+		Map<Date, Double> incomeByMonth = new LinkedHashMap<>();
+
+		for (IncomeItem item : incomeItems) {
+
+			if (sallary != null) {
+				if (item.isSallary() != sallary) {
+					continue;
+				}
+			}
+
+			int payingMonths = startDate.difference(stopDate) + 1;
+
+			Date date = new Date(startDate);
+			for (Integer monthNumber = 0; monthNumber < payingMonths; monthNumber = monthNumber + 1) {
+				Double oldExpense = incomeByMonth.get(date);
+				if (oldExpense == null) {
+					oldExpense = new Double(0.0);
+				}
+
+				Double expense = item.getIncomeForDate(date);
+				incomeByMonth.put(new Date(date), oldExpense + expense);
+				date.nextMonth();
+
+			}
+		}
+		return incomeByMonth;
+	}
+	
+	
 	public Long getId() {
 		return id;
 	}
@@ -190,17 +238,15 @@ public class ExpenseList {
 		return userOwner;
 	}
 	
+	public void setUserOwner(User user) {
+		this.userOwner = user;
+	}
 	
 
 	@Override
 	public String toString() {
 		return "ExpenseList [id=" + id + ", name=" + name + ", expenseCategories=" + expenseCategories
-				+ ", incomeItems=" + incomeItems + ", userOwner=" + userOwner + "]";
+				+ ", incomeItems=" + incomeItems + "]";
 	}
-
-	public void setUserOwner(User user) {
-		this.userOwner = user;
-	}
-
 	
 }

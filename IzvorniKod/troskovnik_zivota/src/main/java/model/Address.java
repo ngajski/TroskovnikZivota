@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlTransient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -26,9 +25,6 @@ public class Address {
 	@Column
 	private Long id;
 
-	/**
-	 * text of blog entry
-	 */
 	@Column(nullable = true, length = 30)
 	private String town;
 
@@ -44,7 +40,7 @@ public class Address {
 	@JsonIgnore
 	@OneToMany(mappedBy = "address", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = false)
 	private List<User> userOwners;
-	
+
 	public Address() {
 		super();
 	}
@@ -116,9 +112,8 @@ public class Address {
 
 	@Override
 	public String toString() {
-		return "Address [town=" + town + ", postCode=" + postCode + ", street=" + street
-				+ ", houseNumber=" + houseNumber + ", userOwners=" + userOwners + "]";
+		return "Address [town=" + town + ", postCode=" + postCode + ", street=" + street + ", houseNumber="
+				+ houseNumber + "]";
 	}
 
-	
 }

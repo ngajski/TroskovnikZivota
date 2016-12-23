@@ -23,6 +23,12 @@ public class JPADAOImpl implements DAO {
 		EntityManager em = JPAEMProvider.getEntityManager();
 		em.persist(user);
 	}
+	
+	@Override
+	public User getUserByID(Long id) throws DAOException {
+		User user = JPAEMProvider.getEntityManager().find(User.class, id);
+		return user;
+	}
 
 	@Override
 	public User getUserByUsername(String username) throws DAOException {

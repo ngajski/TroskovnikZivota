@@ -24,6 +24,18 @@ public interface DAO {
 	public void addUser(User user) throws DAOException;
 
 	/**
+	 * Method which returns {@linkplain User} with given <code>id</code>. If
+	 * such user does not exists method returns <code> null</code>.
+	 * 
+	 * @param id
+	 *            user's id
+	 * @return user with given id, or null if such does not exist
+	 * @throws DAOException
+	 *             if error occurs during process of data obtaining
+	 */
+	public User getUserByID(Long id) throws DAOException;
+
+	/**
 	 * Method which returns {@linkplain User} with given <code>email</code>. If
 	 * such user does not exists method returns <code> null</code>.
 	 * 
@@ -40,10 +52,10 @@ public interface DAO {
 	 * If such user does not exists method returns <code> null</code>.
 	 * 
 	 * @param username
-	 *            username
-	 * @return user with given email, or null if such does not exist
-	 * @throws DAOExceptionif
-	 *             error occurs during process of data obtaining
+	 *            user's username
+	 * @return user with given username, or null if such does not exist
+	 * @throws DAOException
+	 *             if error occurs during process of data obtaining
 	 */
 	public User getUserByUsername(String username) throws DAOException;
 
