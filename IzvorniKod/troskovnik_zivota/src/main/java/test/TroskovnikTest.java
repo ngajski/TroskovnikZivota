@@ -9,12 +9,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+import dao.DAOException;
 import model.ExpenseCategory;
 import model.ExpenseItem;
 import model.ExpenseList;
@@ -28,24 +33,24 @@ public class TroskovnikTest {
 	private static User user = new User("nikola", "nikola", "Nikola", "Gajski", "12345", null, null, null,
 			"nikola.gajski@fer.hr");
 	
-	private static ExpenseList expenseList = new ExpenseList(new Long(12345),"Troškovnik 2015",user);
+	private static ExpenseList expenseList = new ExpenseList("Troškovnik 2015",user);
 	
 	// troškovi
-	private static ExpenseCategory nekretnine = new ExpenseCategory(new Long(1), "nekretnine",false, expenseList);
-	private static ExpenseCategory pokretnine = new ExpenseCategory(new Long(2), "pokretnine",false, expenseList);
+	private static ExpenseCategory nekretnine = new ExpenseCategory("nekretnine",false, expenseList);
+	private static ExpenseCategory pokretnine = new ExpenseCategory("pokretnine",false, expenseList);
 	
-	private static ExpenseCategory rezije = new ExpenseCategory(new Long(3), "rezije",false, expenseList);
-	private static ExpenseCategory hrana = new ExpenseCategory(new Long(4), "hrana",false, expenseList);
+	private static ExpenseCategory rezije = new ExpenseCategory("rezije",false, expenseList);
+	private static ExpenseCategory hrana = new ExpenseCategory("hrana",false, expenseList);
 	
-	private static ExpenseItem struja = new ExpenseItem(new Long(1),"struja", 
+	private static ExpenseItem struja = new ExpenseItem("struja", 
 			new Date(2016,3), new Date(2017,3),Period.MONTHLY,"Režije struja",false);
-	private static ExpenseItem voda = new ExpenseItem(new Long(2),"voda", 
+	private static ExpenseItem voda = new ExpenseItem("voda", 
 			new Date(2016, 3), new Date(2017, 3),Period.QUARTARLY,"Režije voda",false);
-	private static ExpenseItem kruh = new ExpenseItem(new Long(3),"kruh", 
+	private static ExpenseItem kruh = new ExpenseItem("kruh", 
 			new Date(2016, 3), new Date(2017, 3),Period.MONTHLY,"Hrana kruh",false);
-	private static ExpenseItem bojler = new ExpenseItem(new Long(4),"bojler", 
+	private static ExpenseItem bojler = new ExpenseItem("bojler", 
 			new Date(2016,3), new Date(2017, 3),Period.ONE_TIME,"Režije bojler",false);
-	private static ExpenseItem auto = new ExpenseItem(new Long(4),"auto", 
+	private static ExpenseItem auto = new ExpenseItem("auto", 
 			new Date(2016, 3), new Date(2017, 3),Period.MONTHLY,"Troškovi auta",true);
 	
 	private static List<Double> troskoviStruja = Arrays.asList(
@@ -65,13 +70,13 @@ public class TroskovnikTest {
 	
 	
 	// prihodi
-	private static IncomeItem placa = new IncomeItem(new Long(1), "placa", new Date(2016, 3), new Date(2017, 3), null,
+	private static IncomeItem placa = new IncomeItem( "placa", new Date(2016, 3), new Date(2017, 3), null,
 			Period.MONTHLY, true, "prihod od place", expenseList);
-	private static IncomeItem ostaliPrihod = new IncomeItem(new Long(2), "ostali", new Date(2016, 1), new Date(2016, 12), null,
+	private static IncomeItem ostaliPrihod = new IncomeItem("ostali", new Date(2016, 1), new Date(2016, 12), null,
 			Period.QUARTARLY, false, "prihod sa strane", expenseList);
-	private static IncomeItem mobPrihod = new IncomeItem(new Long(3), "mob", new Date(2016, 5), new Date(2016, 12), null,
+	private static IncomeItem mobPrihod = new IncomeItem("mob", new Date(2016, 5), new Date(2016, 12), null,
 			Period.ONE_TIME, false, "prihod sa strane", expenseList);
-	private static IncomeItem bubPrihod = new IncomeItem(new Long(4), "bubreg", new Date(2016, 6), new Date(2016, 12), null,
+	private static IncomeItem bubPrihod = new IncomeItem("bubreg", new Date(2016, 6), new Date(2016, 12), null,
 			Period.ONE_TIME, false, "prihod sa strane", expenseList);
 	
 	private static List<Double> prihodiOstali = Arrays.asList(
@@ -124,146 +129,195 @@ public class TroskovnikTest {
 		pokretnine.addExpenseItem(auto);
 		auto.setAmounts(troskoviAuto);
 		
-		// Graf 1
-		Map<Date, Double> salaryIncomes = expenseList.findIncomeAmount(new Date(2016, 3),
-				new Date(2017,3), true);
-		Map<Date, Double> otherIncomes = expenseList.findIncomeAmount(new Date(2016, 3),
-				new Date(2017, 3), false);
-		Map<Date, Double> allIncomes = expenseList.findIncomeAmount(new Date(2016, 3),
-				new Date(2017,3), null);
+//		// Graf 1
+//		Map<Date, Double> salaryIncomes = expenseList.findIncomeAmount(new Date(2016, 3),
+//				new Date(2017,3), true);
+//		Map<Date, Double> otherIncomes = expenseList.findIncomeAmount(new Date(2016, 3),
+//				new Date(2017, 3), false);
+//		Map<Date, Double> allIncomes = expenseList.findIncomeAmount(new Date(2016, 3),
+//				new Date(2017,3), null);
+//		
+//		System.out.println(salaryIncomes);
+//		System.out.println(otherIncomes);
+//		System.out.println(allIncomes);
+//		
+//		DefaultCategoryDataset graph1DataSet = new DefaultCategoryDataset();
+//		
+//		for (Map.Entry<Date, Double> entry : salaryIncomes.entrySet()) {
+//			Date date = entry.getKey();
+//			Double value = entry.getValue();
+//			String month = Date.getMonthName(date.getMonth());
+//			String xAxis = date.getYear() + "-" + month;
+//			graph1DataSet.addValue(value, "salary", xAxis);			
+//		}
+//		
+//		for (Map.Entry<Date, Double> entry : otherIncomes.entrySet()) {
+//			Date date = entry.getKey();
+//			Double value = entry.getValue();
+//			String month = Date.getMonthName(date.getMonth());
+//			String xAxis = date.getYear() + "-" + month;
+//			graph1DataSet.addValue(value, "other income", xAxis);			
+//		}
+//		
+//		for (Map.Entry<Date, Double> entry : allIncomes.entrySet()) {
+//			Date date = entry.getKey();
+//			Double value = entry.getValue();
+//			String month = Date.getMonthName(date.getMonth());
+//			String xAxis = date.getYear() + "-" + month;
+//			graph1DataSet.addValue(value, "all incomes", xAxis);			
+//		}
+//
+//		
+//		JFreeChart graph1 = ChartFactory.createLineChart("Prihodi", "Vrijeme", "Prihod",
+//				graph1DataSet, PlotOrientation.VERTICAL, true, true, false);
+//
+//		int width = 1140; /* Width of the image */
+//		int height = 480; /* Height of the image */
+//		File lineChart = new File("Graf1_prihod.jpeg");
+//		
+//		try {
+//			ChartUtilities.saveChartAsJPEG(lineChart, graph1, width, height);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		
+//		// Graf 1 kraj
+//		
+//		
+//		// Graf 2
+//		Map<Date, Double> fixedExpense = expenseList.findExpenseAmount(new Date(2016, 3),
+//				new Date(2017, 3), new LinkedHashMap<>(), expenseList.getExpenseCategories(), true);
+//		Map<Date, Double> variableExpense = expenseList.findExpenseAmount(new Date(2016,3),
+//				new Date(2017, 3), new LinkedHashMap<>(), expenseList.getExpenseCategories(), false);
+//		Map<Date, Double> allExpenses = expenseList.findExpenseAmount(new Date(2016,3),
+//				new Date(2017, 3), new LinkedHashMap<>(), expenseList.getExpenseCategories(), null);
+//		
+//		System.out.println(fixedExpense);
+//		System.out.println(variableExpense);
+//		System.out.println(allExpenses);
+//		
+//		DefaultCategoryDataset graf2DataSet = new DefaultCategoryDataset();
+//		
+//		for (Map.Entry<Date, Double> entry : fixedExpense.entrySet()) {
+//			Date date = entry.getKey();
+//			Double value = entry.getValue();
+//			String month = Date.getMonthName(date.getMonth());
+//			String xAxis = date.getYear() + "-" + month;
+//			graf2DataSet.addValue(value, "fixed expenses", xAxis);			
+//		}
+//		
+//		for (Map.Entry<Date, Double> entry : variableExpense.entrySet()) {
+//			Date date = entry.getKey();
+//			Double value = entry.getValue();
+//			String month = Date.getMonthName(date.getMonth());
+//			String xAxis = date.getYear() + "-" + month;
+//			graf2DataSet.addValue(value, "variable expenses", xAxis);			
+//		}
+//		
+//		for (Map.Entry<Date, Double> entry : allExpenses.entrySet()) {
+//			Date date = entry.getKey();
+//			Double value = entry.getValue();
+//			String month = Date.getMonthName(date.getMonth());
+//			String xAxis = date.getYear() + "-" + month;
+//			graf2DataSet.addValue(value, "all expenses", xAxis);			
+//		}
+//
+//		
+//		JFreeChart lineChartObject = ChartFactory.createLineChart("Troškovi", "Vrijeme", "Trošak",
+//				graf2DataSet, PlotOrientation.VERTICAL, true, true, false);
+//
+//		width = 1140; /* Width of the image */
+//		height = 480; /* Height of the image */
+//		File lineChart2 = new File("Graf2_trošak.jpeg");
+//		
+//		try {
+//			ChartUtilities.saveChartAsJPEG(lineChart2, lineChartObject, width, height);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		// Graf 3 
+//		
+//		DefaultCategoryDataset grap3DataSet = new DefaultCategoryDataset();
+//		
+//		for (Map.Entry<Date, Double> entry : allIncomes.entrySet()) {
+//			Date date = entry.getKey();
+//			Double value = entry.getValue();
+//			String month = Date.getMonthName(date.getMonth());
+//			String xAxis = date.getYear() + "-" + month;
+//			grap3DataSet.addValue(value, "income", xAxis);			
+//		}
+//		
+//		for (Map.Entry<Date, Double> entry : allExpenses.entrySet()) {
+//			Date date = entry.getKey();
+//			Double value = entry.getValue();
+//			String month = Date.getMonthName(date.getMonth());
+//			String xAxis = date.getYear() + "-" + month;
+//			grap3DataSet.addValue(value, "expense", xAxis);			
+//		}
+//
+//		
+//		JFreeChart graph3 = ChartFactory.createLineChart("Ukupno", "Vrijeme", "Novac",
+//				grap3DataSet, PlotOrientation.VERTICAL, true, true, false);
+//
+//		File lineChart3 = new File("Graf3_ukupno.jpeg");
+//		
+//		try {
+//			ChartUtilities.saveChartAsJPEG(lineChart3, graph3, width, height);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+	
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("baza.podataka.lokalna");
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
 		
-		System.out.println(salaryIncomes);
-		System.out.println(otherIncomes);
-		System.out.println(allIncomes);
+		em.persist(user);
 		
-		DefaultCategoryDataset graph1DataSet = new DefaultCategoryDataset();
-		
-		for (Map.Entry<Date, Double> entry : salaryIncomes.entrySet()) {
-			Date date = entry.getKey();
-			Double value = entry.getValue();
-			String month = Date.getMonthName(date.getMonth());
-			String xAxis = date.getYear() + "-" + month;
-			graph1DataSet.addValue(value, "salary", xAxis);			
+		DAOException dex = null;
+		try {
+			em.getTransaction().commit();
+		} catch (Exception ex) {
+			dex = new DAOException("Unable to commit transaction.", ex);
 		}
-		
-		for (Map.Entry<Date, Double> entry : otherIncomes.entrySet()) {
-			Date date = entry.getKey();
-			Double value = entry.getValue();
-			String month = Date.getMonthName(date.getMonth());
-			String xAxis = date.getYear() + "-" + month;
-			graph1DataSet.addValue(value, "other income", xAxis);			
-		}
-		
-		for (Map.Entry<Date, Double> entry : allIncomes.entrySet()) {
-			Date date = entry.getKey();
-			Double value = entry.getValue();
-			String month = Date.getMonthName(date.getMonth());
-			String xAxis = date.getYear() + "-" + month;
-			graph1DataSet.addValue(value, "all incomes", xAxis);			
-		}
-
-		
-		JFreeChart graph1 = ChartFactory.createLineChart("Prihodi", "Vrijeme", "Prihod",
-				graph1DataSet, PlotOrientation.VERTICAL, true, true, false);
-
-		int width = 1140; /* Width of the image */
-		int height = 480; /* Height of the image */
-		File lineChart = new File("Graf1_prihod.jpeg");
 		
 		try {
-			ChartUtilities.saveChartAsJPEG(lineChart, graph1, width, height);
-		} catch (IOException e) {
-			e.printStackTrace();
+			em.close();
+		} catch (Exception ex) {
+			if (dex != null) {
+				dex = new DAOException("Unable to close entity manager.", ex);
+			}
+		}
+		if (dex != null) {
+			throw dex;
 		}
 		
+		System.out.println("Dao user uspjesno");
 		
-		// Graf 1 kraj
-		
-		
-		// Graf 2
-		Map<Date, Double> fixedExpense = expenseList.findExpenseAmount(new Date(2016, 3),
-				new Date(2017, 3), new LinkedHashMap<>(), expenseList.getExpenseCategories(), true);
-		Map<Date, Double> variableExpense = expenseList.findExpenseAmount(new Date(2016,3),
-				new Date(2017, 3), new LinkedHashMap<>(), expenseList.getExpenseCategories(), false);
-		Map<Date, Double> allExpenses = expenseList.findExpenseAmount(new Date(2016,3),
-				new Date(2017, 3), new LinkedHashMap<>(), expenseList.getExpenseCategories(), null);
-		
-		System.out.println(fixedExpense);
-		System.out.println(variableExpense);
-		System.out.println(allExpenses);
-		
-		DefaultCategoryDataset graf2DataSet = new DefaultCategoryDataset();
-		
-		for (Map.Entry<Date, Double> entry : fixedExpense.entrySet()) {
-			Date date = entry.getKey();
-			Double value = entry.getValue();
-			String month = Date.getMonthName(date.getMonth());
-			String xAxis = date.getYear() + "-" + month;
-			graf2DataSet.addValue(value, "fixed expenses", xAxis);			
+		EntityManager em2 = emf.createEntityManager();
+		em2.getTransaction().begin();
+		em2.persist(expenseList);
+		try {
+			em2.getTransaction().commit();
+		} catch (Exception ex) {
+			dex = new DAOException("Unable to commit transaction.", ex);
 		}
-		
-		for (Map.Entry<Date, Double> entry : variableExpense.entrySet()) {
-			Date date = entry.getKey();
-			Double value = entry.getValue();
-			String month = Date.getMonthName(date.getMonth());
-			String xAxis = date.getYear() + "-" + month;
-			graf2DataSet.addValue(value, "variable expenses", xAxis);			
-		}
-		
-		for (Map.Entry<Date, Double> entry : allExpenses.entrySet()) {
-			Date date = entry.getKey();
-			Double value = entry.getValue();
-			String month = Date.getMonthName(date.getMonth());
-			String xAxis = date.getYear() + "-" + month;
-			graf2DataSet.addValue(value, "all expenses", xAxis);			
-		}
-
-		
-		JFreeChart lineChartObject = ChartFactory.createLineChart("Troškovi", "Vrijeme", "Trošak",
-				graf2DataSet, PlotOrientation.VERTICAL, true, true, false);
-
-		width = 1140; /* Width of the image */
-		height = 480; /* Height of the image */
-		File lineChart2 = new File("Graf2_trošak.jpeg");
 		
 		try {
-			ChartUtilities.saveChartAsJPEG(lineChart2, lineChartObject, width, height);
-		} catch (IOException e) {
-			e.printStackTrace();
+			em2.close();
+		} catch (Exception ex) {
+			if (dex != null) {
+				dex = new DAOException("Unable to close entity manager.", ex);
+			}
 		}
 		
-		// Graf 3 
-		
-		DefaultCategoryDataset grap3DataSet = new DefaultCategoryDataset();
-		
-		for (Map.Entry<Date, Double> entry : allIncomes.entrySet()) {
-			Date date = entry.getKey();
-			Double value = entry.getValue();
-			String month = Date.getMonthName(date.getMonth());
-			String xAxis = date.getYear() + "-" + month;
-			grap3DataSet.addValue(value, "income", xAxis);			
-		}
-		
-		for (Map.Entry<Date, Double> entry : allExpenses.entrySet()) {
-			Date date = entry.getKey();
-			Double value = entry.getValue();
-			String month = Date.getMonthName(date.getMonth());
-			String xAxis = date.getYear() + "-" + month;
-			grap3DataSet.addValue(value, "expense", xAxis);			
-		}
-
-		
-		JFreeChart graph3 = ChartFactory.createLineChart("Ukupno", "Vrijeme", "Novac",
-				grap3DataSet, PlotOrientation.VERTICAL, true, true, false);
-
-		File lineChart3 = new File("Graf3_ukupno.jpeg");
-		
-		try {
-			ChartUtilities.saveChartAsJPEG(lineChart3, graph3, width, height);
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (dex != null) {
+			throw dex;
 		}
 	
+		System.out.println("dao troskovnik uspjesno");
+		emf.close();
 	}
 
 }

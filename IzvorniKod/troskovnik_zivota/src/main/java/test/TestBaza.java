@@ -1,12 +1,10 @@
 package test;
 
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import dao.DAOException;
-import dao.jpa.JPAEMProvider;
 import model.ExpenseList;
 import model.User;
 

@@ -52,6 +52,20 @@ public class IncomeItem extends Item {
 		}
 	}
 	
+	public IncomeItem(String name, Date startDate, Date endDate, List<Double> amounts, Period period,
+			boolean sallary, String comment,ExpenseList expenseListOwner) {
+	super(null, name, amounts, period, false, comment);
+		
+		this.endDate = endDate;
+		this.startDate = startDate;
+		this.expenseListOwner = expenseListOwner;
+		this.sallary = sallary;
+		
+		if (period == Period.ONE_TIME) {
+			endDate = startDate;
+		}
+	}
+	
 	/**
 	 * Returns income amount for selected month.
 	 * 

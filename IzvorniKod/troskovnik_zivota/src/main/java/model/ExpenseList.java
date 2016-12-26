@@ -68,6 +68,14 @@ public class ExpenseList {
 		this.incomeItems = new ArrayList<>();
 		this.userOwner = userOwner;
 	}
+	
+	public ExpenseList(String name, User userOwner) {
+		super();
+		this.name = name;
+		this.expenseCategories = new ArrayList<>();
+		this.incomeItems = new ArrayList<>();
+		this.userOwner = userOwner;
+	}
 
 	
 	/**
