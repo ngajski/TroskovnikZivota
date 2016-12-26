@@ -16,80 +16,49 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "users")
 public class User {
-	/**
-	 * id
-	 */
+
 	@Id
 	@GeneratedValue
 	private Long id;
 
-	/**
-	 * username
-	 */
 	@Column(nullable = false, unique = true)
 	private String username;
 
-	/**
-	 * password
-	 */
 	@Column(nullable = false)
 	private String password;
 
-	/**
-	 * Firts name.
-	 */
 	@Column(nullable = false)
 	private String firstName;
 
-	/**
-	 * Last name.
-	 */
 	@Column(nullable = false)
 	private String lastName;
 
-	/**
-	 * OIB
-	 */
 	@Column(nullable = true)
 	private String oib;
-
-	/**
-	 * Date of birth in format dd/mm/yyyy.
-	 */
+	
 	@Column(nullable = true)
 	private String dateOfBirth;
 
-	/**
-	 * Address.
-	 */
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	private Address address;
 
-	/**
-	 * Telefon.
-	 */
 	@Column(nullable = true)
 	private String telefon;
 
-	/**
-	 * Email.
-	 */
 	@Column(nullable = false)
 	private String email;
 
-	/**
-	 * List of {@linkplain ExpenseList}s that belong to this User.
-	 */
 	@OneToMany(mappedBy = "userOwner", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<ExpenseList> expenseLists;
 
 	public User() {
 		super();
 	}
-
+	
 	public User(String username, String password, String firstName, String lastName, String oib, String dateOfBirth,
 			Address address, String telefon, String email) {
 		super();
+		
 		this.username = username;
 		this.password = password;
 		this.firstName = firstName;
@@ -99,6 +68,22 @@ public class User {
 		this.address = address;
 		this.telefon = telefon;
 		this.email = email;
+	}
+	
+	public User(String username, String password, String firstName, String lastName, String oib, String dateOfBirth,
+			Address address, String telefon, String email,List<ExpenseList> expenseLists) {
+		super();
+		
+		this.username = username;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.oib = oib;
+		this.dateOfBirth = dateOfBirth;
+		this.address = address;
+		this.telefon = telefon;
+		this.email = email;
+		this.expenseLists = expenseLists;
 	}
 
 	public String getUsername() {
@@ -199,6 +184,7 @@ public class User {
 		if (expenseLists == null) {
 			expenseLists = new LinkedList<>();
 		}
+		
 		expenseLists.add(expenseList);
 	}
 

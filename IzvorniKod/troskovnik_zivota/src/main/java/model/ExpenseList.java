@@ -25,9 +25,6 @@ import model.time.Date;
 @Table(name = "expense_lists")
 public class ExpenseList {
 
-	/**
-	 * id
-	 */
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -76,7 +73,6 @@ public class ExpenseList {
 		this.incomeItems = new ArrayList<>();
 		this.userOwner = userOwner;
 	}
-
 	
 	/**
 	 * Adds new category to this {@link ExpenseList}, and sets this to be
@@ -87,6 +83,8 @@ public class ExpenseList {
 	public void addNewCategory(ExpenseCategory category) {
 		if (category != null) {
 			category.setExpenseListOwner(this);
+			
+			//TODO jel ovo treba?
 			expenseCategories.add(category);
 		}
 	}

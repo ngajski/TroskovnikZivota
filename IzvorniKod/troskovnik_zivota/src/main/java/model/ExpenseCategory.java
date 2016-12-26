@@ -20,9 +20,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "expense_categories")
 public class ExpenseCategory {
 
-	/**
-	 * id
-	 */
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -193,8 +190,6 @@ public class ExpenseCategory {
 	
 	@Override
 	public String toString() {
-		return "ExpenseCategory [id=" + id + ", name=" + name + ", fixed=" + fixed + ", superCategory=" + superCategory
-				+ ", subCategories=" + subCategories + ", expenseItems=" + expenseItems + ", expenseListOwner="
-				+ expenseListOwner + "]";
+		return "ExpenseCategory: name=" + name; 
 	}
 }
