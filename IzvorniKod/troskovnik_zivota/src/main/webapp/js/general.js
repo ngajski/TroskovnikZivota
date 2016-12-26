@@ -110,22 +110,15 @@ function isEmpty(string) {
  * @returns void
  */
 function getExpenseLists(username, callback) {
-	var responseData = [ {
-		name : 'Troskovnik 2017'
-	}, {
-		name : 'Troskovnik 2015'
-	}, {
-		name : 'Troskovnik 2014'
-	}, {
-		name : 'Troskovnik 2013'
-	} ];
-	callback(responseData);
-
-	/*
-	 * Dok nebude stvarno troškovnika $ .ajax({ type : 'GET', url :
-	 * "service/expenseList/" + username, data: 'json', success :
-	 * function(responseData, textStatus, jqXHR) { callback(responseData); } },
-	 * error : function(responseData, textStatus, errorThrown) {
-	 * console.log('GET failed expense lists.'); } });
-	 */
+		$.ajax({
+		type : 'GET',
+		url : "service/expenseList/" + username,
+		data : 'json',
+		success : function(responseData, textStatus, jqXHR) {
+			callback(responseData);
+		},
+		error : function(responseData, textStatus, errorThrown) {
+			console.log('GET failed expense lists.');
+		}
+	});
 }
