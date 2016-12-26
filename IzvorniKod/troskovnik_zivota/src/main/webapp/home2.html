@@ -267,20 +267,26 @@ html, body, h1, h2, h3, h4, h5 {
 		});
 
 	}
-	function showPageContent() {
-		$('#mySidenav').addClass("w3-collapse");
-		$('#menuButton').addClass("w3-hide-large");
-		$("#pageContentNewExpenseList").hide();
-		$("#pageContent").show(750);
-		w3_open();
-
-	}
+</script>
+<!--  Skup fja za kreaciju troskovnika i interaktivnu aplikaciju -->
+<script type="text/javascript">
+	var isNewExpenseListActive = 0; /*provjera stanja */
+	var originalCreationDivision = $('#appBody').html();
+	var currentElementId = 0; /* LOŠE RIJEŠENJE !!! */
+	
 	function searchForExpenseLists() {
+
+		if (isNewExpenseListActive == 1) {
+			showPageContent();
+
+		}
+
 		var hookup = $("#expenseListCheckboxHookup").empty();
 
 		var expenseLists = getExpenseLists();
 		//u pravoj imp ce se zvat getExpenseLists(username, callback);
 		//u callback ces umotat ono kae od tuda pa do dolje
+
 		if (expenseLists.length != 0) {
 			hookup.append("<h5>Troškovnici za slanje</h5>");
 			for (var i = 0; i < expenseLists.length; ++i) {
@@ -295,38 +301,165 @@ html, body, h1, h2, h3, h4, h5 {
 					.append("<label style='font-size: 20px'>Za slanje troškovnika potrebno je prvo izraditi jedan. </label>");
 		}
 	}
-</script>
-<script type="text/javascript">
+
+	function homeExpenseList() {
+		if (isNewExpenseListActive == 1) {
+			showPageContent();
+		}
+
+	}
+	function editExpenseListFunc() {
+		if (isNewExpenseListActive == 1) {
+			showPageContent();
+		}
+
+	}
+	function generatePDF() {
+		if (isNewExpenseListActive == 1) {
+			showPageContent();
+		}
+
+	}
+
+	function deleteExpenseList() {
+		$('#addIncomeItemDivision').hide();
+		$('#addExpenseItemDivision').hide();
+		$('#testing').hide();
+		$('#removeExpenseListDivisionOuter').show(750);
+	}
+
+	function saveAndExit() {
+		/* 	isNewExpenseListActive = 0;
+		reset();
+		window.location.replace("home2.html");
+		TODO SPREMI U BAZU 
+		$('#appBody').html(originalCreationDivision); */
+
+	}
+
+	function showPageContent() {
+		$("#mySidenav").removeAttr("style", "padding-top");
+		$('#mySidenav').addClass("w3-collapse");
+		$('#menuButton').addClass("w3-hide-large");
+		$("#pageContentNewExpenseList").hide();
+		$("#pageContent").show(750);
+		w3_open();
+
+	}
+
 	function newExpenseListCreation() {
+		if (isNewExpenseListActive == 0) {
+			isNewExpenseListActive = 1;
+		}
+
 		$('#mySidenav').removeClass("w3-collapse");
 		$('#menuButton').removeClass("w3-hide-large");
 		$('#pageContent').hide();
 		$('#pageContentNewExpenseList').show(750);
+		w3_open1();
 		w3_close();
 	}
-</script>
-<script type="text/javascript">
+
 	function getLayout() {
 		$("#navMenu").removeAttr("style");
 		$("#newExpenseListDivision").attr("style", "display:none;");
 		var val = $("#input-1").val();
 		$("#navMenu1").children("#imeHeader").html("<b>" + val + "</b>");
-		$("#mySidenav").css("padding-top","43px");
 	}
 
-	function addCategory() {
-		$("#testing").show(750);
-
+	function addCategory(currentElement) {
+		reset();
+		$('#removeExpenseListDivisionOuter').hide();
+		$('#addIncomeItemDivision').hide();
+		$('#addExpenseItemDivision').hide();
+		$('#testing').show(750);
+		currentElementId = "Kategorija" + currentElement["id"].substring(11);
+		console.log(currentElement["id"].substring(11));
 	}
 
+	function openCategory(currentElement) {
+		console.log(currentElement.text);
+	}
+
+	function addExpenseItem(currentElement) {
+		reset();
+		$('#removeExpenseListDivisionOuter').hide();
+		$('#testing').hide();
+		$('#addIncomeItemDivision').hide();
+
+		currentElementId = "Kategorija" + currentElement["id"].substring(9);
+
+		/* TODO NASLJEĐIVANJE FIKSNOSTI*/
+		document.getElementById("checkFixed").innerHTML = "DA";
+
+		$('#addExpenseItemDivision').show(750);
+	}
+
+	function addExpenseItemToList() {
+		$('#addExpenseItemDivision').hide(750);
+		var val = $("#expenseName").val();
+		if (val.length != 0) {
+			var html = $("#" + currentElementId).html();
+			$('#' + currentElementId)
+					.html(
+							"<a href='#' id='expense"
+									+ val
+									+ "' onClick='showExpenseItem(this)'><i class='fa fa-circle' style='font-size:5px;position:relative;top:-3px;'></i> "
+									+ val + "</a>" + html);
+		}
+		/* $("#expenseItem").val(''); */
+		reset();
+	}
+
+	function showExpenseItem(currentExpenseItem) {
+		var val = currentExpenseItem["id"];
+		var x = document.getElementById(val);
+
+		/* 	TODO : IZVUCI IZ BAZE I POPUNI SVA POLJA
+			$("#expenseValue").val(value)
+			$("#expenseComment").val(value)
+			$("#expensePeriod").val(value) */
+
+		$("#expenseName").val(x.text);
+		$("#testing").hide();
+		$('#addIncomeItemDivision').hide();
+		$("#addExpenseItemDivision").show(750);
+
+	}
 	function addCategoryToList() {
 
 		$('#testing').hide(750);
 		var val = $("#categoryName").val();
+		var name = "Kategorija" + val;
+
 		if (val.length != 0) {
-			var html = $("#Kategorije").html();
-			$('#Kategorije').html("<a href='#'>" + val + "</a>" + html);
+			var html = $('#' + currentElementId).html();
+
+			/* var itemHolder = "<div id='val' class='w3-accordion-content w3-padding-large w3-medium'><a href='#' onClick='addCategory()'>"+val+"<i class='fa fa-plus w3-margin-right'></i></a></div>";
+			$('#KategorijaDefault').html(html + itemHolder); */
+			$('#' + currentElementId)
+					.html(
+							"<div class='w3-accordion'><a href='#' id='"
+									+ val
+									+ "Href' onClick='myAccFuncDynamic(this)'>"
+									+ val
+									+ " <i class='fa fa-caret-down'></i></a>"
+									+ "<div id='Kategorija" 
+									+ val 
+									+ "' class='w3-accordion-content w3-padding-large w3-medium'><a href='#' onClick='addCategory(this)' id='addCategory"
+									+ val
+									+ "'>Dodaj kategoriju <i class='fa fa-plus w3-margin-right'></i></a><a href='#' onClick='addExpenseItem(this)' id='addItemTo"
+									+ val
+									+ "'>Dodaj stavku <i class='fa fa-plus w3-margin-right'></i></a></div></div>"
+									+ html);
 		}
+		reset();
+		/* $("#categoryName").val(''); */
+
+		/* 	var val = $('#KategorijaDefault').children();
+			for (var i = 0; i <= val.length-2; i++){
+				console.log(val[i].text);
+			} */
 	}
 	var swap_x = 0; /*ako je 0, onda je mySidenav hidden, ako je 1 onda je mySidenav vidljiv */
 
@@ -334,6 +467,7 @@ html, body, h1, h2, h3, h4, h5 {
 		if (swap_x == 0) {
 			$("#mySidenavDropdown").removeClass("w3-collapse");
 			w3_close1();
+			$("#mySidenav").css("padding-top", "43px");
 			w3_open();
 			swap_x = 1;
 		} else {
@@ -343,11 +477,51 @@ html, body, h1, h2, h3, h4, h5 {
 			swap_x = 0;
 		}
 	}
+
+	function removeAnswerYes() {
+		isNewExpenseListActive = 0;
+		reset();
+		window.location.replace("home2.html")
+		$('#appBody').html(originalCreationDivision);
+		/* TODO */
+	}
+
+	function removeAnswerNo() {
+		$('#removeExpenseListDivisionOuter').hide(750);
+	}
+	function addIncomeToIncomeList() {
+		$('#addIncomeItemDivision').hide(750);
+		var val = $("#incomeName").val();
+		if (val.length != 0) {
+			var html = $("#Prihodi").html();
+			$('#Prihodi').html("<a href='#'>" + val + "</a>" + html);
+		}
+		/* 	$("#incomeName").val('');
+		 */
+	}
+
+	function addIncome() {
+		reset()
+		$('#removeExpenseListDivisionOuter').hide();
+		$('#testing').hide();
+		$('#addExpenseItemDivision').hide();
+		$('#addIncomeItemDivision').show(750);
+	}
+
+	function reset() {
+		$('#testing').find(':input').val('');
+		$('#addExpenseItemDivision').find(':input').val('');
+		$('#addIncomeItemDivision').find(':input').val('');
+
+	}
+
 </script>
 
 
 
-<body class="w3-light-grey">
+
+
+<body class="w3-white" id="appBody">
 
 	<!-- Top container -->
 	<div class="w3-container w3-top w3-black w3-large w3-padding"
@@ -389,19 +563,19 @@ html, body, h1, h2, h3, h4, h5 {
 			onclick="w3_close()" title="close menu"><i
 			class="fa fa-remove fa-fw"></i> Close Menu</a> <a href="#"
 			class="w3-padding w3-blue" id="displayExpenseListLink"
-			onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4), 'showPageContent')"><i
+			onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4), 'homeExpenseList')"><i
 			class="fa fa-eye"></i> Pregledaj troškovnik</a> <a href="#"
 			class="w3-padding" id="newExpenseListLink"
 			onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4), 'newExpenseListCreation')"><i
 			class="fa fa-plus-circle"></i>Novi troškovnik</a> <a href="#"
 			class="w3-padding" id="editExpenseListLink"
-			onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4))"><i
+			onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4), 'editExpenseListFunc')"><i
 			class="fa fa-edit"></i> Uredi postojeći</a> <a href="#"
 			class="w3-padding" id="sendExpenseListLink"
 			onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4), 'searchForExpenseLists')"><i
 			class="fa fa-send-o"></i> Pošalji troškovnik</a> <a href="#"
 			class="w3-padding" id="generatePDFLink"
-			onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4))"><i
+			onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4), 'generatePDF')"><i
 			class="fa fa-file-pdf-o"></i> Generiraj PDF</a>
 	</nav>
 
@@ -413,8 +587,7 @@ html, body, h1, h2, h3, h4, h5 {
 
 
 	<!-- PAGE CONTENT za NEWEXPENSELIST -->
-
-	<div class="w3-main w3-white" style="display: none;"
+	<div class="w3-main w3-white" style="display: none; padding-top: 50px"
 		id="pageContentNewExpenseList">
 		<div class="w3-container" id="newExpenseListDivision">
 			<div class="w3-display-middle">
@@ -442,8 +615,8 @@ html, body, h1, h2, h3, h4, h5 {
 
 		<!-- Sidenav/menu -->
 		<nav class="w3-sidenav w3-collapse w3-white w3-animate-left"
-			style="z-index: 3; width: 300px; padding-top : 50px" id="mySidenavDropdown">
-			<div id="navMenu" style="display: none; margin-top: 45px;" >
+			style="z-index: 3; width: 350px;" id="mySidenavDropdown">
+			<div id="navMenu" style="display: none;">
 				<div class="w3-container w3-padding-16" id="navMenu1">
 					<i onclick="w3_close1()"
 						class="fa fa-remove w3-hide-large w3-closebtn w3-hover-text-red"></i>
@@ -458,10 +631,11 @@ html, body, h1, h2, h3, h4, h5 {
 							class="w3-text-black" id="myBtn"> Kategorije troškova <i
 							class="fa fa-caret-down"></i>
 						</a>
-						<div id="Kategorije"
+						<div id="KategorijaDefault"
 							class="w3-accordion-content w3-padding-large w3-medium">
-							<a href="#" onClick="addCategory()">Dodaj kategoriju <i
-								class="fa fa-plus w3-margin-right"></i></a>
+							<a href="#" onClick="addCategory(this)" id="addCategoryDefault">Dodaj
+								kategoriju <i class="fa fa-plus w3-margin-right"></i>
+							</a>
 						</div>
 					</div>
 					<div class="w3-accordion">
@@ -471,20 +645,82 @@ html, body, h1, h2, h3, h4, h5 {
 						</a>
 						<div id="Prihodi"
 							class="w3-accordion-content w3-padding-large w3-medium">
-							<a href="#">Dodaj prihod<i class="fa fa-plus w3-margin-right"></i></a>
+							<a href="#" onClick="addIncome()">Dodaj prihod<i
+								class="fa fa-plus w3-margin-right"></i></a>
 						</div>
 					</div>
+					<div class="w3-accordion">
+						<a onclick="saveAndExit()" href="javascript:void(0)"
+							class="w3-text-black" id="myBtn3"> Spremi </a>
+					</div>
+					<div class="w3-accordion" id="remove">
+						<a onclick="deleteExpenseList()" href="javascript:void(0)"
+							class="w3-text-black" id="myBtn2"> Izbriši <i
+							class="fa fa-trash-o"></i>
+						</a>
+					</div>
+
+
 				</div>
 			</div>
 		</nav>
 
-		<div class="w3-container" style="margin-left: 325px; margin-top: 45px; display: none"
+
+
+		<!-- Izbriši expenseList -->
+		<div class="w3-container"
+			style="margin-left: 375px; margin-top: 45px; display: none"
+			id="removeExpenseListDivisionOuter">
+			<div class="w3-container w3-card" id="removeExpenseListDivisionInner">
+				<h4>Želite li izbrisati troškovnik ?</h4>
+				<div class="w3.container">
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row">
+							<div class="w3-col s3" style="padding-top: 10px">
+								<button
+									class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
+									onClick="removeAnswerYes()">Da</button>
+							</div>
+						</div>
+					</form>
+
+
+				</div>
+				<div class="w3.container">
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row">
+							<div class="w3-col s3"
+								style="padding-top: 20px; padding-bottom: 20px">
+								<button
+									class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
+									onClick="removeAnswerNo()">Ne</button>
+							</div>
+						</div>
+					</form>
+
+
+				</div>
+
+			</div>
+
+
+
+
+		</div>
+
+
+
+		<div class="w3-accordion" id="itemAccordionHolder"></div>
+
+		<!-- Dodaj novu kategoriju -->
+		<div class="w3-container"
+			style="margin-left: 375px; margin-top: 45px; display: none"
 			id="testing">
 			<div class="w3-container w3-card" id="expenseItem">
 				<h3>Kategorija</h3>
 
 				<div class="w3.container">
-					<form class="w3-container">
+					<form action="javascript:void(0);" class="w3-container">
 						<div class="w3-row">
 							<div class="w3-col s3">
 								<h4 style="margin-top: 3px">Ime kategorije</h4>
@@ -496,7 +732,7 @@ html, body, h1, h2, h3, h4, h5 {
 							</div>
 						</div>
 					</form>
-					<form class="w3-container">
+					<form action="javascript:void(0);" class="w3-container">
 						<div class="w3-row">
 							<div class="w3-col s3">
 								<h4 style="margin-top: 15px">Fiksnost</h4>
@@ -515,7 +751,7 @@ html, body, h1, h2, h3, h4, h5 {
 						</div>
 					</form>
 					<div class="w3.container">
-						<form class="w3-container">
+						<form action="javascript:void(0);" class="w3-container">
 							<div class="w3-row">
 								<div class="w3-col s3">
 									<button
@@ -535,9 +771,210 @@ html, body, h1, h2, h3, h4, h5 {
 
 
 
+		<!-- Dodaj novi prihod -->
+
+		<div class="w3-container"
+			style="margin-left: 375px; margin-top: 45px; display: none"
+			id="addIncomeItemDivision">
+			<div class="w3-container w3-card" id="incomeItem">
+				<h3>Prihod</h3>
+
+				<div class="w3.container">
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row">
+							<div class="w3-col s3">
+								<h4 style="margin-top: 3px">Ime prihoda</h4>
+							</div>
+							<div class="w3-col s9 w3-center">
+								<input id="incomeName"
+									class="w3-input w3-border w3-animate-input" type="text"
+									style="width: 30%">
+							</div>
+						</div>
+					</form>
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row">
+							<div class="w3-col s3">
+								<h4 style="margin-top: 3px">Iznos</h4>
+							</div>
+							<div class="w3-col s9 w3-center">
+								<input id="incomeValue"
+									class="w3-input w3-border w3-animate-input" type="text"
+									style="width: 30%">
+							</div>
+						</div>
+					</form>
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row">
+							<div class="w3-col s3">
+								<h4 style="margin-top: 3px">Period</h4>
+							</div>
+							<div class="w3-col s9 w3-center">
+								<input id="incomePeriod"
+									class="w3-input w3-border w3-animate-input" type="text"
+									style="width: 30%">
+							</div>
+						</div>
+					</form>
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row">
+							<div class="w3-col s3">
+								<h4 style="margin-top: 3px">Komentar</h4>
+							</div>
+							<div class="w3-col s9 w3-center">
+								<input id="incomeComment"
+									class="w3-input w3-border w3-animate-input" type="text"
+									style="width: 30%">
+							</div>
+						</div>
+					</form>
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row">
+							<div class="w3-col s3">
+								<h4 style="margin-top: 15px">Fiksnost</h4>
+							</div>
+
+							<div class="w3-col s9 w3-center">
+								<p>
+									<input class="w3-radio" type="radio" name="gender" value="yes">
+									<label class="w3-validate">Da</label>
+								</p>
+								<p>
+									<input class="w3-radio" type="radio" name="gender" value="no"
+										checked> <label class="w3-validate">Ne</label>
+								</p>
+							</div>
+						</div>
+					</form>
+					<div class="w3.container">
+						<form action="javascript:void(0);" class="w3-container">
+							<div class="w3-row">
+								<div class="w3-col s3">
+									<button
+										class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
+										onClick="addIncomeToIncomeList()">Spremi</button>
+								</div>
+							</div>
+						</form>
+
+
+					</div>
+					<br> <br>
+				</div>
+
+			</div>
+		</div>
+
+
+
+		<!-- Dodaj novi stavak -->
+
+		<div class="w3-container"
+			style="margin-left: 375px; margin-top: 45px; display: none"
+			id="addExpenseItemDivision">
+			<div class="w3-container w3-card" id="expense">
+				<h3>Trošak</h3>
+
+				<div class="w3.container">
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row">
+							<div class="w3-col s3">
+								<h4 style="margin-top: 3px">Ime troška</h4>
+							</div>
+							<div class="w3-col s9 w3-center">
+								<input id="expenseName"
+									class="w3-input w3-border w3-animate-input" type="text"
+									style="width: 30%">
+							</div>
+						</div>
+					</form>
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row">
+							<div class="w3-col s3">
+								<h4 style="margin-top: 3px">Iznos</h4>
+							</div>
+							<div class="w3-col s9 w3-center">
+								<input id="expenseValue"
+									class="w3-input w3-border w3-animate-input" type="text"
+									style="width: 30%">
+							</div>
+						</div>
+					</form>
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row">
+							<div class="w3-col s3">
+								<h4 style="margin-top: 3px">Period</h4>
+							</div>
+							<div class="w3-col s9 w3-center">
+								<input id="expensePeriod"
+									class="w3-input w3-border w3-animate-input" type="text"
+									style="width: 30%">
+							</div>
+						</div>
+					</form>
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row">
+							<div class="w3-col s3">
+								<h4 style="margin-top: 3px">Komentar</h4>
+							</div>
+							<div class="w3-col s9 w3-center">
+								<input id="expenseComment"
+									class="w3-input w3-border w3-animate-input" type="text"
+									style="width: 30%">
+							</div>
+						</div>
+					</form>
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row">
+							<div class="w3-col s3">
+								<h4 style="margin-top: 15px">Fiksnost</h4>
+							</div>
+
+							<div class="w3-col s3">
+								<p id="checkFixed">DA/NE</p>
+
+							</div>
+						</div>
+					</form>
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row-padding">
+							<div class="w3-half" style="maring-left: -15px">
+								<label>Datum početka</label> <input class="w3-input w3-border"
+									type="date" id="startDate" placeholder="DD/MM/YYYY">
+							</div>
+							<div class="w3-half">
+								<label>Datum završetka</label> <input class="w3-input w3-border"
+									type="date" id="endDate" placeholder="DD/MM/YYYY">
+							</div>
+						</div>
+
+					</form>
+
+
+					<div class="w3.container" style="padding-top: 15px">
+						<form action="javascript:void(0);" class="w3-container">
+							<div class="w3-row">
+								<div class="w3-col s3">
+									<button
+										class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
+										onClick="addExpenseItemToList()">Spremi</button>
+								</div>
+							</div>
+						</form>
+
+
+					</div>
+					<br> <br>
+				</div>
+
+			</div>
+		</div>
+
+
 
 
 	</div>
+
 
 
 	<!-- !PAGE CONTENT! -->
@@ -688,14 +1125,13 @@ html, body, h1, h2, h3, h4, h5 {
 			class="w3-validate"></label>
 	</p>
 
-	<script>
-		// Get the Sidenav
-		var mySidenav = document.getElementById("mySidenav");
 
-		// Get the DIV with overlay effect
+	<!-- Skripte za upravljanje sideNav-ovima i stablom -->
+	<script>
+		var mySidenav = document.getElementById("mySidenav");
 		var overlayBg = document.getElementById("myOverlay");
 
-		// Toggle between showing and hiding the sidenav, and add overlay effect
+		// otvor / zatvori glavni sidenav
 		function w3_open() {
 			if (mySidenav.style.display === 'block') {
 				mySidenav.style.display = 'none';
@@ -706,12 +1142,13 @@ html, body, h1, h2, h3, h4, h5 {
 			}
 		}
 
-		// Close the sidenav with the close button
+		// zatvori glavni sidenav
 		function w3_close() {
 			mySidenav.style.display = "none";
 			overlayBg.style.display = "none";
 		}
 
+		// skripta za prikaz Prihoda
 		function myAccFunc1() {
 			var x = document.getElementById("Prihodi");
 			if (x.className.indexOf("w3-show") == -1) {
@@ -720,9 +1157,9 @@ html, body, h1, h2, h3, h4, h5 {
 				x.className = x.className.replace(" w3-show", "");
 			}
 		}
-
+		// skripta za prikaz Kategorija
 		function myAccFunc() {
-			var x = document.getElementById("Kategorije");
+			var x = document.getElementById("KategorijaDefault");
 			if (x.className.indexOf("w3-show") == -1) {
 				x.className += " w3-show";
 			} else {
@@ -730,7 +1167,23 @@ html, body, h1, h2, h3, h4, h5 {
 			}
 		}
 
-		// Script to open and close sidenav
+		// skripta za dinamicki prikaz elementa stabla predanog parametrom
+		function myAccFuncDynamic(currentElement) {
+
+			var value = currentElement["id"];
+			var i_value = $("#" + value).find("i");
+			i_value.toggleClass("fa fa-caret-right fa fa-caret-down");
+
+			var val = "Kategorija" + currentElement.text;
+			var x = document.getElementById(val.substring(0, val.length - 1));
+			if (x.className.indexOf("w3-show") == -1) {
+				x.className += " w3-show";
+			} else {
+				x.className = x.className.replace(" w3-show", "");
+			}
+		}
+
+		// otvori / zatvori unutarnji dropdown
 		function w3_open1() {
 			document.getElementById("mySidenavDropdown").style.display = "block";
 			document.getElementById("myOverlay").style.display = "block";
