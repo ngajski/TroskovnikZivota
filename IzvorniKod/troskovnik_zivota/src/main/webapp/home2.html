@@ -273,7 +273,29 @@ html, body, h1, h2, h3, h4, h5 {
 	var isNewExpenseListActive = 0; /*provjera stanja */
 	var originalCreationDivision = $('#appBody').html();
 	var currentElementId = 0; /* LOŠE RIJEŠENJE !!! */
-	
+
+	function generatePDF_test() {
+
+		var name = $("#testButton").text();
+		console.log(name);
+		
+		$.ajax({
+			type : 'GET',
+			url : "service/expenseList/generate/" + name,
+			dataType : 'text',
+			success : function(responseData, textStatus, jqXHR) {
+				var answer = responseData;
+				if (answer == "ok") {
+					console.log("PDF Kreiran");
+				}
+			},
+			error : function(responseData, textStatus, errorThrown) {
+				alert('GET failed.');
+			}
+		});
+
+	}
+
 	function searchForExpenseLists() {
 
 		if (isNewExpenseListActive == 1) {
@@ -514,7 +536,6 @@ html, body, h1, h2, h3, h4, h5 {
 		$('#addIncomeItemDivision').find(':input').val('');
 
 	}
-
 </script>
 
 
@@ -1100,9 +1121,10 @@ html, body, h1, h2, h3, h4, h5 {
 			</div>
 
 			<div class="w3-container" id="generatePDFDiv" style="display: none;">
-
-				<h4>Izaberi</h4>
-
+				<p>
+					<button class="w3-btn w3-teal w3-round-large"
+						onClick="generatePDF_test()" id="testButton">TEST123</button>
+				</p>
 			</div>
 
 		</div>
