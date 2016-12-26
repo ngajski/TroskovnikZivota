@@ -145,11 +145,11 @@ html, body, h1, h2, h3, h4, h5 {
 
 	<div class="w3-row w3-section">
 		<div class="w3-col" style="width: 50px">
-			<i class="w3-xxlarge fa fa-user"></i>
+			<i class="w3-xxlarge fa fa-key"></i>
 		</div>
 		<div class="w3-rest">
 			<input class="loginInput w3-input w3-border w3-round"
-				name="loginPassword" type="text" required placeholder="Lozinka">
+				name="loginPassword" type="password" required placeholder="Lozinka">
 		</div>
 	</div>
 
@@ -175,11 +175,11 @@ html, body, h1, h2, h3, h4, h5 {
 
 	<div class="w3-row w3-section">
 		<div class="w3-col" style="width: 50px">
-			<i class="w3-xxlarge fa fa-user"></i>
+			<i class="w3-xxlarge fa fa-key"></i>
 		</div>
 		<div class="w3-rest">
 			<input class="registerInput w3-input w3-border w3-round"
-				name="registerPassword" type="text" required placeholder="Lozinka*">
+				name="registerPassword" type="password" required placeholder="Lozinka*">
 		</div>
 	</div>
 
@@ -207,14 +207,14 @@ function openCity(evt, cityName) {
      
   }
   document.getElementById(cityName).style.display = "block";
-  var jazavac = evt.currentTarget.firstElementChild;
+  var activeTab = evt.currentTarget.firstElementChild;
 
-  jazavac.className += " w3-blue ";
-  jazavac.className = jazavac.className.replace("w3-hover-light-blue", "w3-hover-blue").replace("w3-text-grey","w3-text-white"); 
+  activeTab.className += " w3-blue ";
+  activeTab.className = activeTab.className.replace("w3-hover-light-blue", "w3-hover-blue").replace("w3-text-grey","w3-text-white"); 
  
 }
 </script>
 
 
 </body>
-</html>
+</html>Z
