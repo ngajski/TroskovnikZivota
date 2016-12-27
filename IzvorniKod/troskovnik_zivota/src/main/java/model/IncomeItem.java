@@ -3,6 +3,7 @@ package model;
 
 import java.util.List;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -31,6 +32,7 @@ public class IncomeItem {
 	private String name;
 	
 	@ElementCollection
+	@CollectionTable(name ="income_amounts")
 	protected List<Double> amounts;
 	
 	@Enumerated(EnumType.STRING)

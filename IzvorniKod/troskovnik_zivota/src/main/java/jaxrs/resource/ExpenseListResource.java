@@ -73,6 +73,8 @@ public class ExpenseListResource {
 	@Produces({ MediaType.TEXT_PLAIN})
 	public String addIncomeItem(@PathParam("name_expenseList") String name, IncomeItem item){
 		ExpenseList expenseList = DAOProvider.getDAO().getExpenseListByName(name);
+		System.out.println(item);
+		System.out.println(item.getAmounts().toString());
 		expenseList.addNewIncomeItem(item);
 		DAOProvider.getDAO().addIncomeItem(item);
 		return "ok2";
