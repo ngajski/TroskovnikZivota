@@ -274,6 +274,29 @@ html, body, h1, h2, h3, h4, h5 {
 	var originalCreationDivision = $('#appBody').html();
 	var currentElementId = 0; /* LOŠE RIJEŠENJE !!! */
 
+	
+	function persistExpenseList(){
+		var name = $('#input-1');
+				
+		$.ajax({
+			type : 'GET',
+			url : "service/expenseList/"+name,
+			dataType : 'text',
+			success : function(responseData, textStatus, jqXHR) {
+				var answer = responseData;
+				if (answer == "ok1"){
+					console.log("expenseList successfully persisted !");
+				}
+			},
+			error : function(responseData, textStatus, errorThrown) {
+				alert('GET failed.');
+			}
+		});
+	}
+	
+	
+	
+	
 	function generatePDF_test() {
 
 		var name = $("#testButton").text();
@@ -383,6 +406,7 @@ html, body, h1, h2, h3, h4, h5 {
 	}
 
 	function getLayout() {
+		persistExpenseList();
 		$("#navMenu").removeAttr("style");
 		$("#newExpenseListDivision").attr("style", "display:none;");
 		var val = $("#input-1").val();

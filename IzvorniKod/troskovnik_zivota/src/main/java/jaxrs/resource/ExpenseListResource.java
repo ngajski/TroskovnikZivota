@@ -79,6 +79,20 @@ public class ExpenseListResource {
 		return defaultPeriods;
 	}
 	
+	
+	@GET
+	@Path("/{name}")
+	@Produces({ MediaType.TEXT_PLAIN})
+	public String addExpenseList(@PathParam("name") String name){
+		ExpenseList expenseList = new ExpenseList();
+		expenseList.setName(name);
+		DAOProvider.getDAO().addExpenseList(expenseList);
+		return "ok1";
+		
+	}
+	
+	
+	
 	@GET
 	@Path("/generate/{name}")
 	@Produces({ MediaType.TEXT_PLAIN})
@@ -105,7 +119,7 @@ public class ExpenseListResource {
 		}
 		
 //		MENJAJ USERA
-		document.save("C:\\Users\\vrlji\\Desktop\\mypdf.pdf");
+		document.save("mypdf.pdf");
 		document.close();
 		return "ok";
 	}
