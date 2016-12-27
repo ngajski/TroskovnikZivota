@@ -83,9 +83,6 @@ public class ExpenseList {
 	public void addNewCategory(ExpenseCategory category) {
 		if (category != null) {
 			category.setExpenseListOwner(this);
-			
-			//TODO jel ovo treba?
-			expenseCategories.add(category);
 		}
 	}
 	
@@ -98,7 +95,6 @@ public class ExpenseList {
 	public void addNewIncomeItem(IncomeItem item) {
 		if (item != null) {
 			item.setExpenseListOwner(this);
-			incomeItems.add(item);
 		}
 	}
 	

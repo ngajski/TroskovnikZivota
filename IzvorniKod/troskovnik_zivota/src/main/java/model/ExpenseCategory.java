@@ -103,7 +103,6 @@ public class ExpenseCategory {
 		
 		category.setSuperCategory(this);
 		category.setExpenseListOwner(this.getExpenseListOwner());
-		subCategories.add(category);
 	}
 	
 	/**
@@ -113,15 +112,10 @@ public class ExpenseCategory {
 	 * @param item
 	 */
 	public void addExpenseItem(ExpenseItem item) {
-		if (expenseItems == null) {
-			expenseItems = new ArrayList<>();
-		}
-		
 		item.setExpenseCategoryOwner(this);
 		if (this.fixed) {
 			item.setFixed(this.fixed);
 		}
-		expenseItems.add(item);
 	}
 	
 	public Long getId() {
