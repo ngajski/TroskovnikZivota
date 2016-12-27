@@ -5,6 +5,7 @@
 	
 	<persistence-unit name="baza.podataka.udaljena" transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>  
+  		
   		<class>model.ExpenseList</class>
       	<class>model.ExpenseCategory</class>
   		<class>model.User</class>

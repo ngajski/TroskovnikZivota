@@ -25,9 +25,6 @@ import model.time.Date;
 @Table(name = "expense_lists")
 public class ExpenseList {
 
-	/**
-	 * id
-	 */
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -68,7 +65,14 @@ public class ExpenseList {
 		this.incomeItems = new ArrayList<>();
 		this.userOwner = userOwner;
 	}
-
+	
+	public ExpenseList(String name, User userOwner) {
+		super();
+		this.name = name;
+		this.expenseCategories = new ArrayList<>();
+		this.incomeItems = new ArrayList<>();
+		this.userOwner = userOwner;
+	}
 	
 	/**
 	 * Adds new category to this {@link ExpenseList}, and sets this to be
@@ -79,8 +83,14 @@ public class ExpenseList {
 	public void addNewCategory(ExpenseCategory category) {
 		if (category != null) {
 			category.setExpenseListOwner(this);
-			expenseCategories.add(category);
 		}
+		
+		//TODO
+		if (expenseCategories == null) {
+			expenseCategories = new ArrayList<>();
+		}
+		
+		expenseCategories.add(category);
 	}
 	
 	/**
@@ -92,10 +102,14 @@ public class ExpenseList {
 	public void addNewIncomeItem(IncomeItem item) {
 		if (item != null) {
 			item.setExpenseListOwner(this);
-			incomeItems.add(item);
 		}
+		
+		if (incomeItems == null) {
+			incomeItems = new ArrayList<>();
+		}
+		
+		incomeItems.add(item);
 	}
-	
 	
 	/**
 	 * Returns map of all months and their summed expenses. 
@@ -201,6 +215,7 @@ public class ExpenseList {
 		}
 		return incomeByMonth;
 	}
+	
 	
 	public Long getId() {
 		return id;

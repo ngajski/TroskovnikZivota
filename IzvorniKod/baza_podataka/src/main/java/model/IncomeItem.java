@@ -3,6 +3,7 @@ package model;
 
 import java.util.List;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -31,6 +32,7 @@ public class IncomeItem {
 	private String name;
 	
 	@ElementCollection
+	@CollectionTable(name ="income_amounts")
 	protected List<Double> amounts;
 	
 	@Enumerated(EnumType.STRING)
@@ -46,10 +48,10 @@ public class IncomeItem {
 	@ManyToOne
 	@JoinColumn
 	private ExpenseList expenseListOwner;
-	
+
 	@Column
 	private String startDate;
-
+	
 	@Column
 	private String endDate;
 	
@@ -69,11 +71,25 @@ public class IncomeItem {
 		this.period = period;
 		this.fixed = fixed;
 		this.comment = comment;
-		
 	}	
+	
 	public IncomeItem(Long id, String name, String startDate, String endDate, List<Double> amounts, Period period,
 			boolean sallary, String comment,ExpenseList expenseListOwner) {
 	this(id, name, amounts, period, false, comment);
+		
+		this.endDate = endDate;
+		this.startDate = startDate;
+		this.expenseListOwner = expenseListOwner;
+		this.sallary = sallary;
+		
+		if (period == Period.ONE_TIME) {
+			endDate = startDate;
+		}
+	}
+	
+	public IncomeItem(String name, String startDate, String endDate, List<Double> amounts, Period period,
+			boolean sallary, String comment,ExpenseList expenseListOwner) {
+	this(null, name, amounts, period, false, comment);
 		
 		this.endDate = endDate;
 		this.startDate = startDate;
@@ -106,7 +122,7 @@ public class IncomeItem {
 			return new Double(0.0);
 		}
 	}
-	
+
 	public String getStartDate() {
 		return startDate;
 	}

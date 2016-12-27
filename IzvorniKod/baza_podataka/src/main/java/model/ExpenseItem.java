@@ -4,6 +4,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -25,7 +26,6 @@ import model.time.Period;
 @Table(name = "expense_items")
 public class ExpenseItem {
 	
-
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -33,7 +33,8 @@ public class ExpenseItem {
 	@Column
 	private String name;
 	
-	@ElementCollection
+	@ElementCollection	
+	@CollectionTable(name ="expense_amounts")
 	protected List<Double> amounts;
 	
 	@Enumerated(EnumType.STRING)
@@ -44,12 +45,12 @@ public class ExpenseItem {
 	
 	@Column
 	private String comment;
-
+	
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn
 	private ExpenseCategory expenseCategoryOwner;
-	
+
 	@Column
 	private String startDate;
 	
@@ -69,6 +70,7 @@ public class ExpenseItem {
 		this.period = period;
 		this.fixed = fixed;
 		this.comment = comment;
+		
 	}	
 
 	public ExpenseItem(Long id, String name, String startDate, String endDate, List<Double> amounts, Period period,
@@ -88,6 +90,9 @@ public class ExpenseItem {
 		this(id, name, startDate, endDate, new ArrayList<>(), period, fixed, comment, null);
 	}
 
+	public ExpenseItem(String name, String startDate, String endDate, Period period, String comment, boolean fixed) {
+		this(null, name, startDate, endDate, new ArrayList<>(), period, fixed, comment, null);
+	}
 
 
 	/**

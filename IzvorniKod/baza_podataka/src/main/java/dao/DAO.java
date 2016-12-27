@@ -2,6 +2,7 @@ package dao;
 
 import java.util.List;
 
+import model.ExpenseList;
 import model.User;
 
 /**
@@ -109,5 +110,7 @@ public interface DAO {
 	 *             error occurs during process of data obtaining
 	 */
 	public List<User> getUsersByEmail(String email);
+
+	void removeExpenseListFromDatabase(ExpenseList expenseList);
 
 }

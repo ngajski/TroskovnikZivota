@@ -7,6 +7,7 @@ import javax.persistence.NoResultException;
 
 import dao.DAO;
 import dao.DAOException;
+import model.ExpenseList;
 import model.User;
 
 /**
@@ -30,6 +31,13 @@ public class JPADAOImpl implements DAO {
 		return user;
 	}
 
+	@Override
+	public void removeExpenseListFromDatabase(ExpenseList expenseList){
+		EntityManager em = JPAEMProvider.getEntityManager();
+		em.remove(expenseList);
+	}
+	
+	
 	@Override
 	public User getUserByUsername(String username) throws DAOException {
 		EntityManager em = JPAEMProvider.getEntityManager();

@@ -72,6 +72,16 @@ public class ExpenseCategory {
 		this.expenseItems = new ArrayList<>();
 		this.expenseListOwner = expenseListOwner;
 	}
+	
+	public ExpenseCategory(String name, boolean fixed, ExpenseList expenseListOwner) {
+		super();
+		this.name = name;
+		this.fixed = fixed;
+		this.superCategory = null;
+		this.subCategories = new ArrayList<>();
+		this.expenseItems = new ArrayList<>();
+		this.expenseListOwner = expenseListOwner;
+	}
 
 	
 	/**
@@ -187,8 +197,6 @@ public class ExpenseCategory {
 	
 	@Override
 	public String toString() {
-		return "ExpenseCategory [id=" + id + ", name=" + name + ", fixed=" + fixed + ", superCategory=" + superCategory
-				+ ", subCategories=" + subCategories + ", expenseItems=" + expenseItems + ", expenseListOwner="
-				+ expenseListOwner + "]";
+		return "ExpenseCategory: name=" + name; 
 	}
 }
