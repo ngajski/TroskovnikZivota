@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.naming.NamingException;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -19,9 +20,12 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.poi.POIDocument;
 
 import dao.DAOProvider;
+import model.ExpenseCategory;
 import model.ExpenseList;
+import model.IncomeItem;
 import wrappers.StringWrapper;
 import model.User;
 import model.time.Period;
@@ -50,8 +54,41 @@ public class ExpenseListResource {
 		User user = DAOProvider.getDAO().getUserByUsername(username);
 		expenseList.setUserOwner(user);
 		DAOProvider.getDAO().addExpenseList(expenseList);
-		return "ok";
+		return expenseList.getName();
 	}
+	
+	@DELETE
+	@Path("/remove/{name_expenseList}")
+	@Produces({ MediaType.TEXT_PLAIN})
+	public String removeExpenseListFromDatabase(@PathParam("name_expenseList") String name){
+		ExpenseList expenseList = DAOProvider.getDAO().getExpenseListByName(name);
+		DAOProvider.getDAO().removeExpenseListFromDatabase(expenseList);
+		return "ok2";
+	}
+	
+	
+	
+	@POST
+	@Path("/income/{name_expenseList}")
+	@Produces({ MediaType.TEXT_PLAIN})
+	public String addIncomeItem(@PathParam("name_expenseList") String name, IncomeItem item){
+		ExpenseList expenseList = DAOProvider.getDAO().getExpenseListByName(name);
+		expenseList.addNewIncomeItem(item);
+		DAOProvider.getDAO().addIncomeItem(item);
+		return "ok2";
+	}
+	
+	
+	@POST
+	@Path("/category/{name_expenseList}")
+	@Produces({ MediaType.TEXT_PLAIN})
+	public String addExpenseCategoryToExpenseList(@PathParam("name_expenseList") String name, ExpenseCategory expenseCategory) {
+		ExpenseList expenseList = DAOProvider.getDAO().getExpenseListByName(name);
+		expenseList.addNewCategory(expenseCategory);
+		DAOProvider.getDAO().addExpenseCategory(expenseCategory);
+		return "ok1";
+	}
+	
 	
 	@GET
 	@Path("/defaultCategories")
@@ -81,25 +118,11 @@ public class ExpenseListResource {
 	
 	
 	@GET
-	@Path("/{name}")
-	@Produces({ MediaType.TEXT_PLAIN})
-	public String addExpenseList(@PathParam("name") String name){
-		ExpenseList expenseList = new ExpenseList();
-		expenseList.setName(name);
-		DAOProvider.getDAO().addExpenseList(expenseList);
-		return "ok1";
-		
-	}
-	
-	
-	
-	@GET
 	@Path("/generate/{name}")
 	@Produces({ MediaType.TEXT_PLAIN})
 	public String generatePDF(@PathParam("name") String name) throws IOException{
 		PDDocument document = new PDDocument();
 		PDPageContentStream stream;
-		
 		
 		for (int i=0; i<5; i++){
 			PDPage page = new PDPage();

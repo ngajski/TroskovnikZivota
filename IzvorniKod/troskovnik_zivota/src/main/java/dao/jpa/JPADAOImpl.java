@@ -8,7 +8,9 @@ import javax.persistence.NoResultException;
 
 import dao.DAO;
 import dao.DAOException;
+import model.ExpenseCategory;
 import model.ExpenseList;
+import model.IncomeItem;
 import model.User;
 
 /**
@@ -31,7 +33,13 @@ public class JPADAOImpl implements DAO {
 		User user = JPAEMProvider.getEntityManager().find(User.class, id);
 		return user;
 	}
-
+	
+	
+	@Override
+	public void removeExpenseListFromDatabase(ExpenseList expenseList){
+		EntityManager em = JPAEMProvider.getEntityManager();
+		em.remove(expenseList);
+	}
 	@Override
 	public User getUserByUsername(String username) throws DAOException {
 		EntityManager em = JPAEMProvider.getEntityManager();
@@ -56,6 +64,19 @@ public class JPADAOImpl implements DAO {
 		}
 
 	}
+	
+	@Override
+	public ExpenseList getExpenseListByName(String name){
+		EntityManager em = JPAEMProvider.getEntityManager();
+		try{
+			return (ExpenseList) em.createQuery("select b from ExpenseList as b where b.name=:name").setParameter("name", name).getSingleResult();
+			
+		}
+		catch (NoResultException e){
+			return null;
+		}
+		
+	}
 
 	@Override
 	public void addExpenseList(ExpenseList expenseList) {
@@ -64,6 +85,18 @@ public class JPADAOImpl implements DAO {
 		em.persist(expenseList);
 	}
 	
+	@Override
+	public void addExpenseCategory(ExpenseCategory category){
+		EntityManager em = JPAEMProvider.getEntityManager();
+		em.persist(category);
+	}
+	
+	@Override
+	public void addIncomeItem(IncomeItem item){
+		EntityManager em = JPAEMProvider.getEntityManager();
+		em.persist(item);
+	}
+
 	@Override
 	public List<ExpenseList> getExpenseListsForUsername(String username) {
 		User user = getUserByUsername(username);

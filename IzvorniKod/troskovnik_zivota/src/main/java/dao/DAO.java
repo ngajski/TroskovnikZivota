@@ -2,7 +2,9 @@ package dao;
 
 import java.util.List;
 
+import model.ExpenseCategory;
 import model.ExpenseList;
+import model.IncomeItem;
 import model.User;
 
 /**
@@ -70,5 +72,13 @@ public interface DAO {
 	public List<ExpenseList> getExpenseListsForUsername(String username);
 
 	public void addExpenseList(ExpenseList expenseList);
+
+	ExpenseList getExpenseListByName(String name);
+
+	void addExpenseCategory(ExpenseCategory category);
+
+	void removeExpenseListFromDatabase(ExpenseList expenseList);
+
+	void addIncomeItem(IncomeItem item);
 
 }

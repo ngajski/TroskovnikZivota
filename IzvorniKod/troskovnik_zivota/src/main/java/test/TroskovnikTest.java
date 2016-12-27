@@ -99,35 +99,35 @@ public class TroskovnikTest {
 	public static void main(String[] args) {
 		
 		// prihodi
-		expenseList.addNewIncomeItem(bubPrihod);
-		expenseList.addNewIncomeItem(placa);
-		expenseList.addNewIncomeItem(ostaliPrihod);
-		expenseList.addNewIncomeItem(mobPrihod);
-		
-		bubPrihod.setAmounts(prodanBubreg);
-		mobPrihod.setAmounts(prodanMobitel);
-		placa.setAmounts(prihodiPlaca);
-		ostaliPrihod.setAmounts(prihodiOstali);
-		
-		// troškovi
-		expenseList.addNewCategory(nekretnine);
-		expenseList.addNewCategory(pokretnine);
-		
-		nekretnine.addExpenseSubcategory(rezije);
-		nekretnine.addExpenseSubcategory(hrana);
-		
-		rezije.addExpenseItem(struja);
-		rezije.addExpenseItem(voda);
-		hrana.addExpenseItem(kruh);
-		rezije.addExpenseItem(bojler);
-		
-		struja.setAmounts(troskoviStruja);
-		voda.setAmounts(troskoviVoda);
-		kruh.setAmounts(troskoviStruja);
-		bojler.setAmounts(troskoviBojler);
-		
-		pokretnine.addExpenseItem(auto);
-		auto.setAmounts(troskoviAuto);
+//		expenseList.addNewIncomeItem(bubPrihod);
+//		expenseList.addNewIncomeItem(placa);
+//		expenseList.addNewIncomeItem(ostaliPrihod);
+//		expenseList.addNewIncomeItem(mobPrihod);
+//		
+//		bubPrihod.setAmounts(prodanBubreg);
+//		mobPrihod.setAmounts(prodanMobitel);
+//		placa.setAmounts(prihodiPlaca);
+//		ostaliPrihod.setAmounts(prihodiOstali);
+//		
+//		// troškovi
+//		expenseList.addNewCategory(nekretnine);
+//		expenseList.addNewCategory(pokretnine);
+//		
+//		nekretnine.addExpenseSubcategory(rezije);
+//		nekretnine.addExpenseSubcategory(hrana);
+//		
+//		rezije.addExpenseItem(struja);
+//		rezije.addExpenseItem(voda);
+//		hrana.addExpenseItem(kruh);
+//		rezije.addExpenseItem(bojler);
+//		
+//		struja.setAmounts(troskoviStruja);
+//		voda.setAmounts(troskoviVoda);
+//		kruh.setAmounts(troskoviStruja);
+//		bojler.setAmounts(troskoviBojler);
+//		
+//		pokretnine.addExpenseItem(auto);
+//		auto.setAmounts(troskoviAuto);
 		
 //		// Graf 1
 //		Map<Date, Double> salaryIncomes = expenseList.findIncomeAmount(new Date(2016, 3),

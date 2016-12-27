@@ -14,6 +14,7 @@ public class ApplicationConfig extends ResourceConfig {
  
         // Register my custom provider - not needed if it's in jaxrs.resource.
         register(jaxrs.provider.CustomJsonProvider.class);
+        register(jaxrs.provider.DebugExceptionMapper.class);
       
 		// in Jersey WADL generation is enabled by default, but we don't
 		// want to expose too much information about our apis.

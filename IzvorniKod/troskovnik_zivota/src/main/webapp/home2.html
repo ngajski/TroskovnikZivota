@@ -86,78 +86,33 @@ html, body, h1, h2, h3, h4, h5 {
 }
 </style>
 <script type="text/javascript">
-	$(document)
-			.ready(
-					function() {
-						var username = 'luka';
-						if (typeof username === "undefined") {
-							alert('Nemate ovlasti biti ovdje');
-							changeWindow('index.html');
-						} else {
-							$('#usernameHolder').html(username);
-							var expenseLists = getExpenseLists();
-							if (expenseLists.length == 0) {
-								$("#expenseListsTable")
-										.find('tbody')
-										.append(
-												$('<tr>')
-														.append(
-																$('<td>')
-																		.html(
-																				'Trenutno ne postoji niti jedan troškovnik u bazi podataka!')));
-							} else {
-								for (var i = 0; i < expenseLists.length; ++i) {
-									$("#expenseListsTable")
-											.find('tbody')
-											.append(
-													$('<tr>')
-															.append(
-																	$('<td>')
-																			.html(
-																					expenseLists[i].name)));
-								}
-							}
-						}
-					});
+	$(document).ready(function() {
+		var username = sessionStorage.getItem('username');
+		if (isEmpty(username)) {
+			addNoBackButton();
+			openModal('modal1', 'Nemate ovlasti biti ovdje');
+		} else {
+			$('#usernameHolder').html(username);
+			getExpenseLists(username, generateTableOfExpenseLists);
+		}
+	});
 
-	function getExpenseLists(username, callback) {
-		return [ {
-			name : 'Troskovnik 2017'
-		}, {
-			name : 'Troskovnik 2015'
-		}, {
-			name : 'Troskovnik 2014'
-		}, {
-			name : 'Troskovnik 2013'
-		} ];
-
-		/* Dok nebude stvarno troškovnika 
-			$
-				.ajax({
-					type : 'GET',
-					url : "service/expenseList/" + username,
-					data: 'json',
-					success : function(responseData, textStatus, jqXHR) {
-						callback(responseData);
-						var expenseLists = responseData;
-						if (expenseLists.length == 0) {
-							
-							$("#expenseListsTable")
-									.find('tbody')
+	function generateTableOfExpenseLists(expenseLists) {
+		if (expenseLists.length == 0) {
+			$("#expenseListsTable")
+					.find('tbody')
+					.append(
+							$('<tr>')
 									.append(
-											$('<tr>')
-													.append(
-															$('<td>')
-																	.html(
-																			'Trenutno ne postoji niti jedan troškovnik u bazi podataka!')));
-						} else {
-
-						}
-					},
-					error : function(responseData, textStatus, errorThrown) {
-						console.log('GET failed expense lists.');
-					}
-				});*/
+											$('<td>')
+													.html(
+															'Trenutno ne postoji niti jedan troškovnik u bazi podataka!')));
+		} else {
+			for (var i = 0; i < expenseLists.length; ++i) {
+				$("#expenseListsTable").find('tbody').append(
+						$('<tr>').append($('<td>').html(expenseLists[i].name)));
+			}
+		}
 	}
 </script>
 
@@ -273,35 +228,98 @@ html, body, h1, h2, h3, h4, h5 {
 	var isNewExpenseListActive = 0; /*provjera stanja */
 	var originalCreationDivision = $('#appBody').html();
 	var currentElementId = 0; /* LOŠE RIJEŠENJE !!! */
+	var name_expenseList = ""; /*ime trenutnog troskovnika*/
 
-	
-	function persistExpenseList(){
-		var name = $('#input-1');
-				
+	function createExpenseList(name, expenseCategories, incomeItems) {
+		var x = {
+			name : name,
+			expenseCategories : expenseCategories,
+			incomeItems : incomeItems
+
+		}
+		return x;
+	}
+	function persistCategoryToExpenseList() {
+		console.log(name_expenseList);
+		var val = $('#categoryName').val();
+		var category = createExpenseCategory(val, null, null);
+		var json = JSON.stringify(category);
+
 		$.ajax({
-			type : 'GET',
-			url : "service/expenseList/"+name,
+			type : 'POST',
+			url : "service/expenseList/category/" + name_expenseList,
+			data : json,
+			contentType : "application/json",
 			dataType : 'text',
+			contentType : "application/json",
 			success : function(responseData, textStatus, jqXHR) {
-				var answer = responseData;
-				if (answer == "ok1"){
-					console.log("expenseList successfully persisted !");
-				}
+				var val = responseData;
+				console.log('Dodao kategoriju')
 			},
 			error : function(responseData, textStatus, errorThrown) {
-				alert('GET failed.');
+				console.log('POST failed nisam dodao troskovnik.');
+			}
+		});
+
+	}
+	function createExpenseCategory(name, fixed, subCategories) {
+		var x = {
+			name : name,
+			fixed : fixed,
+			subCategories : subCategories,
+
+		}
+		return x;
+	}
+
+	function removeExpenseListFromDatabase() {
+		console.log(name_expenseList);
+
+		$.ajax({
+			type : 'DELETE',
+			url : "service/expenseList/remove/" + name_expenseList,
+			dataType : 'text',
+			success : function(responseData, textStatus, jqXHR) {
+				name_expenseList = "";
+				isNewExpenseListActive = 0;
+				reset();
+				window.location.replace("home2.html")
+				$('#appBody').html(originalCreationDivision);
+				console.log('Izbrisao troškovnik');
+			},
+			error : function(responseData, textStatus, errorThrown) {
+				console.log('POST failed nisam izbriso troskovnik.');
+			}
+		});
+
+	}
+	function persistExpenseList() {
+		var name = $('#input-1').val();
+		var username = sessionStorage.getItem('username');
+		var list = createExpenseList(name, null, null);
+		var json = JSON.stringify(list);
+
+		$.ajax({
+			type : 'POST',
+			url : "service/expenseList/" + username,
+			data : json,
+			contentType : "application/json",
+			dataType : 'text',
+			contentType : "application/json",
+			success : function(responseData, textStatus, jqXHR) {
+				name_expenseList = responseData;
+				console.log('Dodao troskovnik')
+			},
+			error : function(responseData, textStatus, errorThrown) {
+				console.log('POST failed nisam dodao troskovnik.');
 			}
 		});
 	}
-	
-	
-	
-	
+
 	function generatePDF_test() {
 
 		var name = $("#testButton").text();
-		console.log(name);
-		
+
 		$.ajax({
 			type : 'GET',
 			url : "service/expenseList/generate/" + name,
@@ -374,11 +392,10 @@ html, body, h1, h2, h3, h4, h5 {
 	}
 
 	function saveAndExit() {
-		/* 	isNewExpenseListActive = 0;
+		isNewExpenseListActive = 0;
 		reset();
 		window.location.replace("home2.html");
-		TODO SPREMI U BAZU 
-		$('#appBody').html(originalCreationDivision); */
+		$('#appBody').html(originalCreationDivision);
 
 	}
 
@@ -473,7 +490,7 @@ html, body, h1, h2, h3, h4, h5 {
 
 	}
 	function addCategoryToList() {
-
+		persistCategoryToExpenseList();
 		$('#testing').hide(750);
 		var val = $("#categoryName").val();
 		var name = "Kategorija" + val;
@@ -525,17 +542,45 @@ html, body, h1, h2, h3, h4, h5 {
 	}
 
 	function removeAnswerYes() {
-		isNewExpenseListActive = 0;
-		reset();
-		window.location.replace("home2.html")
-		$('#appBody').html(originalCreationDivision);
+		removeExpenseListFromDatabase();
 		/* TODO */
 	}
 
 	function removeAnswerNo() {
 		$('#removeExpenseListDivisionOuter').hide(750);
 	}
+	
+	function createIncomeItem(name) {
+		var x = {
+			name : name
+		}
+		return x;
+	}
 	function addIncomeToIncomeList() {
+		var val = $('#incomeName').val();
+		var income = createIncomeItem(val);
+		var json = JSON.stringify(income);
+
+		$.ajax({
+			type : 'POST',
+			url : "service/expenseList/income/" + name_expenseList,
+			data : json,
+			contentType : "application/json",
+			dataType : 'text',
+			contentType : "application/json",
+			success : function(responseData, textStatus, jqXHR) {
+				console.log('Dodao prihod')
+			},
+			error : function(responseData, textStatus, errorThrown) {
+				console.log('POST failed nisam dodao troskovnik.');
+			}
+		});
+
+		
+		
+		
+		
+		
 		$('#addIncomeItemDivision').hide(750);
 		var val = $("#incomeName").val();
 		if (val.length != 0) {
@@ -696,7 +741,7 @@ html, body, h1, h2, h3, h4, h5 {
 					</div>
 					<div class="w3-accordion">
 						<a onclick="saveAndExit()" href="javascript:void(0)"
-							class="w3-text-black" id="myBtn3"> Spremi </a>
+							class="w3-text-black" id="myBtn3"> Završi i spremi </a>
 					</div>
 					<div class="w3-accordion" id="remove">
 						<a onclick="deleteExpenseList()" href="javascript:void(0)"
