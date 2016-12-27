@@ -103,6 +103,13 @@ public class ExpenseCategory {
 		
 		category.setSuperCategory(this);
 		category.setExpenseListOwner(this.getExpenseListOwner());
+		
+		//TODO
+		if (subCategories == null) {
+			subCategories = new ArrayList<>();
+		}
+		
+		subCategories.add(category);
 	}
 	
 	/**
@@ -116,6 +123,12 @@ public class ExpenseCategory {
 		if (this.fixed) {
 			item.setFixed(this.fixed);
 		}
+		
+		if (expenseItems == null) {
+			expenseItems = new ArrayList<>();
+		}
+		
+		expenseItems.add(item);
 	}
 	
 	public Long getId() {

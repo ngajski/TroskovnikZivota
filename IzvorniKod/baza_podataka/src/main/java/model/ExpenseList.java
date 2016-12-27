@@ -96,6 +96,7 @@ public class ExpenseList {
 		}
 	}
 	
+	
 	/**
 	 * Returns map of all months and their summed expenses. 
 	 * 
@@ -115,7 +116,7 @@ public class ExpenseList {
 	 * @param fixed true, false, or null
 	 * @return
 	 */
-	public Map<Date,Double> findExpenseAmount(Date startDate, Date stopDate,Map<Date,Double> expenseByMonth,
+	public Map<String,Double> findExpenseAmount(String startDate, String stopDate,Map<String,Double> expenseByMonth,
 			List<ExpenseCategory> categories, Boolean fixed) {
 		
 		if (categories == null || categories.isEmpty()) {
@@ -136,9 +137,9 @@ public class ExpenseList {
 					}
 				}
 				
-				int payingMonths = startDate.difference(stopDate) + 1;
+				int payingMonths = Date.difference2(startDate, stopDate) + 1;
 				
-				Date date = new Date(startDate);
+				String date = new String(startDate);
 				for (Integer monthNumber = 0; monthNumber < payingMonths; monthNumber = monthNumber+1) {
 					Double oldExpense = expenseByMonth.get(date);
 					if (oldExpense == null) {
@@ -146,8 +147,8 @@ public class ExpenseList {
 					}
 					
 					Double expense = item.getExpenseForDate(date);
-					expenseByMonth.put(new Date(date), oldExpense + expense); 
-					date.nextMonth();
+					expenseByMonth.put(new String(date), oldExpense + expense); 
+					date = Date.nextMonth(date);
 					
 				}
 			}
@@ -172,8 +173,8 @@ public class ExpenseList {
 	 * @param salary true,false or null
 	 * @return
 	 */
-	public Map<Date, Double> findIncomeAmount(Date startDate, Date stopDate, Boolean sallary) {
-		Map<Date, Double> incomeByMonth = new LinkedHashMap<>();
+	public Map<String, Double> findIncomeAmount(String startDate, String stopDate, Boolean sallary) {
+		Map<String, Double> incomeByMonth = new LinkedHashMap<>();
 
 		for (IncomeItem item : incomeItems) {
 
@@ -183,24 +184,23 @@ public class ExpenseList {
 				}
 			}
 
-			int payingMonths = startDate.difference(stopDate) + 1;
+			int payingMonths = Date.difference2(startDate, stopDate) + 1;
 
-			Date date = new Date(startDate);
+			String dateForIteration = new String(startDate);
 			for (Integer monthNumber = 0; monthNumber < payingMonths; monthNumber = monthNumber + 1) {
-				Double oldExpense = incomeByMonth.get(date);
+				Double oldExpense = incomeByMonth.get(dateForIteration);
 				if (oldExpense == null) {
 					oldExpense = new Double(0.0);
 				}
 
-				Double expense = item.getIncomeForDate(date);
-				incomeByMonth.put(new Date(date), oldExpense + expense);
-				date.nextMonth();
+				Double expense = item.getIncomeForDate(dateForIteration);
+				incomeByMonth.put(new String(dateForIteration), oldExpense + expense);
+				dateForIteration = Date.nextMonth(dateForIteration);
 
 			}
 		}
 		return incomeByMonth;
 	}
-	
 	
 	public Long getId() {
 		return id;

@@ -3,117 +3,18 @@ package model.time;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import model.ExpenseItem;
-import model.IncomeItem;
-
-@Entity
-@Table(name = "dates")
+/**
+ * Class with static methods for operations with dates given in format:
+ * MM/YYYY
+ * 
+ * @author nikola
+ *
+ */
 public class Date {
-
-	@Id
-	@GeneratedValue
-	private Long id;
-	
-	@Column(name ="\"year\"")
-	private Integer year;
-	
-	@Column
-	private Integer month;
-	
-	@OneToMany(mappedBy = "startDate", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = false)
-	private List<ExpenseItem> startDateExpenseOwners;
-	
-	@OneToMany(mappedBy = "endDate", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = false)
-	private List<ExpenseItem> endDateExpenseOwners;
-	
-	@OneToMany(mappedBy = "startDate", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = false)
-	private List<IncomeItem> startDateIncomeOwners;
-	
-	@OneToMany(mappedBy = "endDate", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = false)
-	private List<IncomeItem> endDateIncomeOwners;
 	
 	private static final List<String> MONTHS = Arrays.asList("January", "February", "March","April","May",
 			"June","July","August","October","September","November","December");
-	
-	public Date() {
-		super();
-	}
-	
-	public Date(int year, int month) {
-		if (month < 1 || month > 12) {
-			throw new IllegalArgumentException("Month outside of interval: " + month);
-		}
-		this.year = year;
-		this.month = month;
-	}
-	
-	public Date(Date date) {
-		this.month = date.getMonth();
-		this.year = date.getYear();
-	}
-	
-	/**
-	 * Returns true if this happened after given date or in this month.
-	 * 
-	 * @param date {@link Date}
-	 * @return true if this happened after givent date
-	 */
-	public boolean happenedAfter(Date date) {
-		if (this.year >= date.getYear() && this.month >= date.getMonth()) {
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Returns true if this happened before given date or in this month.
-	 * 
-	 * @param date {@link Date}
-	 * @return true if this happened before given date
-	 */
-	public boolean happenedBefore(Date date) {
-		if (this.year < date.getYear()) {
-			return true;
-		} else if (this.year.equals(date.getYear()) && this.month <= date.getMonth()) {
-			return true;
-		}
 		
-		return false;
-	}
-	
-	/**
-	 * Returns difference in months between given {@link Date} and this.
-	 * 
-	 * @param date {@link Date}
-	 * @return difference in months
-	 */
-	public int difference(Date date) {
-		int yearDif = Math.abs(this.year - date.year);
-		int monthDif = Math.abs(this.month - date.month);
-		return yearDif * 12 + monthDif;
-	}
-	
-	/**
-	 * Switch from current month to next month.
-	 */
-	public void nextMonth() {
-		if (month < 12) {
-			month++;
-		} else {
-			year++;
-			month = new Integer(1);
-		}
-	}
-	
 	/**
 	 * Returns {@link String} representation of month given with
 	 * number from 1 - 12.
@@ -128,63 +29,103 @@ public class Date {
 		return MONTHS.get(monthNumber-1);
 	}
 
-	public Integer getMonth() {
-		return month;
-	}
-	
-	public Integer getYear() {
-		return year;
-	}
-	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((month == null) ? 0 : month.hashCode());
-		result = prime * result + ((year == null) ? 0 : year.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
+	/**
+	 * Returns true if date1 happened after date2 or in this month.
+	 * Date format: mm/yyyy
+	 * 
+	 * 
+	 * @return true if this happened after givent date
+	 */
+	public static boolean happenedAfter(String date1,String date2) {
+		String[] polje1 = date1.split("/");
+		String[] polje2 = date2.split("/");
+		
+		int year1 = Integer.parseInt(polje1[1]);
+		int year2 = Integer.parseInt(polje2[1]);
+		int month1 = Integer.parseInt(polje1[0]);
+		int month2 = Integer.parseInt(polje2[0]);
+		
+		if (year1 > year2) {
 			return true;
-		if (obj == null)
+		} else if (year1 < year2) {
 			return false;
-		if (getClass() != obj.getClass())
+		} else if (month1 >= month2) {
+			return true;
+		} else {
 			return false;
-		Date other = (Date) obj;
-		if (month == null) {
-			if (other.month != null)
-				return false;
-		} else if (!month.equals(other.month))
+		}
+	}
+	
+	/**
+	 * Returns true if date1 happened before given date or in this month.
+	 * 
+	 * @return true if this happened before given date
+	 */
+	public static boolean happenedBefore(String date1,String date2) {
+		String[] polje1 = date1.split("/");
+		String[] polje2 = date2.split("/");
+		
+		int year1 = Integer.parseInt(polje1[1]);
+		int year2 = Integer.parseInt(polje2[1]);
+		int month1 = Integer.parseInt(polje1[0]);
+		int month2 = Integer.parseInt(polje2[0]);
+		
+		if (year1 < year2) {
+			return true;
+		} else if (year1 > year2) {
 			return false;
-		if (year == null) {
-			if (other.year != null)
-				return false;
-		} else if (!year.equals(other.year))
+		}else if (month1 <= month2) {
+			return true;
+		} else {
 			return false;
-		return true;
+		}
 	}
-
-	@Override
-	public String toString() {
-		return "Date: " + year + " - " + month;
+	
+	/**
+	 * Returns difference in months between date1 and date2.
+	 * 
+	 * @param date {@link Date}
+	 * @return difference in months
+	 * 
+	 * 
+	 */
+	public static int difference2(String date1,String date2) {
+		String[] polje1 = date1.split("/");
+		String[] polje2 = date2.split("/");
+		
+		int year1 = Integer.parseInt(polje1[1]);
+		int year2 = Integer.parseInt(polje2[1]);
+		int month1 = Integer.parseInt(polje1[0]);
+		int month2 = Integer.parseInt(polje2[0]);
+		
+		int yearDif = Math.abs(year1 - year2);
+		int monthDif = month1 - month2;
+		return yearDif * 12 + monthDif;
 	}
-
-	public Long getId() {
-		return id;
+	
+	/**
+	 * Switch from current month to next month, and returns next month in 
+	 * {@link String} representation: mm/yyyy
+	 */
+	public static String nextMonth(String date) {
+		String[] polje = date.split("/");
+		
+		int year = Integer.parseInt(polje[1]);
+		int month = Integer.parseInt(polje[0]);
+		
+		if (month < 12) {
+			month++;
+		} else {
+			year++;
+			month = new Integer(1);
+		}
+		
+		return month + "/" + year;
 	}
-
-	public void setId(Long id) {
-		this.id = id;
+	
+	public static int getMonth(String date) {
+		return Integer.parseInt(date.split("/")[0]);
 	}
-
-	public void setYear(Integer year) {
-		this.year = year;
-	}
-
-	public void setMonth(Integer month) {
-		this.month = month;
-	}
+	
+	
 }

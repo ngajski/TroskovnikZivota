@@ -20,9 +20,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "expense_categories")
 public class ExpenseCategory {
 
-	/**
-	 * id
-	 */
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -96,6 +93,12 @@ public class ExpenseCategory {
 		
 		category.setSuperCategory(this);
 		category.setExpenseListOwner(this.getExpenseListOwner());
+		
+		//TODO
+		if (subCategories == null) {
+			subCategories = new ArrayList<>();
+		}
+		
 		subCategories.add(category);
 	}
 	
@@ -106,14 +109,15 @@ public class ExpenseCategory {
 	 * @param item
 	 */
 	public void addExpenseItem(ExpenseItem item) {
-		if (expenseItems == null) {
-			expenseItems = new ArrayList<>();
-		}
-		
 		item.setExpenseCategoryOwner(this);
 		if (this.fixed) {
 			item.setFixed(this.fixed);
 		}
+		
+		if (expenseItems == null) {
+			expenseItems = new ArrayList<>();
+		}
+		
 		expenseItems.add(item);
 	}
 	
