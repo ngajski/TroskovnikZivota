@@ -85,12 +85,12 @@ public class ExpenseList {
 			category.setExpenseListOwner(this);
 		}
 		
-		//TODO
-		if (expenseCategories == null) {
-			expenseCategories = new ArrayList<>();
-		}
-		
-		expenseCategories.add(category);
+		//TODO ako se ubacuje u bazu ovo mora bit zakomentirano
+//		if (expenseCategories == null) {
+//			expenseCategories = new ArrayList<>();
+//		}
+//		
+//		expenseCategories.add(category);
 	}
 	
 	/**
@@ -104,11 +104,12 @@ public class ExpenseList {
 			item.setExpenseListOwner(this);
 		}
 		
-		if (incomeItems == null) {
-			incomeItems = new ArrayList<>();
-		}
-		
-		incomeItems.add(item);
+		//TODO ako se ubacuje u bazu ovo mora bit zakomentirano
+//		if (incomeItems == null) {
+//			incomeItems = new ArrayList<>();
+//		}
+//		
+//		incomeItems.add(item);
 	}
 	
 	/**
