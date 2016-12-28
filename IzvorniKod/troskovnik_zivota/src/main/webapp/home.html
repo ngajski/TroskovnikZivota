@@ -187,6 +187,51 @@ html, body, h1, h2, h3, h4, h5 {
 		$('#mySidenav').hide();
 	}
 </script>
+
+
+<!-- Skup fja za generiranje PDF-a -->
+<script type="text/javascript">
+
+function prepareGeneratePDF(){
+	var username = sessionStorage.getItem('username');
+	getExpenseLists(username, generateExpenseListsRadioGroup);
+
+}
+
+function generateExpenseListsRadioGroup(expenseLists) {
+	var hookup = $("#expenseListRadioGroupHookup").empty();
+	if (expenseLists.length != 0) {
+		hookup.append("<h5>Izaberi troškovnik za generirat PDF</h5>");
+		for (var i = 0; i < expenseLists.length; ++i) {
+			var radioTemplate = $("#radioTemplate");
+			var cloned = radioTemplate.clone().removeAttr("style")
+					.removeAttr("id");
+			cloned.children("label").html(expenseLists[i].name);
+			cloned.children("input").attr('value', expenseLists[i].name);
+			hookup.append(cloned);
+		}
+	} else {
+		hookup
+				.append("<label style='font-size: 20px'>Za generiranje troškovnika potrebno je prvo izraditi jedan. </label>");
+	}
+}
+
+function setHref() {
+	var username = sessionStorage.getItem('username');
+	
+	var name = $('input[name=expenseList]:checked').val();
+	
+	$('#generatePDFLinkButton')
+			.attr(
+					'href',
+					'service/expenseList/generate/' + username
+							+ "/" + name);
+	
+	return true;
+}
+
+</script>
+
 <body class="w3-light-grey">
 
 	<!-- Top container -->
@@ -229,7 +274,7 @@ html, body, h1, h2, h3, h4, h5 {
 		<a href="#" class="w3-padding" id="newExpenseListLink" onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4), 'newExpenseListCreation')"><i class="fa fa-plus-circle"></i> Novi troškovnik</a>
 		<a href="#" class="w3-padding" id="editExpenseListLink" onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4))"><i class="fa fa-edit"></i> Uredi postojeći</a>
 		<a href="#" class="w3-padding" id="sendExpenseListLink" onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4), 'searchForExpenseLists')"><i class="fa fa-send-o"></i> Pošalji troškovnik</a>
-		<a href="#" class="w3-padding" id="generatePDFLink" onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4))"><i	class="fa fa-file-pdf-o"></i> Generiraj PDF</a>
+		<a href="#" class="w3-padding" id="generatePDFLink" onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4), 'prepareGeneratePDF')"><i	class="fa fa-file-pdf-o"></i> Generiraj PDF</a>
 	</nav>
 
 
@@ -362,7 +407,19 @@ html, body, h1, h2, h3, h4, h5 {
 
 			<div class="w3-container" id="generatePDFDiv" style="display: none;">
 
-				<h4>Izaberi troškovnik koji želiš generirati</h4>
+				<p style="display: none" id="radioTemplate" >
+					<input class="radioInput w3-radio" type="radio" name="expenseList"> 
+					<label class="w3-validate"></label>
+				</p>
+
+				<div class="w3-container w3-card-4 w3-white"
+					id="expenseListRadioGroupHookup"></div>
+
+				<div class="w3-container" id="generatePDFDiv">
+					<div>
+						<a class="w3-btn w3-right w3-white w3-border" id='generatePDFLinkButton' onclick="return setHref();">GENERIRAJ</a>
+					</div>
+				</div>
 
 			</div>
 

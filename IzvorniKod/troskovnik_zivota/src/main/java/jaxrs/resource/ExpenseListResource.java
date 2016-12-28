@@ -1,5 +1,6 @@
 package jaxrs.resource;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
@@ -15,8 +16,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
@@ -120,33 +124,53 @@ public class ExpenseListResource {
 	
 	
 	@GET
-	@Path("/generate/{name}")
-	@Produces({ MediaType.TEXT_PLAIN})
-	public String generatePDF(@PathParam("name") String name) throws IOException{
+	@Path("/generate/{username}/{name}")
+	@Produces("application/pdf")
+	public Response generatePDF(@PathParam("username") String username, @PathParam("name") String name) throws IOException{
+//		List<ExpenseList> expenseLists = getExpenseListsForUsername(username);
+//		ExpenseList expenseList = new ExpenseList();
+//		for(ExpenseList list : expenseLists) {
+//			if(list.getName().equals(name)) {
+//				expenseList = list;
+//				break;
+//			}
+//		}
+		
 		PDDocument document = new PDDocument();
+		PDDocumentInformation info = new PDDocumentInformation();
+		info.setAuthor(username);
+		info.setTitle(name);
+		info.setSubject("Troskovnik zivota: " + name);
+		document.setDocumentInformation(info);
+		
 		PDPageContentStream stream;
+		PDPage page;
+		//String text;
 		
-		for (int i=0; i<5; i++){
-			PDPage page = new PDPage();
-			stream = new PDPageContentStream(document,page);
-			
-			stream.beginText();
-			stream.setFont(PDType1Font.COURIER_BOLD, 12);
-			stream.newLineAtOffset(225, 760);
-			String text = name;
-			stream.showText(text);
-			stream.endText();
-			
-			
-			
-			stream.close();
-			document.addPage(page);
-		}
+		page = new PDPage();
+		stream = new PDPageContentStream(document,page);
+		stream.beginText();
+		stream.setFont(PDType1Font.COURIER_BOLD, 12);
+		stream.setLeading(14.5f);
+		stream.newLineAtOffset(250, 700);
+		stream.showText("TROŠKOVNIK ŽIVOTA");
+		stream.newLine();
+		stream.showText("IME: " + name);
+		stream.newLine();
+		stream.showText("KORISNIK: " + username);
+		stream.endText();
+		stream.close();
+		document.addPage(page);
 		
-//		MENJAJ USERA
-		document.save("mypdf.pdf");
+		File file = new File("troskovnik.pdf");
+		document.save(file);
 		document.close();
-		return "ok";
+		
+		ResponseBuilder response = Response.ok((Object) file);
+		response.header("Content-Disposition", "attachment; filename=troskovnik_"+name+".pdf");
+		response.header("Content-Type", "application/force-download");
+		return response.build();
+		
 	}
 			
 	}

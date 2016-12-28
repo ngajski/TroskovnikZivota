@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<meta charset="UTF-8" name="viewport"
+	content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+
+<link rel="stylesheet" type="text/css" href="css/set2.css" />
+
+<!-- Jquery -->
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="js/general.js"></script>
+<script type="text/javascript">
+	$(document).ready(
+			function() {
+				var username = sessionStorage.getItem('username');
+				getExpenseLists(username, generateExpenseListsCheckBox);
+			});
+
+	function generateExpenseListsCheckBox(expenseLists) {
+		var hookup = $("#expenseListRadioGroupHookup").empty();
+		if (expenseLists.length != 0) {
+			hookup.append("<h5>Izaberi troškovnik za generirat PDF</h5>");
+			for (var i = 0; i < expenseLists.length; ++i) {
+				var radioTemplate = $("#radioTemplate");
+				var cloned = radioTemplate.clone().removeAttr("style")
+						.removeAttr("id");
+				cloned.children("label").html(expenseLists[i].name);
+				cloned.children("input").attr('value', expenseLists[i].name);
+				hookup.append(cloned);
+			}
+		} else {
+			hookup
+					.append("<label style='font-size: 20px'>Za generiranje troškovnika potrebno je prvo izraditi jedan. </label>");
+		}
+	}
+	
+	function setHref() {
+		var username = sessionStorage.getItem('username');
+		
+		var name = $('input[name=expenseList]:checked').val();
+		
+		$('#generatePDFLink')
+				.attr(
+						'href',
+						'service/expenseList/generate/' + username
+								+ "/" + name);
+	}
+</script>
+
+
+
+
+<body>
+	<p style="display: none" id="radioTemplate" >
+		<input class="radioInput w3-radio" type="radio" name="expenseList"> 
+		<label class="w3-validate"></label>
+	</p>
+
+	<div class="w3-container w3-card-4 w3-white"
+		id="expenseListRadioGroupHookup"></div>
+
+	<div class="w3-container" id="generatePDFDiv">
+		<div>
+			<a class="w3-btn w3-right w3-white w3-border" id='generatePDFLink' onclick="return setHref();">GENERIRAJ</a>
+		</div>
+	</div>
+
+
+</body>
+</html>

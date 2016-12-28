@@ -110,15 +110,15 @@ function isEmpty(string) {
  * @returns void
  */
 function getExpenseLists(username, callback) {
-		$.ajax({
+	$.ajax({
 		type : 'GET',
 		url : "service/expenseList/" + username,
-		data : 'json',
+		dataType : 'json',
 		success : function(responseData, textStatus, jqXHR) {
 			callback(responseData);
 		},
 		error : function(responseData, textStatus, errorThrown) {
 			console.log('GET failed expense lists.');
 		}
-	});
+});
 }
