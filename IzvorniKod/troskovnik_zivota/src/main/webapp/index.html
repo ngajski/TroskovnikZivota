@@ -36,41 +36,42 @@ html, body, h1, h2, h3, h4, h5 {
 		var username = $(" input[name='registerUsername'] ").val();
 		var password = $(" input[name='registerPassword'] ").val();
 
-		$.ajax({
-				type : 'GET',
-				url : "http://localhost:8080/baza-podataka/service/users/exists/username/"
-						+ username,
-				crossDomain : true,
-				dataType: 'text',
-				success : function(responseData, textStatus, jqXHR) {
-					var exists = responseData;
+		$
+				.ajax({
+					type : 'GET',
+					url : "http://localhost:8080/baza-podataka/service/users/exists/username/"
+							+ username,
+					crossDomain : true,
+					dataType : 'text',
+					success : function(responseData, textStatus, jqXHR) {
+						var exists = responseData;
 						if (exists == "true") {
-						alert("Korisnicko ime postoji, izaberite drugo!");
-					} else {
-						sessionStorage.setItem('register', 'true');
-						sessionStorage.setItem('username', username);
-						sessionStorage.setItem('password', password);
-						changeWindowUrl('register.html');
+							alert("Korisnicko ime postoji, izaberite drugo!");
+						} else {
+							sessionStorage.setItem('register', 'true');
+							sessionStorage.setItem('username', username);
+							sessionStorage.setItem('password', password);
+							changeWindowUrl('register.html');
+						}
+					},
+					error : function(responseData, textStatus, errorThrown) {
+						alert('GET failed.');
 					}
-				},
-				error : function(responseData, textStatus, errorThrown) {
-					alert('GET failed.');
-				}
-			});
+				});
 	}
-	
+
 	/* This function checks if given username and password are valid (in local DB), if they are valid
 	 it will store username in storage (session) object and change page to home.html*/
 	function validateLoginForm() {
 		if (emptyExists('loginInput')) {
 			return;
 		}
-		
+
 		var username = $(" input[name='loginUsername'] ").val();
 		var password = $(" input[name='loginPassword'] ").val();
 		var user = {
-				username: username,
-				password: password
+			username : username,
+			password : password
 		};
 
 		var json = JSON.stringify(user);
@@ -79,7 +80,7 @@ html, body, h1, h2, h3, h4, h5 {
 			url : "service/users/validateLogin",
 			data : json,
 			contentType : "application/json",
-			dataType: 'text',
+			dataType : 'text',
 			success : function(responseData, textStatus, jqXHR) {
 				var isValid = responseData;
 				if (isValid == "false") {
@@ -95,26 +96,28 @@ html, body, h1, h2, h3, h4, h5 {
 			}
 		});
 
-		function openTab(evt, tabName) {
-  var i, x, tablinks;
-  x = document.getElementsByClassName("forma");
-  for (i = 0; i < x.length; i++) {
-     x[i].style.display = "none";
-  }
-  tablinks = document.getElementsByClassName("tablink");
-  for (i = 0; i < x.length; i++) {
-     tablinks[i].className = tablinks[i].className.replace("w3-hover-blue", "w3-hover-light-blue").replace("w3-text-white", "w3-text-grey").replace(" w3-blue", "");
+	}
 
-     
-     
-  }
-  document.getElementById(tabName).style.display = "block";
-  var activeTab = evt.currentTarget.firstElementChild;
+	function openTab(evt, tabName) {
+		var i, x, tablinks;
+		x = document.getElementsByClassName("forma");
+		for (i = 0; i < x.length; i++) {
+			x[i].style.display = "none";
+		}
+		tablinks = document.getElementsByClassName("tablink");
+		for (i = 0; i < x.length; i++) {
+			tablinks[i].className = tablinks[i].className.replace(
+					"w3-hover-blue", "w3-hover-light-blue").replace(
+					"w3-text-white", "w3-text-grey").replace(" w3-blue", "");
 
-  activeTab.className += " w3-blue ";
-  activeTab.className = activeTab.className.replace("w3-hover-light-blue", "w3-hover-blue").replace("w3-text-grey","w3-text-white"); 
- 
-}
+		}
+		document.getElementById(tabName).style.display = "block";
+		var activeTab = evt.currentTarget.firstElementChild;
+
+		activeTab.className += " w3-blue ";
+		activeTab.className = activeTab.className.replace(
+				"w3-hover-light-blue", "w3-hover-blue").replace("w3-text-grey",
+				"w3-text-white");
 
 	}
 </script>
@@ -129,77 +132,87 @@ html, body, h1, h2, h3, h4, h5 {
 		class="w3-container w3-card-4 w3-light-grey"
 		style="width: 60%; position: relative; left: 20%;">
 
-        <div class=" w3-margin-top">
-           		
-       <a href="javascript:void(0)" onclick="openTab(event, 'Prijava');">
-      <div class="w3-panel w3-card w3-half w3-center tablink w3-text-white w3-hover-blue w3-padding w3-border-blue w3-xxlarge w3-blue ">Prijava</div>
-    </a>
+		<div class=" w3-margin-top">
 
-    <a href="javascript:void(0)" onclick="openTab(event, 'Registracija');">
-      <div class="w3-panel w3-card w3-half w3-center w3-text-grey tablink w3-hover-light-blue w3-border-blue w3-padding w3-xxlarge ">Registracija</div>
-    </a>
+			<a href="javascript:void(0)" onclick="openTab(event, 'Prijava');">
+				<div
+					class="w3-panel w3-card w3-half w3-center tablink w3-text-white w3-hover-blue w3-padding w3-border-blue w3-xxlarge w3-blue ">Prijava</div>
+			</a> <a href="javascript:void(0)"
+				onclick="openTab(event, 'Registracija');">
+				<div
+					class="w3-panel w3-card w3-half w3-center w3-text-grey tablink w3-hover-light-blue w3-border-blue w3-padding w3-xxlarge ">Registracija</div>
+			</a>
 
 
-  </div>
-
-  <div id="Prijava" class="w3-container forma w3-center w3-text-blue w3-margin-top" style="display:true">
-
-  	<h2 class="w3-center ">Dobro došli nazad</h2>
-
-	<div class="w3-row w3-section">
-		<div class="w3-col" style="width: 50px">
-			<i class="w3-xxlarge fa fa-user"></i>
 		</div>
-		<div class="w3-rest">
-			<input class="loginInput w3-input w3-border w3-round"
-				name="loginUsername" type="text" required placeholder="Korisničko ime">
+
+		<div id="Prijava"
+			class="w3-container forma w3-center w3-text-blue w3-margin-top"
+			style="display: true">
+
+			<h2 class="w3-center ">Dobro došli nazad</h2>
+
+			<div class="w3-row w3-section">
+				<div class="w3-col" style="width: 50px">
+					<i class="w3-xxlarge fa fa-user"></i>
+				</div>
+				<div class="w3-rest">
+					<input class="loginInput w3-input w3-border w3-round"
+						name="loginUsername" type="text" required
+						placeholder="Korisničko ime">
+				</div>
+			</div>
+
+			<div class="w3-row w3-section">
+				<div class="w3-col" style="width: 50px">
+					<i class="w3-xxlarge fa fa-key"></i>
+				</div>
+				<div class="w3-rest">
+					<input class="loginInput w3-input w3-border w3-round"
+						name="loginPassword" type="password" required
+						placeholder="Lozinka">
+				</div>
+			</div>
+
+			<button class="w3-btn-block w3-section w3-blue w3-ripple w3-padding"
+				onclick="validateLoginForm()" id='formButton'>Prijavi se</button>
+
 		</div>
-	</div>
 
-	<div class="w3-row w3-section">
-		<div class="w3-col" style="width: 50px">
-			<i class="w3-xxlarge fa fa-key"></i>
+		<div id="Registracija"
+			class="w3-container forma w3-center w3-text-blue w3-margin-top"
+			style="display: none">
+
+			<h2 class="w3-center ">Novi korisnik</h2>
+
+
+			<div class="w3-row w3-section">
+				<div class="w3-col" style="width: 50px">
+					<i class="w3-xxlarge fa fa-user"></i>
+				</div>
+				<div class="w3-rest">
+					<input class="registerInput w3-input w3-border w3-round"
+						name="registerUsername" type="text" required
+						placeholder="Korisničko ime*">
+				</div>
+			</div>
+
+			<div class="w3-row w3-section">
+				<div class="w3-col" style="width: 50px">
+					<i class="w3-xxlarge fa fa-key"></i>
+				</div>
+				<div class="w3-rest">
+					<input class="registerInput w3-input w3-border w3-round"
+						name="registerPassword" type="password" required
+						placeholder="Lozinka*">
+				</div>
+			</div>
+
+			<button class="w3-btn-block w3-section w3-blue w3-ripple w3-padding"
+				onclick="validateRegisterForm()" id='formButton'>Registriraj
+				se</button>
+
 		</div>
-		<div class="w3-rest">
-			<input class="loginInput w3-input w3-border w3-round"
-				name="loginPassword" type="password" required placeholder="Lozinka">
-		</div>
-	</div>
-
-	<button class="w3-btn-block w3-section w3-blue w3-ripple w3-padding"
-			onclick="validateLoginForm()" id='formButton'>Prijavi se</button>
-
-  </div>
-
-  <div id="Registracija" class="w3-container forma w3-center w3-text-blue w3-margin-top" style="display:none">
- 
-  		<h2 class="w3-center ">Novi korisnik</h2>
-
-
-	<div class="w3-row w3-section">
-		<div class="w3-col" style="width: 50px">
-			<i class="w3-xxlarge fa fa-user"></i>
-		</div>
-		<div class="w3-rest">
-			<input class="registerInput w3-input w3-border w3-round"
-				name="registerUsername" type="text" required placeholder="Korisničko ime*">
-		</div>
-	</div>
-
-	<div class="w3-row w3-section">
-		<div class="w3-col" style="width: 50px">
-			<i class="w3-xxlarge fa fa-key"></i>
-		</div>
-		<div class="w3-rest">
-			<input class="registerInput w3-input w3-border w3-round"
-				name="registerPassword" type="password" required placeholder="Lozinka*">
-		</div>
-	</div>
-
-	<button class="w3-btn-block w3-section w3-blue w3-ripple w3-padding"
-			onclick="validateRegisterForm()" id='formButton'>Registriraj se</button>
-
-  </div>
 
 	</form>
 
@@ -207,4 +220,4 @@ html, body, h1, h2, h3, h4, h5 {
 
 
 </body>
-</html>Z
+</html>
