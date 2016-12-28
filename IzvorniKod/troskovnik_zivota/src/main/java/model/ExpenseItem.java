@@ -104,7 +104,7 @@ public class ExpenseItem {
 	 * @return is it fixed
 	 */
 	public boolean checkOwnerCategory(boolean fixed) {
-		if (expenseCategoryOwner != null && expenseCategoryOwner.getFixed()) {
+		if (expenseCategoryOwner != null && expenseCategoryOwner.isgetFixed()) {
 			return true;
 		} else {
 			return fixed;

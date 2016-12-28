@@ -28,6 +28,7 @@ import org.apache.poi.POIDocument;
 
 import dao.DAOProvider;
 import model.ExpenseCategory;
+import model.ExpenseItem;
 import model.ExpenseList;
 import model.IncomeItem;
 import wrappers.StringWrapper;
@@ -90,10 +91,31 @@ public class ExpenseListResource {
 	@Produces({ MediaType.TEXT_PLAIN})
 	public String addExpenseCategoryToExpenseList(@PathParam("name_expenseList") String name, ExpenseCategory expenseCategory) {
 		ExpenseList expenseList = DAOProvider.getDAO().getExpenseListByName(name);
+		String catName = expenseCategory.getName().substring(0,expenseCategory.getName().indexOf('&'));
+		String superCategoryName = expenseCategory.getName().substring(expenseCategory.getName().lastIndexOf("&")+1);
+		expenseCategory.setName(catName);
+		if (!superCategoryName.equals("Default")){
+			ExpenseCategory superCategory = DAOProvider.getDAO().getCategoryByName(superCategoryName);
+			expenseCategory.setSuperCategory(superCategory);
+		}
 		expenseList.addNewCategory(expenseCategory);
 		DAOProvider.getDAO().addExpenseCategory(expenseCategory);
 		return "ok1";
 	}
+	
+	
+	@POST
+	@Path("/expenseitem/{category_name}")
+	@Produces({ MediaType.TEXT_PLAIN})
+	public String addExpenseItemToExpenseList(@PathParam("category_name") String name, ExpenseItem expenseItem) {
+		ExpenseCategory expenseCategory = DAOProvider.getDAO().getCategoryByName(name);
+		expenseItem.setExpenseCategoryOwner(expenseCategory);
+		expenseItem.setFixed(expenseCategory.isgetFixed());
+		expenseCategory.getExpenseItems().add(expenseItem);
+		DAOProvider.getDAO().addExpenseItem(expenseItem);
+		return String.valueOf(expenseCategory.isgetFixed());
+	}
+	
 	
 	
 	@GET

@@ -151,7 +151,7 @@ public class IncomeItem {
 		return sallary;
 	}
 
-	public void setSallary(boolean sallary) {
+	public void issetSallary(boolean sallary) {
 		this.sallary = sallary;
 	}
 	
@@ -191,7 +191,7 @@ public class IncomeItem {
 		return fixed;
 	}
 
-	public void setFixed(boolean fixed) {
+	public void issetFixed(boolean fixed) {
 		this.fixed = fixed;
 	}
 

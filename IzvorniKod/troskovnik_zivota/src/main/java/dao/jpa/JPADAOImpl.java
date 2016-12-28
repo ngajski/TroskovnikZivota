@@ -9,6 +9,7 @@ import javax.persistence.NoResultException;
 import dao.DAO;
 import dao.DAOException;
 import model.ExpenseCategory;
+import model.ExpenseItem;
 import model.ExpenseList;
 import model.IncomeItem;
 import model.User;
@@ -34,6 +35,22 @@ public class JPADAOImpl implements DAO {
 		return user;
 	}
 	
+	@Override
+	public ExpenseCategory getCategoryByName(String name) throws DAOException{
+		EntityManager em = JPAEMProvider.getEntityManager();
+		try {
+			return (ExpenseCategory) em.createQuery("select b from ExpenseCategory as b where b.name=:name")
+					.setParameter("name", name).getSingleResult();
+
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+	@Override
+	public void addExpenseItem(ExpenseItem expenseItem) throws DAOException{
+		EntityManager em = JPAEMProvider.getEntityManager();
+		em.persist(expenseItem);
+	}
 	
 	@Override
 	public void removeExpenseListFromDatabase(ExpenseList expenseList){

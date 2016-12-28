@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "expense_categories")
@@ -98,7 +99,7 @@ public class ExpenseCategory {
 		}
 		
 		if (fixed) {
-			category.setFixed(fixed);
+			category.issetFixed(fixed);
 		}
 		
 		category.setSuperCategory(this);
@@ -148,14 +149,14 @@ public class ExpenseCategory {
 		this.name = name;
 	}
 
-	public boolean getFixed() {
+	public boolean isgetFixed() {
 		return fixed;
 	}
 
-	public void setFixed(boolean fixed) {
+	public void issetFixed(boolean fixed) {
 		if (fixed) {
 			for (ExpenseCategory subCategory : subCategories) {
-				subCategory.setFixed(fixed);
+				subCategory.issetFixed(fixed);
 			}
 		}
 		
