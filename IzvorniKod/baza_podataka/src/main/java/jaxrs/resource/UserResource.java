@@ -24,6 +24,14 @@ public class UserResource {
 		System.out.println("RESTful Service 'UserService' is running ==> ping");
 		return "received ping on " + new Date().toString();
 	}
+	
+//	@GET
+//	@Path("/username/{username}")
+//	@Produces({ MediaType.APPLICATION_JSON })
+//	public User getUserByUsername(@PathParam("username") String username) {
+//		User user = DAOProvider.getDAO().getUserByUsername(username);
+//		return user;
+//	}
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
