@@ -22,7 +22,6 @@ public class UserResource {
 		System.out.println(user);
 		System.out.println(user.getAddress());
 		return user;
-
 	}
 
 	@POST

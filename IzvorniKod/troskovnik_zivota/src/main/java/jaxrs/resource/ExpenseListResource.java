@@ -51,6 +51,15 @@ public class ExpenseListResource {
 	public List<ExpenseList> getExpenseListsForUsername(@PathParam("username") String username){
 		return DAOProvider.getDAO().getExpenseListsForUsername(username);
 	}
+	
+	@GET
+	@Path("/byName/{expenseListName}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ExpenseList getExpenseList(@PathParam("expenseListName") String name){
+		return DAOProvider.getDAO().getExpenseListByName(name);
+	}
+	
+	
 
 	@POST
 	@Path("/{username}")
