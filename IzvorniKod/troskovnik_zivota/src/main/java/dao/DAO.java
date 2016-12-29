@@ -86,4 +86,6 @@ public interface DAO {
 
 	void addExpenseItem(ExpenseItem expenseItem) throws DAOException;
 
+	List<User> getUsers() throws DAOException;
+
 }

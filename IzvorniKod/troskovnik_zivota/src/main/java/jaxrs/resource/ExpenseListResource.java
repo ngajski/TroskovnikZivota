@@ -144,6 +144,14 @@ public class ExpenseListResource {
 		return defaultPeriods;
 	}
 	
+	@GET 
+	@Path("/expenselistTree/{name}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ExpenseList getExpenseListByName(@PathParam("name") String name) {
+		return DAOProvider.getDAO().getExpenseListByName(name);
+	}
+	
+	
 	
 	@GET
 	@Path("/generate/{username}/{name}")

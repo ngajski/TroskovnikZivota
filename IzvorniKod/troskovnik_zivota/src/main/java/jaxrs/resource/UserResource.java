@@ -1,6 +1,5 @@
 package jaxrs.resource;
 
-import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -47,7 +46,10 @@ public class UserResource {
 		}
 		return "ok";
 	}
-
+	
+	
+	
+	
 	@POST
 	@Path("/validateLogin")
 	@Produces({ MediaType.TEXT_PLAIN })

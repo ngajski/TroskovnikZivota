@@ -22,6 +22,18 @@ import model.User;
  * @version 1.0
  */
 public class JPADAOImpl implements DAO {
+	
+	
+	
+	@Override
+	public List<User> getUsers() throws DAOException {
+		EntityManager em = JPAEMProvider.getEntityManager();
+
+		@SuppressWarnings("unchecked")
+		List<User> list = em.createQuery("select b from User as b").getResultList();
+
+		return list;
+	}
 
 	@Override
 	public void addUser(User user) throws DAOException {
