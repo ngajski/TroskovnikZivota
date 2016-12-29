@@ -122,3 +122,51 @@ function getExpenseLists(username, callback) {
 		}
 });
 }
+
+/**
+ * Method used to retrieve expense list with given
+ * <code>expenseListName</code>. 
+ * 
+ * @param expenseListName
+ *            expenseListName
+ * @returns ExpenseList
+ */
+function getExpenseList(expenseListName,username) {
+	$.ajax({
+		type : 'GET',
+		url : "http://localhost:8080/troskovnik-zivota/service/expenseList/byName/"
+				+ expenseListName,
+		crossDomain : true,
+		dataType : 'json',
+		success : function(responseData, textStatus, jqXHR) {
+			var expenseList = responseData; 
+			getUser(expenseList,username);
+		},
+		error : function(responseData, textStatus, errorThrown) {
+			alert('GET failed.');
+		}
+	});
+}
+
+function getUser(expenseList,username) {
+	$.ajax({
+		type : 'GET',
+		url : "http://localhost:8080/baza-podataka/service/users/username/"
+				+ username,
+		crossDomain : true,
+		dataType : 'json',
+		success : function(responseData, textStatus, jqXHR) {
+			var user = responseData[0];
+			setExpenseListToUser(expenseList,user);
+		},
+		error : function(responseData, textStatus, errorThrown) {
+			alert('GET failed.');
+		}
+	});
+}
+
+function setExpenseListToUser(expenseList,user) {
+	alert("tu " + user.username + expenseList.name);
+	expenseList.userOwner = user;
+	alert(expenseList.userOwner.username);
+}
