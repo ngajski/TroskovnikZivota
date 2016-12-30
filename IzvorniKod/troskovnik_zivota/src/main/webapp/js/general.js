@@ -123,13 +123,24 @@ function getExpenseLists(username, callback) {
 });
 }
 
+
+/**
+ * Method which starts synchronus sending of expenseList 
+ * to udaljenaBaza.
+ * 
+ * @param expenseListName String
+ * @param username	String
+ */
+function send(expenseListName,username) {
+	getExpenseList(expenseListName,username);
+}
+
 /**
  * Method used to retrieve expense list with given
  * <code>expenseListName</code>. 
  * 
  * @param expenseListName
  *            expenseListName
- * @returns ExpenseList
  */
 function getExpenseList(expenseListName,username) {
 	$.ajax({
@@ -140,7 +151,7 @@ function getExpenseList(expenseListName,username) {
 		dataType : 'json',
 		success : function(responseData, textStatus, jqXHR) {
 			var expenseList = responseData; 
-			getUser(expenseList,username);
+			setExpenseListToUser(expenseList,username);
 		},
 		error : function(responseData, textStatus, errorThrown) {
 			alert('GET failed.');
@@ -165,8 +176,22 @@ function getUser(expenseList,username) {
 	});
 }
 
-function setExpenseListToUser(expenseList,user) {
-	alert("tu " + user.username + expenseList.name);
-	expenseList.userOwner = user;
-	alert(expenseList.userOwner.username);
+function setExpenseListToUser(expenseList,username) {
+	var json = JSON.stringify(expenseList);
+	$.ajax({
+		type : 'POST',
+		url : "http://localhost:8080/baza-podataka/service/expenseList/store/"
+			+ username,
+		data : json,
+		contentType : "application/json",
+		dataType : 'text',
+		contentType : "application/json",
+		success : function(responseData, textStatus, jqXHR) {
+			var val = responseData;
+			console.log('Dodao kategoriju ' + val);
+		},
+		error : function(responseData, textStatus, errorThrown) {
+			console.log('POST failed nisam dodao troskovnik. ' + responseData);
+		}
+	});
 }
