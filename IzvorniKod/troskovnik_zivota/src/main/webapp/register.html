@@ -119,9 +119,9 @@ html, body, h1, h2, h3, h4, h5 {
 		var street = $("input[name='street']").val();
 		var houseNumber = $("input[name='houseNumber']").val();
 
-		var dayOfBirth = $("#BDday :selected").text();
-		var MonthOfBirth = $("#BDMonth:selected").text();
-		var YearOfBirth = $("#BDday :selected").text();
+		var dayOfBirth = $("#BDDay :selected").text();
+		var MonthOfBirth = $("#BDMonth :selected").text();
+		var YearOfBirth = $("#BDYear :selected").text();
 
 		var dateOfBirth = MonthOfBirth+"/"+dayOfBirth+"/"+YearOfBirth;
 
@@ -373,7 +373,7 @@ html, body, h1, h2, h3, h4, h5 {
 			</div>
 			<div class="w3-rest">
 				
-<select class="w3-select  w3-third w3-border w3-text-grey" id="BDday">
+<select class="w3-select  w3-third w3-border w3-center w3-text-grey" id="BDDay">
 	<option> - Day - </option>
 	<option value="1">1</option>
 	<option value="2">2</option>
@@ -409,7 +409,7 @@ html, body, h1, h2, h3, h4, h5 {
 </select>
 
 
-				<select class="w3-select w3-border w3-third w3-text-grey" id="BDMonth">
+				<select class="w3-select w3-border w3-center w3-third w3-text-grey" id="BDMonth">
 	<option> - Month - </option>
 	<option value="January">January</option>
 	<option value="Febuary">Febuary</option>

@@ -13,64 +13,103 @@
 <script
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="js/general.js"></script>
+<script src="js/crtanje.js"></script>
 
 
 <script type="text/javascript">
-	$(document).ready(
-			function() {
-				var name = sessionStorage.getItem('expenseListName');
-				console.log(name);
-				$.ajax({
-					type : 'GET',
-					url : "service/expenseList/expenselistTree/" + name,
-					dataType : 'json',
-					success : function(responseData, textStatus, jqXHR) {
-						var expenseList = responseData;
-						var expenseListName = expenseList.name;
-						console.log("Ime iz baze" + expenseListName);
-						console.log("Kolicina kategorija "
-								+ expenseList.expenseCategories.length);
-						var config = {
-								container : "#wholeFuckingTree",
+var indexi = [];
+var troskovnik;
+var name;
 
-								connectors : {
-									type : 'step'
-								},
-								node : {
-									HTMLclass : 'nodeExample1'
-								}
-							};
-						var	rootExpenseList = {
-								text : {
-									name : expenseListName
+function funk2(){
 
-								},
+	$.ajax({
+		type : 'GET',
+		url : "service/expenseList/expenselistTree/" + name,
+		dataType : 'json',
+		success : function(responseData, textStatus, jqXHR) {
 
-							};
-						chart_config = [ config, rootExpenseList ];
-						
-						for (var i = 0; i < expenseList.expenseCategories.length; i++){
-							var categoryNode = {
-									parent : rootExpenseList,
-									text : {
-										name : expenseList.expenseCategories[i].name
-									}		
-							};
-							chart_config.push(categoryNode);
-							
-						}
-										
-						new Treant(chart_config);
-						/* $('#wholeFuckingTree').append("<button class='w3-btn w3-left w3-light-grey' onClick = 'returnToHome()'>&laquo; Previous</button>");
- */
+
+
+			var expenseList = responseData;
+			troskovnik= responseData;
+			var expenseListName = expenseList.name;
+			console.log("Ime iz baze" + expenseListName);
+			console.log("Kolicina kategorija "
+					+ expenseList.expenseCategories.length);
+			var config = {
+					container : "#wholeFuckingTree",
+
+					connectors : {
+						type : 'step'
 					},
-					error : function(responseData, textStatus, errorThrown) {
-						alert('GET failed.');
+					node : {
+						HTMLclass : 'nodeExample1'
 					}
-				});
+				};
+
+
+			var	rootExpenseList = {
+					text : {
+						name : expenseListName
+
+					},
+
+				};
+			chart_config = [ config, rootExpenseList ];
+			var glavneKategorije = getGlavne(troskovnik.expenseCategories, indexi);
+			processList(glavneKategorije,rootExpenseList);
+
+			new Treant(chart_config);
+
+		},
+		error : function(responseData, textStatus, errorThrown) {
+			alert('GET failed.');
+		}
+	});
+
+
+}
+
+
+function funk1(callback){
+
+	$.ajax({
+			type : 'GET',
+			url : "service/expenseList/parentlessCategories/" + name,
+			dataType : 'json',
+			success : function(responseData, textStatus, jqXHR) {
+					console.log("getParentlessNodeID() has been succesfully obavljena rip english executed");
+					indexi = responseData;
+					console.log(indexi);
+
+
+			},
+			error : function(responseData, textStatus, errorThrown) {
+					alert('GET failed.');
+			}
+	});
+
+	callback();
+
+}
+
+	$(document).ready(
+
+
+
+				function(){
+
+					name= sessionStorage.getItem('expenseListName');
+					funk1(funk2);
+
+
+
+
+
 
 			});
-	
+
 	function returnToHome(){
 		changeWindowUrl('home2.html');
 	}

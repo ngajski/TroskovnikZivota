@@ -2,6 +2,7 @@ package jaxrs.resource;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
@@ -58,6 +59,22 @@ public class ExpenseListResource {
 	public ExpenseList getExpenseList(@PathParam("expenseListName") String name){
 		return DAOProvider.getDAO().getExpenseListByName(name);
 	}
+	
+
+	@GET
+    @Path("/parentlessCategories/{expenseListName}")
+    @Produces({ MediaType.APPLICATION_JSON })
+    public List<String> getParentlessCategories(@PathParam("expenseListName") String name){
+        ExpenseList expenseList = DAOProvider.getDAO().getExpenseListByName(name);
+        List<String> parentlessCategories = new ArrayList<String>();
+        for (ExpenseCategory category : expenseList.getExpenseCategories()){
+            if (category.getSuperCategory() == null){
+                parentlessCategories.add(category.getId().toString());
+                //System.out.println(category.getId().toString());
+            }
+        }
+        return parentlessCategories;
+    }
 	
 	
 
