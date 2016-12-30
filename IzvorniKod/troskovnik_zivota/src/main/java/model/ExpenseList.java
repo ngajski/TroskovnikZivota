@@ -42,6 +42,9 @@ public class ExpenseList {
 	@ManyToOne
 	@JoinColumn
 	private User userOwner;
+	
+	@Column
+	private Boolean writable;
 
 	public ExpenseList() {
 		super();
@@ -257,7 +260,14 @@ public class ExpenseList {
 	public void setUserOwner(User user) {
 		this.userOwner = user;
 	}
-	
+
+	public Boolean getWritable() {
+		return writable;
+	}
+
+	public void setWritable(Boolean writable) {
+		this.writable = writable;
+	}
 
 	@Override
 	public String toString() {

@@ -42,6 +42,17 @@ public class ExpenseList {
 	@ManyToOne
 	@JoinColumn
 	private User userOwner;
+	
+	@Column
+	private Boolean writable;
+
+	public Boolean getWritable() {
+		return writable;
+	}
+
+	public void setWritable(Boolean writable) {
+		this.writable = writable;
+	}
 
 	public ExpenseList() {
 		super();
