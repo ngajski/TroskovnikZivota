@@ -44,7 +44,7 @@ public class ExpenseList {
 	private User userOwner;
 	
 	@Column
-	private Boolean writable;
+	private boolean writable;
 
 	public ExpenseList() {
 		super();
@@ -261,11 +261,11 @@ public class ExpenseList {
 		this.userOwner = user;
 	}
 
-	public Boolean getWritable() {
+	public boolean isgetWritable() {
 		return writable;
 	}
 
-	public void setWritable(Boolean writable) {
+	public void issetWritable(boolean writable) {
 		this.writable = writable;
 	}
 

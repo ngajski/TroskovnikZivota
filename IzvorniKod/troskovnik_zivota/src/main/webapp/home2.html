@@ -241,11 +241,12 @@ html, body, h1, h2, h3, h4, h5 {
 	var name_expenseList = ""; /*ime trenutnog troskovnika*/
 	var result = ''; /*rezultat*/
 
-	function createExpenseList(name, expenseCategories, incomeItems) {
+	function createExpenseList(name, expenseCategories, incomeItems, writable) {
 		var x = {
 			name : name,
 			expenseCategories : expenseCategories,
-			incomeItems : incomeItems
+			incomeItems : incomeItems,
+			writable : writable
 		}
 		return x;
 	}
@@ -379,7 +380,7 @@ html, body, h1, h2, h3, h4, h5 {
 	function persistExpenseList() {
 		var name = $('#input-1').val();
 		var username = sessionStorage.getItem('username');
-		var list = createExpenseList(name, null, null);
+		var list = createExpenseList(name, null, null, true);
 		var json = JSON.stringify(list);
 
 		$.ajax({
