@@ -208,5 +208,16 @@ public class ExpenseItem {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+
+	/**
+	 * Sets this id to null and <code>expenseCategoryOwner<code>
+	 * to given owner.
+	 * 
+	 * @param owner expenseList owner of this
+	 */
+	public void revalidate(ExpenseCategory owner) {
+		this.id = null;
+		this.expenseCategoryOwner = owner;
+	}
 	
 }

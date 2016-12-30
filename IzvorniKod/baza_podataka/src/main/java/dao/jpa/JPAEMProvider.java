@@ -54,6 +54,7 @@ public class JPAEMProvider {
 	 */
 	public static void close() throws DAOException {
 		LocalData ldata = locals.get();
+		System.out.println("Zatvaram");
 		if (ldata == null) {
 			return;
 		}
@@ -61,12 +62,14 @@ public class JPAEMProvider {
 		try {
 			ldata.em.getTransaction().commit();
 		} catch (Exception ex) {
+			System.out.println("ex1");
 			dex = new DAOException("Unable to commit transaction.", ex);
 		}
 		try {
 			ldata.em.close();
 		} catch (Exception ex) {
 			if (dex != null) {
+				System.out.println("ex2");
 				dex = new DAOException("Unable to close entity manager.", ex);
 			}
 		}

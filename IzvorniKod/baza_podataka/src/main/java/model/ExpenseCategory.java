@@ -104,12 +104,6 @@ public class ExpenseCategory {
 		category.setSuperCategory(this);
 		category.setExpenseListOwner(this.getExpenseListOwner());
 		
-		//TODO
-		if (subCategories == null) {
-			subCategories = new ArrayList<>();
-		}
-		
-		subCategories.add(category);
 	}
 	
 	/**
@@ -198,5 +192,78 @@ public class ExpenseCategory {
 	@Override
 	public String toString() {
 		return "ExpenseCategory: name=" + name; 
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((expenseListOwner == null) ? 0 : expenseListOwner.hashCode());
+		result = prime * result + (fixed ? 1231 : 1237);
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((superCategory == null) ? 0 : superCategory.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ExpenseCategory other = (ExpenseCategory) obj;
+		if (expenseListOwner == null) {
+			if (other.expenseListOwner != null)
+				return false;
+		} else if (!expenseListOwner.equals(other.expenseListOwner))
+			return false;
+		if (fixed != other.fixed)
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (superCategory == null) {
+			if (other.superCategory != null)
+				return false;
+		} else if (!superCategory.equals(other.superCategory))
+			return false;
+		return true;
+	}
+
+	/**
+	 * Set this <code>id<code> to null and </code>expenseListOwner</code> to given owner.
+	 * If this has <code>expenseCategoryOwner</code> it will also be set.
+	 * 
+	 * Calls <code>revalidate()</code> of all {@link ExpenseItem} and {@link ExpenseCategory}
+	 * recursively.
+	 * 
+	 */
+
+	public void revalidate(ExpenseList expenseListOwner, ExpenseCategory categoryOwner) {
+		
+		System.out.println(this.name);
+		System.out.println(this.superCategory);
+
+		this.id = null;
+		this.expenseListOwner = expenseListOwner;
+		this.superCategory = categoryOwner;
+		
+		for (ExpenseItem item : expenseItems) {
+			item.revalidate(this);
+		}
+		
+		for (ExpenseCategory category : subCategories) {
+			category.revalidate(expenseListOwner,this);
+		}
 	}
 }

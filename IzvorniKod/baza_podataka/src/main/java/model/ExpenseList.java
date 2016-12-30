@@ -274,5 +274,78 @@ public class ExpenseList {
 		return "ExpenseList [id=" + id + ", name=" + name + ", expenseCategories=" + expenseCategories
 				+ ", incomeItems=" + incomeItems + "]";
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((incomeItems == null) ? 0 : incomeItems.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((userOwner == null) ? 0 : userOwner.hashCode());
+		result = prime * result + ((writable == null) ? 0 : writable.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ExpenseList other = (ExpenseList) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (incomeItems == null) {
+			if (other.incomeItems != null)
+				return false;
+		} else if (!incomeItems.equals(other.incomeItems))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (userOwner == null) {
+			if (other.userOwner != null)
+				return false;
+		} else if (!userOwner.equals(other.userOwner))
+			return false;
+		if (writable == null) {
+			if (other.writable != null)
+				return false;
+		} else if (!writable.equals(other.writable))
+			return false;
+		return true;
+	}
+
+	/**
+	 * Sets this id and id's of <code>incomeItems<code> 
+	 * and id's of all <code>expenseItems<code> to null.
+	 * 
+	 *  Sets owners of all <code>incomeItems<code> 
+	 *  and <code>expenseItems<code>.
+	 * 
+	 */
+	public void revalidate(User user) {
+		this.userOwner = user;
+		this.id = null;
+		
+		for (IncomeItem item : incomeItems) {
+			item.revalidate(this);
+		}
+		
+		for (ExpenseCategory category : expenseCategories) {
+			System.out.println(category.getSuperCategory());
+			if (category.getSuperCategory() == null) {
+				category.revalidate(this, null);
+			}
+		}
+	}
 	
 }

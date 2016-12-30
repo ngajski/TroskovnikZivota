@@ -88,5 +88,17 @@ public class JPADAOImpl implements DAO {
 		return em.createQuery(" select b from User as b where b." + searchParamter + " LIKE :searchKeyword", User.class)
 				.setParameter("searchKeyword", searchValue + "%").getResultList();
 	}
+	
+	@Override
+	public void addExpenseList(ExpenseList expenseList) {
+		EntityManager em = JPAEMProvider.getEntityManager();
+		try {
+			em.persist(expenseList);
+			System.out.println("Nema pogreške: " + expenseList);
+		} catch (Exception ex) {
+			System.out.println(expenseList);
+			System.out.println(ex.getMessage());
+		}
+	}
 
 }

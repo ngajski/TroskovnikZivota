@@ -112,5 +112,8 @@ public interface DAO {
 	public List<User> getUsersByEmail(String email);
 
 	void removeExpenseListFromDatabase(ExpenseList expenseList);
+	
+	public void addExpenseList(ExpenseList expenseList);
+
 
 }

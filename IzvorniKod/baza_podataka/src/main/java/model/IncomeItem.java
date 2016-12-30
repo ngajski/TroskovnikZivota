@@ -208,6 +208,17 @@ public class IncomeItem {
 		return this.getName() + " " + this.getComment();
 	}
 
+	/**
+	 * Sets this id to null and <code>expenseListOwner<code>
+	 * to given owner.
+	 * 
+	 * @param owner expenseList owner of this
+	 */
+	public void revalidate(ExpenseList owner) {
+		this.id = null;
+		this.expenseListOwner = owner;
+	}
+
 
 	
 }
