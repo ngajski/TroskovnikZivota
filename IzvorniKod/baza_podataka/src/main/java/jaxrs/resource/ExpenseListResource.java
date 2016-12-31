@@ -38,7 +38,7 @@ public class ExpenseListResource {
 		expenseList.revalidate(user);
 		expenseList.setWritable(new Boolean(false));
 		
-//		DAOProvider.getDAO().addExpenseList(expenseList);
+		DAOProvider.getDAO().addExpenseList(expenseList);
 		return expenseList.getName();
 	}
 }

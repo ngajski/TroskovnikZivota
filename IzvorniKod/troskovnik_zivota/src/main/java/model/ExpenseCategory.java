@@ -15,7 +15,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "expense_categories")
@@ -46,6 +45,9 @@ public class ExpenseCategory {
 	@ManyToOne
 	@JoinColumn
 	private ExpenseList expenseListOwner;
+	
+	@Column
+	private Long ownerID;
 	
 	public ExpenseCategory() {
 		super();
@@ -104,13 +106,8 @@ public class ExpenseCategory {
 		
 		category.setSuperCategory(this);
 		category.setExpenseListOwner(this.getExpenseListOwner());
-		
-		//TODO ako se ubacuje u bazu ovo mora bit zakomentirano
-//		if (subCategories == null) {
-//			subCategories = new ArrayList<>();
-//		}
-//		
-//		subCategories.add(category);
+		category.setOwnerID(new Long(this.id));
+
 	}
 	
 	/**
@@ -121,16 +118,10 @@ public class ExpenseCategory {
 	 */
 	public void addExpenseItem(ExpenseItem item) {
 		item.setExpenseCategoryOwner(this);
+		item.setOwnerID(new Long(this.id));
 		if (this.fixed) {
 			item.setFixed(this.fixed);
 		}
-		
-		//TODO ako se ubacuje u bazu ovo mora bit zakomentirano
-//		if (expenseItems == null) {
-//			expenseItems = new ArrayList<>();
-//		}
-//		
-//		expenseItems.add(item);
 	}
 	
 	public Long getId() {
@@ -169,6 +160,7 @@ public class ExpenseCategory {
 
 	public void setSuperCategory(ExpenseCategory superCategory) {
 		this.superCategory = superCategory;
+		this.ownerID = new Long(superCategory.getId());
 	}
 	
 	public List<ExpenseCategory> getSubCategories() {
@@ -196,7 +188,22 @@ public class ExpenseCategory {
 		this.expenseListOwner = expenseListOwner;
 	}
 	
-	
+	public boolean isFixed() {
+		return fixed;
+	}
+
+	public void setFixed(boolean fixed) {
+		this.fixed = fixed;
+	}
+
+	public Long getOwnerID() {
+		return ownerID;
+	}
+
+	public void setOwnerID(Long ownerID) {
+		this.ownerID = ownerID;
+	}
+
 	@Override
 	public String toString() {
 		return "ExpenseCategory: name=" + name; 

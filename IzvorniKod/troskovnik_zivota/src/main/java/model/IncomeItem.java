@@ -58,6 +58,9 @@ public class IncomeItem {
 	@Column
 	private boolean sallary;
 	
+	@Column
+	private Long ownerID;
+	
 	public IncomeItem() {
 		super();
 	}
@@ -201,6 +204,23 @@ public class IncomeItem {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	
+	public Long getOwnerID() {
+		return ownerID;
+	}
+
+	public void setOwnerID(Long ownerID) {
+		this.ownerID = ownerID;
+	}
+
+	public void setFixed(boolean fixed) {
+		this.fixed = fixed;
+	}
+
+	public void setSallary(boolean sallary) {
+		this.sallary = sallary;
 	}
 
 	@Override

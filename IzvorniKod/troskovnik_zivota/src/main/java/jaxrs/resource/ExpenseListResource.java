@@ -3,19 +3,16 @@ package jaxrs.resource;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.naming.NamingException;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -25,7 +22,6 @@ import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.poi.POIDocument;
 
 import dao.DAOProvider;
 import model.ExpenseCategory;
@@ -124,7 +120,9 @@ public class ExpenseListResource {
 			ExpenseCategory superCategory = DAOProvider.getDAO().getCategoryByName(superCategoryName);
 			expenseCategory.setSuperCategory(superCategory);
 		}
+		
 		expenseList.addNewCategory(expenseCategory);
+		
 		DAOProvider.getDAO().addExpenseCategory(expenseCategory);
 		return "ok1";
 	}
