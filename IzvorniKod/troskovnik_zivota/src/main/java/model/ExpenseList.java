@@ -42,7 +42,13 @@ public class ExpenseList {
 	@ManyToOne
 	@JoinColumn
 	private User userOwner;
+	
+	@Column
+	private Boolean writable;
 
+	@Column
+	private Long ownerID;
+	
 	public ExpenseList() {
 		super();
 	}
@@ -83,14 +89,10 @@ public class ExpenseList {
 	public void addNewCategory(ExpenseCategory category) {
 		if (category != null) {
 			category.setExpenseListOwner(this);
+			if (category.getOwnerID() == null) {
+				category.setOwnerID(new Long(this.id));
+			}
 		}
-		
-		//TODO ako se ubacuje u bazu ovo mora bit zakomentirano
-//		if (expenseCategories == null) {
-//			expenseCategories = new ArrayList<>();
-//		}
-//		
-//		expenseCategories.add(category);
 	}
 	
 	/**
@@ -102,14 +104,8 @@ public class ExpenseList {
 	public void addNewIncomeItem(IncomeItem item) {
 		if (item != null) {
 			item.setExpenseListOwner(this);
+			item.setOwnerID(new Long(this.id));
 		}
-		
-		//TODO ako se ubacuje u bazu ovo mora bit zakomentirano
-//		if (incomeItems == null) {
-//			incomeItems = new ArrayList<>();
-//		}
-//		
-//		incomeItems.add(item);
 	}
 	
 	/**
@@ -256,13 +252,68 @@ public class ExpenseList {
 	
 	public void setUserOwner(User user) {
 		this.userOwner = user;
+		this.ownerID = new Long(user.getId());
 	}
-	
+
+	public boolean isgetWritable() {
+		return writable;
+	}
+
+	public void issetWritable(boolean writable) {
+		this.writable = writable;
+	}
+
+	public Boolean isWritable() {
+		return writable;
+	}
+
+	public void setWritable(boolean writable) {
+		this.writable = writable;
+	}
+
+	public Long getOwnerID() {
+		return ownerID;
+	}
+
+	public void setOwnerID(Long ownerID) {
+		this.ownerID = ownerID;
+	}
 
 	@Override
 	public String toString() {
 		return "ExpenseList [id=" + id + ", name=" + name + ", expenseCategories=" + expenseCategories
 				+ ", incomeItems=" + incomeItems + "]";
+	}
+	
+	/**
+	 * Sets this id and id's of <code>incomeItems<code> 
+	 * and id's of all <code>expenseItems<code> to null.
+	 * 
+	 *  Sets owners of all <code>incomeItems<code> 
+	 *  and <code>expenseItems<code>.
+	 * 
+	 */
+	public void revalidate(User user) {
+		
+		this.name = this.name + " [R]";
+		System.out.println("Validiram " + this.name);
+		System.out.println("Broj kategorija: " + this.expenseCategories.size() );
+		
+		for (IncomeItem item : incomeItems) {
+			item.revalidate(this);
+		}
+		
+		//TODO
+		for (ExpenseCategory category : expenseCategories) {
+//			if (category.getOwnerID().equals(this.id)) {
+				category.revalidate(this, null);
+//			}
+		}
+		
+		System.out.println("Validirao " + this.name);
+		this.userOwner = user;
+		this.id = null;
+		this.ownerID = new Long(user.getId());
 	}
 	
 }

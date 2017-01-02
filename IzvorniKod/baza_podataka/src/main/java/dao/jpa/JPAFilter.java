@@ -20,7 +20,7 @@ import javax.servlet.annotation.WebFilter;
  * @version 1.0
  * @param <EMProvider>
  */
-@WebFilter("/service/users/*")
+@WebFilter("/service/*")
 public class JPAFilter implements Filter {
 
 	@Override

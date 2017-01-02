@@ -2,19 +2,17 @@ package jaxrs.resource;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.naming.NamingException;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -24,7 +22,6 @@ import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.poi.POIDocument;
 
 import dao.DAOProvider;
 import model.ExpenseCategory;
@@ -59,6 +56,21 @@ public class ExpenseListResource {
 		return DAOProvider.getDAO().getExpenseListByName(name);
 	}
 	
+	@GET
+    @Path("/parentlessCategories/{expenseListName}")
+    @Produces({ MediaType.APPLICATION_JSON })
+    public List<String> getParentlessCategories(@PathParam("expenseListName") String name){
+        ExpenseList expenseList = DAOProvider.getDAO().getExpenseListByName(name);
+        List<String> parentlessCategories = new ArrayList<String>();
+        for (ExpenseCategory category : expenseList.getExpenseCategories()){
+            if (category.getSuperCategory() == null){
+                parentlessCategories.add(category.getId().toString());
+                //System.out.println(category.getId().toString());
+            }
+        }
+        return parentlessCategories;
+    }
+	
 	
 
 	@POST
@@ -80,8 +92,6 @@ public class ExpenseListResource {
 		return "ok2";
 	}
 	
-	
-	
 	@POST
 	@Path("/income/{name_expenseList}")
 	@Produces({ MediaType.TEXT_PLAIN})
@@ -93,7 +103,6 @@ public class ExpenseListResource {
 		DAOProvider.getDAO().addIncomeItem(item);
 		return "ok2";
 	}
-	
 	
 	@POST
 	@Path("/category/{name_expenseList}")
@@ -107,11 +116,12 @@ public class ExpenseListResource {
 			ExpenseCategory superCategory = DAOProvider.getDAO().getCategoryByName(superCategoryName);
 			expenseCategory.setSuperCategory(superCategory);
 		}
+		
 		expenseList.addNewCategory(expenseCategory);
+		
 		DAOProvider.getDAO().addExpenseCategory(expenseCategory);
 		return "ok1";
 	}
-	
 	
 	@POST
 	@Path("/expenseitem/{category_name}")
@@ -124,8 +134,6 @@ public class ExpenseListResource {
 		DAOProvider.getDAO().addExpenseItem(expenseItem);
 		return String.valueOf(expenseCategory.isgetFixed());
 	}
-	
-	
 	
 	@GET
 	@Path("/defaultCategories")
@@ -159,8 +167,34 @@ public class ExpenseListResource {
 	public ExpenseList getExpenseListByName(@PathParam("name") String name) {
 		return DAOProvider.getDAO().getExpenseListByName(name);
 	}
+
+	@GET
+	@Path("/check/{username}")
+	@Produces({ MediaType.APPLICATION_JSON})
+	public Boolean checkExpenseListForUsername(@PathParam("username") String username) {
+		User user = DAOProvider.getDAO().getUserByUsername(username);
+		List<ExpenseList> expenseLists = user.getExpenseLists();
+		
+		if  (expenseLists != null && expenseLists.size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
-	
+	@POST
+	@Path("/store/{username}")
+	@Produces({ MediaType.TEXT_PLAIN})
+	public String addExpenseListsToUser(@PathParam("username") String username, List<ExpenseList> expenseLists) {
+		User user = DAOProvider.getDAO().getUserByUsername(username);
+		
+		for (ExpenseList expenseList : expenseLists) {
+			expenseList.revalidate(user);
+			DAOProvider.getDAO().addExpenseList(expenseList);
+		}
+		
+		return "Uspiješno dodao troškovnike.";
+	}
 	
 	@GET
 	@Path("/generate/{username}/{name}")

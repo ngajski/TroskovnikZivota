@@ -46,6 +46,9 @@ public class ExpenseCategory {
 	@JoinColumn
 	private ExpenseList expenseListOwner;
 	
+	@Column
+	private Long ownerID;
+	
 	public ExpenseCategory() {
 		super();
 	}
@@ -104,12 +107,6 @@ public class ExpenseCategory {
 		category.setSuperCategory(this);
 		category.setExpenseListOwner(this.getExpenseListOwner());
 		
-		//TODO
-		if (subCategories == null) {
-			subCategories = new ArrayList<>();
-		}
-		
-		subCategories.add(category);
 	}
 	
 	/**
@@ -195,8 +192,103 @@ public class ExpenseCategory {
 	}
 	
 	
+	public Long getOwnerID() {
+		return ownerID;
+	}
+
+	public void setOwnerID(Long ownerID) {
+		this.ownerID = ownerID;
+	}
+
 	@Override
 	public String toString() {
 		return "ExpenseCategory: name=" + name; 
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((expenseListOwner == null) ? 0 : expenseListOwner.hashCode());
+		result = prime * result + (fixed ? 1231 : 1237);
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((superCategory == null) ? 0 : superCategory.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ExpenseCategory other = (ExpenseCategory) obj;
+		if (expenseListOwner == null) {
+			if (other.expenseListOwner != null)
+				return false;
+		} else if (!expenseListOwner.equals(other.expenseListOwner))
+			return false;
+		if (fixed != other.fixed)
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (superCategory == null) {
+			if (other.superCategory != null)
+				return false;
+		} else if (!superCategory.equals(other.superCategory))
+			return false;
+		return true;
+	}
+
+	/**
+	 * Set this <code>id<code> to null and </code>expenseListOwner</code> to given owner.
+	 * If this has <code>expenseCategoryOwner</code> it will also be set.
+	 * 
+	 * Calls <code>revalidate()</code> of all {@link ExpenseItem} and {@link ExpenseCategory}
+	 * recursively.
+	 * 
+	 */
+
+	public void revalidate(ExpenseList expenseListOwner, ExpenseCategory categoryOwner) {
+
+		System.out.println("Kategorija:" + this.name);
+		for (ExpenseItem item : expenseItems) {
+			item.revalidate(this);
+		}
+
+		if (!subCategories.isEmpty()) {
+			for (ExpenseCategory category : subCategories) {
+				if (category.getOwnerID().equals(this.id)) {
+					category.revalidate(expenseListOwner, this);
+				}
+			}
+		}
+
+		this.id = null;
+		this.expenseListOwner = expenseListOwner;
+		this.superCategory = categoryOwner;
+		
+		if (categoryOwner == null) {
+			this.ownerID = new Long(expenseListOwner.getId());
+		} else {
+			this.ownerID = new Long(categoryOwner.getId());
+		}
+		
+		System.out.println(this.name);
+		System.out.println("Troskovnik vlasnik: " + this.expenseListOwner.getName());
+		if (categoryOwner != null) {
+			System.out.println("Kategorija vlasnik: " +  categoryOwner.getName());
+		}
 	}
 }

@@ -16,62 +16,152 @@
 
 
 <script type="text/javascript">
-	$(document).ready(
-			function() {
-				var name = sessionStorage.getItem('expenseListName');
-				console.log(name);
-				$.ajax({
+	var indexi = [];
+	var name = sessionStorage.getItem('expenseListName');
+	var expenseList;
+	function editExpenseItem() {
+		/* hiding all */
+		$('#testing').hide();
+
+		/* ------------------ */
+		$('#addExpenseItemDivision').show(750);
+	}
+
+	function editCategory() {
+		/* hiding all */
+		$('#addExpenseItemDivision').hide();
+
+		/* ------------------ */
+		$('#testing').show(750);
+	}
+
+	function processList(glavne, rootExpenseList) {
+		for ( var i in glavne) {
+
+			var cvor = {
+				parent : rootExpenseList,
+				text : {
+					name : {
+						val : glavne[i].name,
+						href : "javascript:editCategory()"
+					},
+					title : "Kategorija",
+				}
+			}
+
+			chart_config.push(cvor);
+
+			/* stavci */
+			
+			for (var j = 0; j < glavne[i].expenseItems.length; j++) {
+				var dijete = {
+					parent : cvor,
+					HTMLclass : 'blue',
+					text : {
+						name : {
+							val : glavne[i].expenseItems[j].name,
+							href : "javascript:editExpenseItem()"
+						},
+						title : "Stavka",
+					}
+				}
+				chart_config.push(dijete);
+			}
+
+			//sada ulazimo u potkategorije
+
+			if (glavne[i].subCategories.length == 0) {
+				console.log("nema potkategorija");
+			} else {
+
+				processList(glavne[i].subCategories, cvor);
+
+			}
+
+		}
+
+	}
+
+	function getParentlessNodeID() {
+		$
+				.ajax({
 					type : 'GET',
-					url : "service/expenseList/expenselistTree/" + name,
+					url : "service/expenseList/parentlessCategories/" + name,
 					dataType : 'json',
 					success : function(responseData, textStatus, jqXHR) {
-						var expenseList = responseData;
+						console
+								.log("getParentlessNodeID() has been succesfully obavljena rip english executed");
+						indexi = responseData;
+						console.log(indexi);
 						var expenseListName = expenseList.name;
 						console.log("Ime iz baze" + expenseListName);
 						console.log("Kolicina kategorija "
 								+ expenseList.expenseCategories.length);
 						var config = {
-								container : "#wholeFuckingTree",
+							container : "#wholeFuckingTree",
 
-								connectors : {
-									type : 'step'
-								},
-								node : {
-									HTMLclass : 'nodeExample1'
-								}
-							};
-						var	rootExpenseList = {
-								text : {
-									name : expenseListName
+							connectors : {
+								type : 'step'
+							},
+							node : {
+								HTMLclass : 'nodeExample1'
+							}
+						};
 
-								},
+						var rootExpenseList = {
+							text : {
+								name : expenseListName
 
-							};
+							},
+
+						};
 						chart_config = [ config, rootExpenseList ];
-						
-						for (var i = 0; i < expenseList.expenseCategories.length; i++){
-							var categoryNode = {
-									parent : rootExpenseList,
-									text : {
-										name : expenseList.expenseCategories[i].name
-									}		
-							};
-							chart_config.push(categoryNode);
-							
+
+						var glavne = [];
+
+						for (var i = 0; i < expenseList.expenseCategories.length; i++) {
+							for ( var j in indexi) {
+								if (expenseList.expenseCategories[i].id == indexi[j])
+									glavne
+											.push(expenseList.expenseCategories[i]);
+							}
 						}
-										
+
+						processList(glavne, rootExpenseList);
+
 						new Treant(chart_config);
 						/* $('#wholeFuckingTree').append("<button class='w3-btn w3-left w3-light-grey' onClick = 'returnToHome()'>&laquo; Previous</button>");
- */
+						 */
+
 					},
 					error : function(responseData, textStatus, errorThrown) {
 						alert('GET failed.');
 					}
 				});
+	}
 
-			});
-	
-	function returnToHome(){
+	$(document).ready(
+
+	function() {
+
+		$.ajax({
+			type : 'GET',
+			url : "service/expenseList/expenselistTree/" + name,
+			dataType : 'json',
+			success : function(responseData, textStatus, jqXHR) {
+				expenseList = responseData;
+
+				getParentlessNodeID();
+
+			},
+			error : function(responseData, textStatus, errorThrown) {
+				alert('GET failed.');
+			}
+		});
+
+	});
+
+	function returnToHome() {
 		changeWindowUrl('home2.html');
 	}
 </script>
@@ -79,8 +169,185 @@
 
 
 <body>
+
 	<div class="chart" id="wholeFuckingTree"></div>
-	<button class='w3-btn w3-left w3-light-grey' onClick = 'returnToHome()'>&laquo; Previous</button>
+	<div class="w3-container" id="fillIn">
+
+		<button class='w3-btn w3-left w3-light-grey' onClick='returnToHome()'>&laquo;
+			Previous</button>
+
+
+		<!-- Dodaj novu kategoriju -->
+		<div class="w3-container" style="margin-top: 45px; display: none"
+			id="testing">
+			<div class="w3-container w3-card" id="expenseItem">
+				<h3>Kategorija</h3>
+
+				<div class="w3.container">
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row">
+							<div class="w3-col s3">
+								<h4 style="margin-top: 3px">Ime kategorije</h4>
+							</div>
+							<div class="w3-col s9 w3-center">
+								<input id="categoryName"
+									class="w3-input w3-border w3-animate-input" type="text"
+									style="width: 30%">
+							</div>
+						</div>
+					</form>
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row">
+							<div class="w3-col s3">
+								<h4 style="margin-top: 15px">Fiksnost</h4>
+							</div>
+
+							<div class="w3-col s9 w3-center">
+								<p>
+									<input class="w3-radio" type="radio" name="gender" value="yes"
+										id="fixedCategoryYes"> <label class="w3-validate">Da</label>
+								</p>
+								<p>
+									<input class="w3-radio" type="radio" name="gender" value="no"
+										id="fixedCategoryNo" checked> <label
+										class="w3-validate">Ne</label>
+								</p>
+							</div>
+						</div>
+					</form>
+					<div class="w3.container">
+						<form action="javascript:void(0);" class="w3-container">
+							<div class="w3-row">
+								<div class="w3-col s3">
+									<button
+										class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
+										onClick="addCategoryToList()">Spremi</button>
+								</div>
+							</div>
+						</form>
+
+
+					</div>
+					<br> <br>
+				</div>
+
+			</div>
+		</div>
+
+
+
+
+
+
+
+		<!-- IZMENI EXPENSE ITEM -->
+		<div class="w3-container" style="margin-top: 45px; display: none;"
+			id="addExpenseItemDivision">
+			<div class="w3-container w3-card" id="expense">
+				<h3>Trošak</h3>
+
+				<div class="w3.container">
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row">
+							<div class="w3-col s3">
+								<h4 style="margin-top: 3px">Ime troška</h4>
+							</div>
+							<div class="w3-col s9 w3-center">
+								<input id="expenseName"
+									class="w3-input w3-border w3-animate-input" type="text"
+									style="width: 30%">
+							</div>
+						</div>
+					</form>
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row">
+							<div class="w3-col s3">
+								<h4 style="margin-top: 3px">Iznos</h4>
+							</div>
+							<div class="w3-col s9 w3-center">
+								<input id="expenseValue"
+									class="w3-input w3-border w3-animate-input" type="text"
+									style="width: 30%">
+							</div>
+						</div>
+					</form>
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row">
+							<div class="w3-col s3">
+								<h4 style="margin-top: 3px">Period</h4>
+							</div>
+							<div class="w3-col s9 w3-center">
+								<select class="w3-select" name="option" id="expensePeriod">
+									<option value="">Godišnje</option>
+									<option value="Mjesečno">Mjesečno</option>
+									<option value="Kvartalno">Kvartalno</option>
+									<option value="Jednoročno">Jednoročno</option>
+								</select>
+							</div>
+						</div>
+					</form>
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row">
+							<div class="w3-col s3">
+								<h4 style="margin-top: 3px">Komentar</h4>
+							</div>
+							<div class="w3-col s9 w3-center">
+								<input id="expenseComment"
+									class="w3-input w3-border w3-animate-input" type="text"
+									style="width: 30%">
+							</div>
+						</div>
+					</form>
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row">
+							<div class="w3-col s3">
+								<h4 style="margin-top: 15px">Fiksnost</h4>
+							</div>
+
+							<div class="w3-col s3">
+								<p id="checkFixed">DA/NE</p>
+
+							</div>
+						</div>
+					</form>
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row-padding">
+							<div class="w3-half" style="maring-left: -15px">
+								<label>Datum početka</label> <input class="w3-input w3-border"
+									type="text" id="startDateExpenseItem" placeholder="MM/YYYY">
+							</div>
+							<div class="w3-half">
+								<label>Datum završetka</label> <input class="w3-input w3-border"
+									type="text" id="endDateExpenseItem" placeholder="MM/YYYY">
+							</div>
+						</div>
+
+					</form>
+
+
+					<div class="w3.container" style="padding-top: 15px">
+						<form action="javascript:void(0);" class="w3-container">
+							<div class="w3-row">
+								<div class="w3-col s3">
+									<button
+										class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
+										onClick="addExpenseItemToList()">Spremi</button>
+								</div>
+							</div>
+						</form>
+
+
+					</div>
+
+
+
+
+					<br> <br>
+				</div>
+
+			</div>
+		</div>
+	</div>
 	<script src="vendor/raphael.js"></script>
 	<script src="js/Treant.js"></script>
 </body>

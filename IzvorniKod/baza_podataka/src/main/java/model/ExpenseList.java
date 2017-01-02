@@ -42,6 +42,14 @@ public class ExpenseList {
 	@ManyToOne
 	@JoinColumn
 	private User userOwner;
+	
+	@Column
+	private Boolean writable;
+	
+	@Column
+	private Long ownerID;
+
+	
 
 	public ExpenseList() {
 		super();
@@ -86,11 +94,11 @@ public class ExpenseList {
 		}
 		
 		//TODO
-		if (expenseCategories == null) {
-			expenseCategories = new ArrayList<>();
-		}
-		
-		expenseCategories.add(category);
+//		if (expenseCategories == null) {
+//			expenseCategories = new ArrayList<>();
+//		}
+//		
+//		expenseCategories.add(category);
 	}
 	
 	/**
@@ -257,11 +265,104 @@ public class ExpenseList {
 		this.userOwner = user;
 	}
 	
+	public Long getOwnerID() {
+		return ownerID;
+	}
+
+	public void setOwnerID(Long ownerID) {
+		this.ownerID = ownerID;
+	}
+
+	public Boolean getWritable() {
+		return writable;
+	}
+
+	public void setWritable(Boolean writable) {
+		this.writable = writable;
+	}
 
 	@Override
 	public String toString() {
 		return "ExpenseList [id=" + id + ", name=" + name + ", expenseCategories=" + expenseCategories
 				+ ", incomeItems=" + incomeItems + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((incomeItems == null) ? 0 : incomeItems.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((userOwner == null) ? 0 : userOwner.hashCode());
+		result = prime * result + ((writable == null) ? 0 : writable.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ExpenseList other = (ExpenseList) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (incomeItems == null) {
+			if (other.incomeItems != null)
+				return false;
+		} else if (!incomeItems.equals(other.incomeItems))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (userOwner == null) {
+			if (other.userOwner != null)
+				return false;
+		} else if (!userOwner.equals(other.userOwner))
+			return false;
+		if (writable == null) {
+			if (other.writable != null)
+				return false;
+		} else if (!writable.equals(other.writable))
+			return false;
+		return true;
+	}
+
+	/**
+	 * Sets this id and id's of <code>incomeItems<code> 
+	 * and id's of all <code>expenseItems<code> to null.
+	 * 
+	 *  Sets owners of all <code>incomeItems<code> 
+	 *  and <code>expenseItems<code>.
+	 * 
+	 */
+	public void revalidate(User user) {
+		
+		System.out.println("Validiram " + this.name);
+		System.out.println("Broj kategorija: " + this.expenseCategories.size() );
+		
+		for (IncomeItem item : incomeItems) {
+			item.revalidate(this);
+		}
+		
+		for (ExpenseCategory category : expenseCategories) {
+			if (category.getOwnerID().equals(this.id)) {
+				category.revalidate(this, null);
+			}
+		}
+		
+		System.out.println("Validirao " + this.name);
+		this.userOwner = user;
+		this.id = null;
+		this.ownerID = new Long(user.getId());
 	}
 	
 }

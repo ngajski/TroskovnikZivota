@@ -58,6 +58,9 @@ public class IncomeItem {
 	@Column
 	private boolean sallary;
 	
+	@Column
+	private Long ownerID;
+	
 	public IncomeItem() {
 		super();
 	}
@@ -203,11 +206,39 @@ public class IncomeItem {
 		this.comment = comment;
 	}
 
+	
+	public Long getOwnerID() {
+		return ownerID;
+	}
+
+	public void setOwnerID(Long ownerID) {
+		this.ownerID = ownerID;
+	}
+
+	public void setFixed(boolean fixed) {
+		this.fixed = fixed;
+	}
+
+	public void setSallary(boolean sallary) {
+		this.sallary = sallary;
+	}
+
 	@Override
 	public String toString() {
 		return this.getName() + " " + this.getComment();
 	}
 
+	/**
+	 * Sets this id to null and <code>expenseListOwner<code>
+	 * to given owner.
+	 * 
+	 * @param owner expenseList owner of this
+	 */
+	public void revalidate(ExpenseList owner) {
+		this.id = null;
+		this.expenseListOwner = owner;
+		this.ownerID = new Long(owner.getId());
+	}
 
 	
 }

@@ -54,6 +54,7 @@ public class JPAEMProvider {
 	 */
 	public static void close() throws DAOException {
 		LocalData ldata = locals.get();
+		System.out.println("Zatvaram");
 		if (ldata == null) {
 			return;
 		}
@@ -71,6 +72,7 @@ public class JPAEMProvider {
 			}
 		}
 		locals.remove();
+		
 		if (dex != null)
 			throw dex;
 	}
