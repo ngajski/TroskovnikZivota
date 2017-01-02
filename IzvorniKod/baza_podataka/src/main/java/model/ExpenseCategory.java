@@ -46,6 +46,9 @@ public class ExpenseCategory {
 	@JoinColumn
 	private ExpenseList expenseListOwner;
 	
+	@Column
+	private Long ownerID;
+	
 	public ExpenseCategory() {
 		super();
 	}
@@ -189,6 +192,14 @@ public class ExpenseCategory {
 	}
 	
 	
+	public Long getOwnerID() {
+		return ownerID;
+	}
+
+	public void setOwnerID(Long ownerID) {
+		this.ownerID = ownerID;
+	}
+
 	@Override
 	public String toString() {
 		return "ExpenseCategory: name=" + name; 
@@ -250,20 +261,34 @@ public class ExpenseCategory {
 	 */
 
 	public void revalidate(ExpenseList expenseListOwner, ExpenseCategory categoryOwner) {
-		
-		System.out.println(this.name);
-		System.out.println(this.superCategory);
+
+		System.out.println("Kategorija:" + this.name);
+		for (ExpenseItem item : expenseItems) {
+			item.revalidate(this);
+		}
+
+		if (!subCategories.isEmpty()) {
+			for (ExpenseCategory category : subCategories) {
+				if (category.getOwnerID().equals(this.id)) {
+					category.revalidate(expenseListOwner, this);
+				}
+			}
+		}
 
 		this.id = null;
 		this.expenseListOwner = expenseListOwner;
 		this.superCategory = categoryOwner;
 		
-		for (ExpenseItem item : expenseItems) {
-			item.revalidate(this);
+		if (categoryOwner == null) {
+			this.ownerID = new Long(expenseListOwner.getId());
+		} else {
+			this.ownerID = new Long(categoryOwner.getId());
 		}
 		
-		for (ExpenseCategory category : subCategories) {
-			category.revalidate(expenseListOwner,this);
+		System.out.println(this.name);
+		System.out.println("Troskovnik vlasnik: " + this.expenseListOwner.getName());
+		if (categoryOwner != null) {
+			System.out.println("Kategorija vlasnik: " +  categoryOwner.getName());
 		}
 	}
 }

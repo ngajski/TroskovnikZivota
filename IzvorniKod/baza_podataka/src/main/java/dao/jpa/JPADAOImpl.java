@@ -101,4 +101,17 @@ public class JPADAOImpl implements DAO {
 		}
 	}
 
+	@Override
+	public ExpenseList getExpenseListByName(String name) {
+		EntityManager em = JPAEMProvider.getEntityManager();	
+		try{
+			return (ExpenseList) em.createQuery("select b from ExpenseList as b where b.name=:name").setParameter("name", name).getSingleResult();
+		}
+		catch (NoResultException e){
+			return null;
+		}
+	}
+	
+	
+
 }

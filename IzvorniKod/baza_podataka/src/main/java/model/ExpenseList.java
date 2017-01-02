@@ -45,14 +45,11 @@ public class ExpenseList {
 	
 	@Column
 	private Boolean writable;
+	
+	@Column
+	private Long ownerID;
 
-	public Boolean getWritable() {
-		return writable;
-	}
-
-	public void setWritable(Boolean writable) {
-		this.writable = writable;
-	}
+	
 
 	public ExpenseList() {
 		super();
@@ -97,11 +94,11 @@ public class ExpenseList {
 		}
 		
 		//TODO
-		if (expenseCategories == null) {
-			expenseCategories = new ArrayList<>();
-		}
-		
-		expenseCategories.add(category);
+//		if (expenseCategories == null) {
+//			expenseCategories = new ArrayList<>();
+//		}
+//		
+//		expenseCategories.add(category);
 	}
 	
 	/**
@@ -268,6 +265,21 @@ public class ExpenseList {
 		this.userOwner = user;
 	}
 	
+	public Long getOwnerID() {
+		return ownerID;
+	}
+
+	public void setOwnerID(Long ownerID) {
+		this.ownerID = ownerID;
+	}
+
+	public Boolean getWritable() {
+		return writable;
+	}
+
+	public void setWritable(Boolean writable) {
+		this.writable = writable;
+	}
 
 	@Override
 	public String toString() {
@@ -333,19 +345,24 @@ public class ExpenseList {
 	 * 
 	 */
 	public void revalidate(User user) {
-		this.userOwner = user;
-		this.id = null;
+		
+		System.out.println("Validiram " + this.name);
+		System.out.println("Broj kategorija: " + this.expenseCategories.size() );
 		
 		for (IncomeItem item : incomeItems) {
 			item.revalidate(this);
 		}
 		
 		for (ExpenseCategory category : expenseCategories) {
-			System.out.println(category.getSuperCategory());
-			if (category.getSuperCategory() == null) {
+			if (category.getOwnerID().equals(this.id)) {
 				category.revalidate(this, null);
 			}
 		}
+		
+		System.out.println("Validirao " + this.name);
+		this.userOwner = user;
+		this.id = null;
+		this.ownerID = new Long(user.getId());
 	}
 	
 }

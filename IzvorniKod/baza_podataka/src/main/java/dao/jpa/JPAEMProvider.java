@@ -62,18 +62,17 @@ public class JPAEMProvider {
 		try {
 			ldata.em.getTransaction().commit();
 		} catch (Exception ex) {
-			System.out.println("ex1");
 			dex = new DAOException("Unable to commit transaction.", ex);
 		}
 		try {
 			ldata.em.close();
 		} catch (Exception ex) {
 			if (dex != null) {
-				System.out.println("ex2");
 				dex = new DAOException("Unable to close entity manager.", ex);
 			}
 		}
 		locals.remove();
+		
 		if (dex != null)
 			throw dex;
 	}

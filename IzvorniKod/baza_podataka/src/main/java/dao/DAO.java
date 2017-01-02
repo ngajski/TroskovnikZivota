@@ -111,9 +111,27 @@ public interface DAO {
 	 */
 	public List<User> getUsersByEmail(String email);
 
+	/**
+	 * Removes given {@link ExpenseList} from database.
+	 * 
+	 * @param expenseList {@link ExpenseList}
+	 */
 	void removeExpenseListFromDatabase(ExpenseList expenseList);
 	
+	/**
+	 * Stores given {@link ExpenseList} to database.
+	 * 
+	 * @param expenseList {@link ExpenseList}
+	 */
 	public void addExpenseList(ExpenseList expenseList);
-
+	
+	/**
+	 * Returns {@link ExpenseList} from database whose name is equal
+	 * to name given with <code>name</code>.
+	 * 
+	 * @param name of {@link ExpenseList}
+	 * @return {@link ExpenseList} with given name, else null
+	 */
+	public ExpenseList getExpenseListByName(String name);
 
 }

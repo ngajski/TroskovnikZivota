@@ -57,6 +57,9 @@ public class ExpenseItem {
 	@Column
 	private String endDate;
 	
+	@Column
+	private Long ownerID;
+	
 	public ExpenseItem() {
 		super();
 	}
@@ -205,6 +208,15 @@ public class ExpenseItem {
 		return comment;
 	}
 
+	
+	public Long getOwnerID() {
+		return ownerID;
+	}
+
+	public void setOwnerID(Long ownerID) {
+		this.ownerID = ownerID;
+	}
+
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
@@ -218,6 +230,7 @@ public class ExpenseItem {
 	public void revalidate(ExpenseCategory owner) {
 		this.id = null;
 		this.expenseCategoryOwner = owner;
+		this.ownerID = null;
 	}
 	
 }
