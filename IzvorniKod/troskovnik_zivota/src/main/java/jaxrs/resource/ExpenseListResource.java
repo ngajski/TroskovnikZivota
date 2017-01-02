@@ -56,7 +56,6 @@ public class ExpenseListResource {
 		return DAOProvider.getDAO().getExpenseListByName(name);
 	}
 	
-
 	@GET
     @Path("/parentlessCategories/{expenseListName}")
     @Produces({ MediaType.APPLICATION_JSON })
@@ -93,8 +92,6 @@ public class ExpenseListResource {
 		return "ok2";
 	}
 	
-	
-	
 	@POST
 	@Path("/income/{name_expenseList}")
 	@Produces({ MediaType.TEXT_PLAIN})
@@ -106,7 +103,6 @@ public class ExpenseListResource {
 		DAOProvider.getDAO().addIncomeItem(item);
 		return "ok2";
 	}
-	
 	
 	@POST
 	@Path("/category/{name_expenseList}")
@@ -127,7 +123,6 @@ public class ExpenseListResource {
 		return "ok1";
 	}
 	
-	
 	@POST
 	@Path("/expenseitem/{category_name}")
 	@Produces({ MediaType.TEXT_PLAIN})
@@ -139,8 +134,6 @@ public class ExpenseListResource {
 		DAOProvider.getDAO().addExpenseItem(expenseItem);
 		return String.valueOf(expenseCategory.isgetFixed());
 	}
-	
-	
 	
 	@GET
 	@Path("/defaultCategories")
@@ -174,8 +167,34 @@ public class ExpenseListResource {
 	public ExpenseList getExpenseListByName(@PathParam("name") String name) {
 		return DAOProvider.getDAO().getExpenseListByName(name);
 	}
+
+	@GET
+	@Path("/check/{username}")
+	@Produces({ MediaType.APPLICATION_JSON})
+	public Boolean checkExpenseListForUsername(@PathParam("username") String username) {
+		User user = DAOProvider.getDAO().getUserByUsername(username);
+		List<ExpenseList> expenseLists = user.getExpenseLists();
+		
+		if  (expenseLists != null && expenseLists.size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
-	
+	@POST
+	@Path("/store/{username}")
+	@Produces({ MediaType.TEXT_PLAIN})
+	public String addExpenseListsToUser(@PathParam("username") String username, List<ExpenseList> expenseLists) {
+		User user = DAOProvider.getDAO().getUserByUsername(username);
+		
+		for (ExpenseList expenseList : expenseLists) {
+			expenseList.revalidate(user);
+			DAOProvider.getDAO().addExpenseList(expenseList);
+		}
+		
+		return "Uspiješno dodao troškovnike.";
+	}
 	
 	@GET
 	@Path("/generate/{username}/{name}")

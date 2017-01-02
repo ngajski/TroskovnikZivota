@@ -221,5 +221,17 @@ public class ExpenseItem {
 		this.ownerID = ownerID;
 	}
 	
+	/**
+	 * Sets this id to null and <code>expenseCategoryOwner<code>
+	 * to given owner.
+	 * 
+	 * @param owner expenseList owner of this
+	 */
+	public void revalidate(ExpenseCategory owner) {
+		this.id = null;
+		this.expenseCategoryOwner = owner;
+		this.ownerID = null;
+	}
+	
 	
 }

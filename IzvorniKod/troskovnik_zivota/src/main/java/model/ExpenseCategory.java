@@ -208,4 +208,45 @@ public class ExpenseCategory {
 	public String toString() {
 		return "ExpenseCategory: name=" + name; 
 	}
+
+	/**
+	 * Set this <code>id<code> to null and </code>expenseListOwner</code> to given owner.
+	 * If this has <code>expenseCategoryOwner</code> it will also be set.
+	 * 
+	 * Calls <code>revalidate()</code> of all {@link ExpenseItem} and {@link ExpenseCategory}
+	 * recursively.
+	 * 
+	 */
+
+	public void revalidate(ExpenseList expenseListOwner, ExpenseCategory categoryOwner) {
+
+		System.out.println("Kategorija:" + this.name);
+		for (ExpenseItem item : expenseItems) {
+			item.revalidate(this);
+		}
+
+		if (!subCategories.isEmpty()) {
+			for (ExpenseCategory category : subCategories) {
+				if (category.getOwnerID().equals(this.id)) {
+					category.revalidate(expenseListOwner, this);
+				}
+			}
+		}
+
+		this.id = null;
+		this.expenseListOwner = expenseListOwner;
+		this.superCategory = categoryOwner;
+		
+		if (categoryOwner == null) {
+			this.ownerID = new Long(expenseListOwner.getId());
+		} else {
+			this.ownerID = new Long(categoryOwner.getId());
+		}
+		
+		System.out.println(this.name);
+		System.out.println("Troskovnik vlasnik: " + this.expenseListOwner.getName());
+		if (categoryOwner != null) {
+			System.out.println("Kategorija vlasnik: " +  categoryOwner.getName());
+		}
+	}
 }

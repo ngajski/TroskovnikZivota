@@ -44,8 +44,8 @@ public class ExpenseList {
 	private User userOwner;
 	
 	@Column
-	private boolean writable;
-	
+	private Boolean writable;
+
 	@Column
 	private Long ownerID;
 	
@@ -263,7 +263,7 @@ public class ExpenseList {
 		this.writable = writable;
 	}
 
-	public boolean isWritable() {
+	public Boolean isWritable() {
 		return writable;
 	}
 
@@ -283,6 +283,37 @@ public class ExpenseList {
 	public String toString() {
 		return "ExpenseList [id=" + id + ", name=" + name + ", expenseCategories=" + expenseCategories
 				+ ", incomeItems=" + incomeItems + "]";
+	}
+	
+	/**
+	 * Sets this id and id's of <code>incomeItems<code> 
+	 * and id's of all <code>expenseItems<code> to null.
+	 * 
+	 *  Sets owners of all <code>incomeItems<code> 
+	 *  and <code>expenseItems<code>.
+	 * 
+	 */
+	public void revalidate(User user) {
+		
+		this.name = this.name + " [R]";
+		System.out.println("Validiram " + this.name);
+		System.out.println("Broj kategorija: " + this.expenseCategories.size() );
+		
+		for (IncomeItem item : incomeItems) {
+			item.revalidate(this);
+		}
+		
+		//TODO
+		for (ExpenseCategory category : expenseCategories) {
+//			if (category.getOwnerID().equals(this.id)) {
+				category.revalidate(this, null);
+//			}
+		}
+		
+		System.out.println("Validirao " + this.name);
+		this.userOwner = user;
+		this.id = null;
+		this.ownerID = new Long(user.getId());
 	}
 	
 }

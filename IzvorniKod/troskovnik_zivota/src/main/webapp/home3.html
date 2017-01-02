@@ -31,6 +31,7 @@ html, body, h1, h2, h3, h4, h5 {
 						} else {
 							$('#usernameHolder').html(username);
 							getExpenseLists(username, generateTableOfExpenseLists);
+							checkInbox(username);
 						}
 					});
 
@@ -189,7 +190,7 @@ html, body, h1, h2, h3, h4, h5 {
 	function sendExpenseList() {
 		var username = $('input[name="userRadioBtn"]:checked').val();	
 		var expenseListName = $('input[name="expenseListRadioBtn"]:checked').val();
-		getExpenseList(expenseListName,username);
+		send(expenseListName,username);
 	}
 	
 </script>
@@ -467,6 +468,25 @@ function setHref() {
 				<div class="w3-container w3-light-grey w3-padding">
 					<button class="w3-btn w3-right w3-white w3-border"
 						onclick="$('#modal1').hide(); changeWindowUrl('index.html')">Zatvori</button>
+				</div>
+			</div>
+		</div>
+		
+		<div id="modal2" class="w3-modal">
+			<div class="w3-modal-content w3-card-4 w3-animate-zoom">
+				<header class="w3-container w3-red">
+					<span onclick="$('#modal2').hide(); changeWindowUrl('home3.html')"
+						class="w3-closebtn w3-padding-top">&times;</span>
+					<h2>
+						Obavijest <i class="w3-xxlarge fa fa-exclamation-circle"></i>
+					</h2>
+				</header>
+				<div class="w3-container">
+					<h4 class="textHolder"></h4>
+				</div>
+				<div class="w3-container w3-light-grey w3-padding">
+					<button class="w3-btn w3-right w3-white w3-border"
+						onclick="$('#modal2').hide(); changeWindowUrl('home3.html')">Zatvori</button>
 				</div>
 			</div>
 		</div>
