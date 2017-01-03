@@ -1,11 +1,15 @@
 package test;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
 
 import dao.DAOException;
 import model.ExpenseCategory;
@@ -14,6 +18,7 @@ import model.ExpenseList;
 import model.IncomeItem;
 import model.User;
 import model.time.Period;
+import pdf.PDFGenerator;
 
 public class UbaciTroskovnik {
 
@@ -113,7 +118,15 @@ public class UbaciTroskovnik {
 		placa.setAmounts(prihodiPlaca);
 		ostaliPrihod.setAmounts(prihodiOstali);
 		
-		
+		try {
+			PDDocument document = new PDDocument();
+			PDFGenerator.generatePDF(document, "test", expenseList);
+			File file = new File("C://Users/Vilim/Desktop/troskovnik.pdf");		//TODO stavite si kud hocete
+			document.save(file);
+			document.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("baza.podataka.lokalna");
 		DAOException dex = null;

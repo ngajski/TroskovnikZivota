@@ -31,6 +31,7 @@ import model.IncomeItem;
 import wrappers.StringWrapper;
 import model.User;
 import model.time.Period;
+import pdf.PDFGenerator;
 
 @Path("/expenseList")
 public class ExpenseListResource {
@@ -200,47 +201,23 @@ public class ExpenseListResource {
 	@Path("/generate/{username}/{name}")
 	@Produces("application/pdf")
 	public Response generatePDF(@PathParam("username") String username, @PathParam("name") String name) throws IOException{
-//		List<ExpenseList> expenseLists = getExpenseListsForUsername(username);
-//		ExpenseList expenseList = new ExpenseList();
-//		for(ExpenseList list : expenseLists) {
-//			if(list.getName().equals(name)) {
-//				expenseList = list;
-//				break;
-//			}
-//		}
+		List<ExpenseList> expenseLists = getExpenseListsForUsername(username);
+		ExpenseList expenseList = new ExpenseList();
+		for(ExpenseList list : expenseLists) {
+			if(list.getName().equals(name)) {
+				expenseList = list;
+				break;
+			}
+		}
 		
 		PDDocument document = new PDDocument();
-		PDDocumentInformation info = new PDDocumentInformation();
-		info.setAuthor(username);
-		info.setTitle(name);
-		info.setSubject("Troskovnik zivota: " + name);
-		document.setDocumentInformation(info);
-		
-		PDPageContentStream stream;
-		PDPage page;
-		//String text;
-		
-		page = new PDPage();
-		stream = new PDPageContentStream(document,page);
-		stream.beginText();
-		stream.setFont(PDType1Font.COURIER_BOLD, 12);
-		stream.setLeading(14.5f);
-		stream.newLineAtOffset(250, 700);
-		stream.showText("TROŠKOVNIK ŽIVOTA");
-		stream.newLine();
-		stream.showText("IME: " + name);
-		stream.newLine();
-		stream.showText("KORISNIK: " + username);
-		stream.endText();
-		stream.close();
-		document.addPage(page);
-		
+		PDFGenerator.generatePDF(document, username, expenseList);
 		File file = new File("troskovnik.pdf");
 		document.save(file);
 		document.close();
 		
 		ResponseBuilder response = Response.ok((Object) file);
-		response.header("Content-Disposition", "attachment; filename=troskovnik_"+name+".pdf");
+		response.header("Content-Disposition", "attachment; filename=troskovnik_"+expenseList.getName()+".pdf");
 		response.header("Content-Type", "application/force-download");
 		return response.build();
 		
