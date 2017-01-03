@@ -533,9 +533,27 @@ html, body, h1, h2, h3, h4, h5 {
 		currentElementId = "Kategorija" + currentElement["id"].substring(9);
 
 		/* TODO NASLJEĐIVANJE FIKSNOSTI*/
-		document.getElementById("checkFixed").innerHTML = "DA";
-
-		$('#addExpenseItemDivision').show(750);
+		$.ajax({
+			type : 'GET',
+			url : "service/expenseList/expensecategory/" + currentElement["id"].substring(9),
+			dataType : 'json',
+			success : function(responseData, textStatus, jqXHR) {
+				var category = responseData;
+				var fixed;
+				if ( category.fixed == true){
+					fixed = "DA";
+				}
+				else{
+					fixed = "NE";
+				}
+				document.getElementById("checkFixed").innerHTML = fixed;
+				$('#addExpenseItemDivision').show(750);
+				
+			},
+			error : function(responseData, textStatus, errorThrown) {
+				alert('GET failed.');
+			}
+		});
 	}
 
 	function addExpenseItemToList() {
