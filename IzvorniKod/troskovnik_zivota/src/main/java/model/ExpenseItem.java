@@ -201,7 +201,7 @@ public class ExpenseItem {
 		return fixed;
 	}
 
-	public void setFixed(boolean fixed) {
+	public void issetFixed(boolean fixed) {
 		this.fixed = fixed;
 	}
 

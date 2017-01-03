@@ -48,6 +48,12 @@ public class JPADAOImpl implements DAO {
 	}
 	
 	@Override
+	public ExpenseCategory getCategoryByID(Long id) throws DAOException {
+		ExpenseCategory category = JPAEMProvider.getEntityManager().find(ExpenseCategory.class, id);
+		return category;
+	}
+	
+	@Override
 	public ExpenseCategory getCategoryByName(String name) throws DAOException{
 		EntityManager em = JPAEMProvider.getEntityManager();
 		try {
@@ -69,6 +75,13 @@ public class JPADAOImpl implements DAO {
 		EntityManager em = JPAEMProvider.getEntityManager();
 		em.remove(expenseList);
 	}
+	
+	@Override
+	public void removeExpenseCategoryFromDatabase(ExpenseCategory expenseCategory){
+		EntityManager em = JPAEMProvider.getEntityManager();
+		em.remove(expenseCategory);
+	}
+	
 	@Override
 	public User getUserByUsername(String username) throws DAOException {
 		EntityManager em = JPAEMProvider.getEntityManager();
@@ -123,7 +136,7 @@ public class JPADAOImpl implements DAO {
 		EntityManager em = JPAEMProvider.getEntityManager();
 		em.persist(item);
 	}
-
+		
 	@Override
 	public List<ExpenseList> getExpenseListsForUsername(String username) {
 		User user = getUserByUsername(username);

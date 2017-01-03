@@ -88,4 +88,8 @@ public interface DAO {
 
 	List<User> getUsers() throws DAOException;
 
+	void removeExpenseCategoryFromDatabase(ExpenseCategory expenseCategory);
+
+	ExpenseCategory getCategoryByID(Long id) throws DAOException;
+
 }

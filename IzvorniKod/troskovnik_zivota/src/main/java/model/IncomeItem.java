@@ -215,10 +215,6 @@ public class IncomeItem {
 		this.ownerID = ownerID;
 	}
 
-	public void setFixed(boolean fixed) {
-		this.fixed = fixed;
-	}
-
 	public void setSallary(boolean sallary) {
 		this.sallary = sallary;
 	}

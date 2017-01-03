@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width">
-<title>Basic example</title>
+<title>Pregled troškovnika</title>
 <link rel="stylesheet" href="css/Treant.css">
 <link rel="stylesheet" href="css/basic-example.css">
 <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
@@ -19,6 +19,66 @@
 	var indexi = [];
 	var name = sessionStorage.getItem('expenseListName');
 	var expenseList;
+	var currentEditCategoryName;
+	
+	function removeCategoryFromExpenseList(){
+		var currentCategoryName = $('#categoryName').val();
+		$.ajax({
+			type : 'DELETE',
+			url : "service/expenseList/removeCategory/" + currentCategoryName,
+			dataType : 'text',
+			success : function(responseData, textStatus, jqXHR) {
+				window.location.reload();
+			},
+			error : function(responseData, textStatus, errorThrown) {
+				console.log('DELETE failed nisam izbriso kategoriju.');
+			}
+		});
+		
+	}
+	
+	function changeCategory(){
+		var name = $('#categoryName').val();
+		var fixed;
+		if (document.getElementById("fixedCategoryYes").checked) {
+			fixed = true;
+		} else if (document.getElementById("fixedCategoryNo").checked) {
+			fixed = false;
+		}
+		
+		
+		for ( var i = 0; i < expenseList.expenseCategories.length; i++){
+			if (expenseList.expenseCategories[i].name == currentEditCategoryName){
+					var x = {
+						id : expenseList.expenseCategories[i].id,
+						name : name,
+						fixed : fixed,
+					}	
+					var json = JSON.stringify(x);
+					
+					$.ajax({
+						type : 'POST',
+						url : "service/expenseList/expenseCategory",
+						data : json,
+						contentType : "application/json",
+						dataType : 'text',
+						contentType : "application/json",
+						success : function(responseData, textStatus, jqXHR) {
+							window.location.reload();
+							console.log('Category updated !')
+						},
+						error : function(responseData, textStatus, errorThrown) {
+							console.log('POST failed nisam updateo kategoriju!');
+						}
+					});
+					
+					
+					
+			} 
+
+		}
+	}
+	
 	function editExpenseItem() {
 		/* hiding all */
 		$('#testing').hide();
@@ -27,23 +87,46 @@
 		$('#addExpenseItemDivision').show(750);
 	}
 
-	function editCategory() {
+	function editCategory(currentElementName) {
 		/* hiding all */
+
 		$('#addExpenseItemDivision').hide();
 
 		/* ------------------ */
-		$('#testing').show(750);
+
+		$.ajax({
+			type : 'GET',
+			url : "service/expenseList/expensecategory/" + currentElementName,
+			dataType : 'json',
+			success : function(responseData, textStatus, jqXHR) {
+				var expenseCategory = responseData;
+				$('#categoryName').val(expenseCategory.name);
+				currentEditCategoryName = expenseCategory.name;
+				if ( expenseCategory.fixed == true){
+					document.getElementById('fixedCategoryYes').checked = true;
+				}
+				else{
+					document.getElementById('fixedCategoryNo').checked = true;
+				}
+				$('#testing').show(750);
+			},
+
+			error : function(responseData, textStatus, errorThrown) {
+				alert('GET failed - nisam dohvatio danu kategoriju');
+			}
+		});
+
 	}
 
 	function processList(glavne, rootExpenseList) {
 		for ( var i in glavne) {
-
+			var ime = glavne[i].name;
 			var cvor = {
 				parent : rootExpenseList,
 				text : {
 					name : {
 						val : glavne[i].name,
-						href : "javascript:editCategory()"
+						href : "javascript:editCategory('" + ime + "')"
 					},
 					title : "Kategorija",
 				}
@@ -52,7 +135,7 @@
 			chart_config.push(cvor);
 
 			/* stavci */
-			
+
 			for (var j = 0; j < glavne[i].expenseItems.length; j++) {
 				var dijete = {
 					parent : cvor,
@@ -89,12 +172,9 @@
 					url : "service/expenseList/parentlessCategories/" + name,
 					dataType : 'json',
 					success : function(responseData, textStatus, jqXHR) {
-						console
-								.log("getParentlessNodeID() has been succesfully obavljena rip english executed");
 						indexi = responseData;
 						console.log(indexi);
 						var expenseListName = expenseList.name;
-						console.log("Ime iz baze" + expenseListName);
 						console.log("Kolicina kategorija "
 								+ expenseList.expenseCategories.length);
 						var config = {
@@ -196,7 +276,7 @@
 							</div>
 						</div>
 					</form>
-					<form action="javascript:void(0);" class="w3-container">
+					<form action="javascript:void(0);" class="w3-container" id = "mojaForma">
 						<div class="w3-row">
 							<div class="w3-col s3">
 								<h4 style="margin-top: 15px">Fiksnost</h4>
@@ -204,11 +284,11 @@
 
 							<div class="w3-col s9 w3-center">
 								<p>
-									<input class="w3-radio" type="radio" name="gender" value="yes"
+									<input class="w3-radio" type="radio" name="gender" value="1"
 										id="fixedCategoryYes"> <label class="w3-validate">Da</label>
 								</p>
 								<p>
-									<input class="w3-radio" type="radio" name="gender" value="no"
+									<input class="w3-radio" type="radio" name="gender" value="2"
 										id="fixedCategoryNo" checked> <label
 										class="w3-validate">Ne</label>
 								</p>
@@ -221,7 +301,12 @@
 								<div class="w3-col s3">
 									<button
 										class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
-										onClick="addCategoryToList()">Spremi</button>
+										onClick="changeCategory()">Spremi</button>
+								</div>
+								<div class="w3-col s3">
+									<button
+										class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
+										onClick="removeCategoryFromExpenseList()">Izbriši kategoriju</button>
 								</div>
 							</div>
 						</form>
@@ -331,7 +416,12 @@
 								<div class="w3-col s3">
 									<button
 										class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
-										onClick="addExpenseItemToList()">Spremi</button>
+										onClick="changeExpenseItem()">Spremi</button>
+								</div>
+									<div class="w3-col s3">
+									<button
+										class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
+										onClick="removeExpenseItemFromDatabase()">Izbriši stavak</button>
 								</div>
 							</div>
 						</form>

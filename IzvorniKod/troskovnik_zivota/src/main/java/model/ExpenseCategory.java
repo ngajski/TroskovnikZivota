@@ -100,9 +100,9 @@ public class ExpenseCategory {
 			return;
 		}
 		
-		if (fixed) {
-			category.issetFixed(fixed);
-		}
+//		if (fixed) {
+//			category.issetFixed(fixed);
+//		}
 		
 		category.setSuperCategory(this);
 		category.setExpenseListOwner(this.getExpenseListOwner());
@@ -120,7 +120,7 @@ public class ExpenseCategory {
 		item.setExpenseCategoryOwner(this);
 		item.setOwnerID(new Long(this.id));
 		if (this.fixed) {
-			item.setFixed(this.fixed);
+			item.issetFixed(this.fixed);
 		}
 	}
 	
@@ -145,11 +145,11 @@ public class ExpenseCategory {
 	}
 
 	public void issetFixed(boolean fixed) {
-		if (fixed) {
-			for (ExpenseCategory subCategory : subCategories) {
-				subCategory.issetFixed(fixed);
-			}
-		}
+//		if (fixed) {
+//			for (ExpenseCategory subCategory : subCategories) {
+//				subCategory.issetFixed(fixed);
+//			}
+//		}
 		
 		this.fixed = fixed;
 	}

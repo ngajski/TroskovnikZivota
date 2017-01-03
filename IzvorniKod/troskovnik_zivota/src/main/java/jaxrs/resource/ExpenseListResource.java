@@ -93,6 +93,32 @@ public class ExpenseListResource {
 		return "ok2";
 	}
 	
+	@DELETE
+	@Path("/removeCategory/{currentCategoryName}")
+	@Produces({ MediaType.TEXT_PLAIN})
+	public void removeExpenseCategoryFromDatabase(@PathParam("currentCategoryName") String name){
+		ExpenseCategory expenseCategory = DAOProvider.getDAO().getCategoryByName(name);
+		expenseCategory.getExpenseListOwner().getExpenseCategories().remove(expenseCategory);
+		DAOProvider.getDAO().removeExpenseCategoryFromDatabase(expenseCategory);
+		for (ExpenseCategory category : expenseCategory.getSubCategories()){
+//			category.getExpenseListOwner().getExpenseCategories().remove(category);
+//			DAOProvider.getDAO().removeExpenseCategoryFromDatabase(category);
+			removeExpenseCategoryFromDatabase(category.getName());
+		}
+	}
+	
+	@POST
+	@Path("/expenseCategory")
+	@Produces({ MediaType.TEXT_PLAIN})
+	public String editExpenseCategory( ExpenseCategory expenseCategory){
+		ExpenseCategory category = DAOProvider.getDAO().getCategoryByID(expenseCategory.getId());
+		category.setName(expenseCategory.getName());
+		category.issetFixed(expenseCategory.isgetFixed());
+		return "SVE PET";
+	}
+	
+	
+	
 	@POST
 	@Path("/income/{name_expenseList}")
 	@Produces({ MediaType.TEXT_PLAIN})
@@ -117,7 +143,7 @@ public class ExpenseListResource {
 			ExpenseCategory superCategory = DAOProvider.getDAO().getCategoryByName(superCategoryName);
 			expenseCategory.setSuperCategory(superCategory);
 		}
-		
+		expenseCategory.setExpenseListOwner(expenseList);
 		expenseList.addNewCategory(expenseCategory);
 		
 		DAOProvider.getDAO().addExpenseCategory(expenseCategory);
@@ -130,7 +156,7 @@ public class ExpenseListResource {
 	public String addExpenseItemToExpenseList(@PathParam("category_name") String name, ExpenseItem expenseItem) {
 		ExpenseCategory expenseCategory = DAOProvider.getDAO().getCategoryByName(name);
 		expenseItem.setExpenseCategoryOwner(expenseCategory);
-		expenseItem.setFixed(expenseCategory.isgetFixed());
+		expenseItem.issetFixed(expenseCategory.isgetFixed());
 		expenseCategory.getExpenseItems().add(expenseItem);
 		DAOProvider.getDAO().addExpenseItem(expenseItem);
 		return String.valueOf(expenseCategory.isgetFixed());
@@ -169,6 +195,15 @@ public class ExpenseListResource {
 		return DAOProvider.getDAO().getExpenseListByName(name);
 	}
 
+	@GET 
+	@Path("/expensecategory/{name}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ExpenseCategory getExpenseCategoryByName(@PathParam("name") String name) {
+		return DAOProvider.getDAO().getCategoryByName(name);
+	}
+
+	
+	
 	@GET
 	@Path("/check/{username}")
 	@Produces({ MediaType.APPLICATION_JSON})
@@ -224,3 +259,6 @@ public class ExpenseListResource {
 	}
 			
 	}
+
+
+
