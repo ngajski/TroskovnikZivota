@@ -1,4 +1,4 @@
-package dao.init;
+package init;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -7,8 +7,6 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 import dao.jpa.JPAEMFProvider;
-
-
 
 /**
  * This class is used to create {@linkplain EntityManagerFactory}, which is
@@ -29,10 +27,15 @@ public class Initialization implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent sce) {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("baza.podataka.lokalna");
 		sce.getServletContext().setAttribute("emf", emf);
+		String pathToFonts = sce.getServletContext().getRealPath("font");
+		System.out.println("Putanja do direkotrija sa fontovima:" + pathToFonts);
+		// TODO Ovdje ti sad imas putanju do foldera sa fontovima, korisiti ju
+		// kako trebas, tu ispod pozovi load fonts ili kaj vec, makni ovaj gore
+		// sysout kada odradis sve kaj ti treba
 		JPAEMFProvider.setEmf(emf);
-		
+
 		System.out.println("init local emf");
-		
+
 	}
 
 	@Override
@@ -42,7 +45,7 @@ public class Initialization implements ServletContextListener {
 		if (emf != null) {
 			emf.close();
 		}
-		
+
 		System.out.println("closing local emf");
 	}
 }

@@ -271,7 +271,9 @@ public class ExpenseListResource {
 		document.save(file);
 		document.close();
 
+		System.out.println("doso sam do tu");
 		ResponseBuilder response = Response.ok((Object) file);
+		//neznam da li ti treba onaj tamo zadnje desno .pdf
 		response.header("Content-Disposition", "attachment; filename=troskovnik_" + expenseList.getName() + ".pdf");
 		response.header("Content-Type", "application/force-download");
 		return response.build();
