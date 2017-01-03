@@ -92,4 +92,6 @@ public interface DAO {
 
 	ExpenseCategory getCategoryByID(Long id) throws DAOException;
 
+	ExpenseItem getExpenseItemByID(Long id) throws DAOException;
+
 }

@@ -46,7 +46,6 @@ public class ExpenseCategory {
 	@JoinColumn
 	private ExpenseList expenseListOwner;
 	
-	@Column
 	private Long ownerID;
 	
 	public ExpenseCategory() {

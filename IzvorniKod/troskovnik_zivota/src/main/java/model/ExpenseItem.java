@@ -57,9 +57,6 @@ public class ExpenseItem {
 	@Column
 	private String endDate;
 	
-	@Column
-	private Long ownerID;
-	
 	public ExpenseItem() {
 		super();
 	}
@@ -162,7 +159,6 @@ public class ExpenseItem {
 
 	public void setExpenseCategoryOwner(ExpenseCategory expenseCategoryOwner) {
 		this.expenseCategoryOwner = expenseCategoryOwner;
-		this.id = new Long(expenseCategoryOwner.getId());
 	}
 
 	public Long getId() {
@@ -213,13 +209,6 @@ public class ExpenseItem {
 		this.comment = comment;
 	}
 
-	public Long getOwnerID() {
-		return ownerID;
-	}
-
-	public void setOwnerID(Long ownerID) {
-		this.ownerID = ownerID;
-	}
 	
 	/**
 	 * Sets this id to null and <code>expenseCategoryOwner<code>
@@ -230,8 +219,14 @@ public class ExpenseItem {
 	public void revalidate(ExpenseCategory owner) {
 		this.id = null;
 		this.expenseCategoryOwner = owner;
-		this.ownerID = null;
 	}
+
+	@Override
+	public String toString() {
+		return "ExpenseItem [id=" + id + ", name=" + name + ", amounts=" + amounts + ", period=" + period + ", fixed="
+				+ fixed + ", comment=" + comment + ", startDate=" + startDate + ", endDate=" + endDate + "]";
+	}
+	
 	
 	
 }

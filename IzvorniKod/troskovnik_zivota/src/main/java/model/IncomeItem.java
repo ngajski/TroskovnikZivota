@@ -57,10 +57,7 @@ public class IncomeItem {
 	
 	@Column
 	private boolean sallary;
-	
-	@Column
-	private Long ownerID;
-	
+
 	public IncomeItem() {
 		super();
 	}
@@ -206,15 +203,6 @@ public class IncomeItem {
 		this.comment = comment;
 	}
 
-	
-	public Long getOwnerID() {
-		return ownerID;
-	}
-
-	public void setOwnerID(Long ownerID) {
-		this.ownerID = ownerID;
-	}
-
 	public void setSallary(boolean sallary) {
 		this.sallary = sallary;
 	}
@@ -233,7 +221,6 @@ public class IncomeItem {
 	public void revalidate(ExpenseList owner) {
 		this.id = null;
 		this.expenseListOwner = owner;
-		this.ownerID = new Long(owner.getId());
 	}
 
 	

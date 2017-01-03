@@ -484,7 +484,8 @@ html, body, h1, h2, h3, h4, h5 {
 	}
 
 	function showPageContent() {
-		$("#mySidenav").removeAttr("style", "padding-top");
+/* 		$("#mySidenav").removeAttr("style", "padding-top"); */
+ 		$('#mySidenav').css("padding-top","0px");
 		$('#mySidenav').addClass("w3-collapse");
 		$('#menuButton').addClass("w3-hide-large");
 		$("#pageContentNewExpenseList").hide();
@@ -619,7 +620,7 @@ html, body, h1, h2, h3, h4, h5 {
 		if (swap_x == 0) {
 			$("#mySidenavDropdown").removeClass("w3-collapse");
 			w3_close1();
-			$("#mySidenav").css("padding-top", "43px");
+			$("#mySidenav").attr("style", "z-index: 3; width: 300px;padding-top: 43px;");
 			w3_open();
 			swap_x = 1;
 		} else {

@@ -37,6 +37,68 @@
 		
 	}
 	
+	
+	function changeExpenseItem(){
+		var id = $('#expenseItemID').val();
+		var name = $('#expenseName').val();
+		var owner = $('#owner').val();
+		var value = $('#expenseValue').val();
+		var comment = $('#expenseComment').val();
+		var startDate = $('#startDateExpenseItem').val();
+		var endDate = $('#endDateExpenseItem').val();
+		var amounts = [];
+		
+/* 		var period = document.getElementById("expensePeriod");
+		var periodCheck = period.options[period.selectedIndex].value;
+		if (periodCheck == "") {
+			period = "ANUALY";
+		}
+		if (periodCheck == "Mjesečno") {
+			period = "MONTHLY";
+		}
+		if (periodCheck == "Kvartalno") {
+			period = "QUARTARLY";
+		}
+		if (periodCheck == "Jednoročno") {
+			period = "ONE_TIME";
+		} */
+		
+		
+		
+		
+		amounts.push(parseFloat(value.toString()));
+		var x = {
+				id : id,
+				name : name,
+				comment : comment,
+				amounts : amounts,
+				startDate : startDate,
+				endDate : endDate,
+				period : period
+				
+			}
+		var json = JSON.stringify(x);
+		
+		$.ajax({
+			type : 'POST',
+			url : "service/expenseList/expenseItem",
+			data : json,
+			contentType : "application/json",
+			dataType : 'text',
+			contentType : "application/json",
+			success : function(responseData, textStatus, jqXHR) {
+				window.location.reload();
+				console.log('ExpenseItem updated !')
+			},
+			error : function(responseData, textStatus, errorThrown) {
+				console.log('POST failed nisam updateo item!');
+			}
+		});
+		
+		
+		
+	}
+	
 	function changeCategory(){
 		var name = $('#categoryName').val();
 		var fixed;
@@ -79,12 +141,32 @@
 		}
 	}
 	
-	function editExpenseItem() {
-		/* hiding all */
+	function editExpenseItem(currentElementID) {
+		
 		$('#testing').hide();
 
-		/* ------------------ */
-		$('#addExpenseItemDivision').show(750);
+		$.ajax({
+			type : 'GET',
+			url : "service/expenseList/getexpenseitem/" + currentElementID,
+			dataType : 'json',
+			success : function(responseData, textStatus, jqXHR) {
+				var expenseItem = responseData;
+				$('#expenseItemID').val(expenseItem.id);
+				$('#expenseName').val(expenseItem.name);
+				$('#expenseValue').val(expenseItem.amounts);
+				$('#owner').val(expenseItem.expenseCategoryOwner);
+				$('#expenseComment').val(expenseItem.comment);
+				$('#startDateExpenseItem').val(expenseItem.startDate);
+				$('#endDateExpenseItem').val(expenseItem.endDate);
+				$('#addExpenseItemDivision').show(750);
+			},
+
+			error : function(responseData, textStatus, errorThrown) {
+				alert('GET failed - nisam dohvatio danu kategoriju');
+			}
+		});
+		
+		
 	}
 
 	function editCategory(currentElementName) {
@@ -137,13 +219,14 @@
 			/* stavci */
 
 			for (var j = 0; j < glavne[i].expenseItems.length; j++) {
+				var id = glavne[i].expenseItems[j].id;
 				var dijete = {
 					parent : cvor,
 					HTMLclass : 'blue',
 					text : {
 						name : {
 							val : glavne[i].expenseItems[j].name,
-							href : "javascript:editExpenseItem()"
+							href : "javascript:editExpenseItem('"+id+"')"
 						},
 						title : "Stavka",
 					}
@@ -276,7 +359,8 @@
 							</div>
 						</div>
 					</form>
-					<form action="javascript:void(0);" class="w3-container" id = "mojaForma">
+					<form action="javascript:void(0);" class="w3-container"
+						id="mojaForma">
 						<div class="w3-row">
 							<div class="w3-col s3">
 								<h4 style="margin-top: 15px">Fiksnost</h4>
@@ -306,7 +390,8 @@
 								<div class="w3-col s3">
 									<button
 										class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
-										onClick="removeCategoryFromExpenseList()">Izbriši kategoriju</button>
+										onClick="removeCategoryFromExpenseList()">Izbriši
+										kategoriju</button>
 								</div>
 							</div>
 						</form>
@@ -319,12 +404,6 @@
 			</div>
 		</div>
 
-
-
-
-
-
-
 		<!-- IZMENI EXPENSE ITEM -->
 		<div class="w3-container" style="margin-top: 45px; display: none;"
 			id="addExpenseItemDivision">
@@ -333,6 +412,13 @@
 
 				<div class="w3.container">
 					<form action="javascript:void(0);" class="w3-container">
+
+						<div>
+							<input id="expenseItemID" type="hidden">
+						</div>
+						<div>
+							<input id="owner" type="hidden">
+						</div>
 						<div class="w3-row">
 							<div class="w3-col s3">
 								<h4 style="margin-top: 3px">Ime troška</h4>
@@ -418,10 +504,11 @@
 										class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
 										onClick="changeExpenseItem()">Spremi</button>
 								</div>
-									<div class="w3-col s3">
+								<div class="w3-col s3">
 									<button
 										class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
-										onClick="removeExpenseItemFromDatabase()">Izbriši stavak</button>
+										onClick="removeExpenseItemFromDatabase()">Izbriši
+										stavak</button>
 								</div>
 							</div>
 						</form>
