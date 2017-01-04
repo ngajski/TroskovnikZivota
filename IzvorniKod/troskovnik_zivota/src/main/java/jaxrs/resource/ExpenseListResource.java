@@ -19,16 +19,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDDocumentInformation;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import dao.DAOProvider;
 import model.ExpenseCategory;
 import model.ExpenseItem;
 import model.ExpenseList;
-import model.Holder;
 import model.IncomeItem;
 import wrappers.StringWrapper;
 import model.User;
@@ -302,16 +297,5 @@ public class ExpenseListResource {
 
 	}
 
-	@GET
-	@Path("/test")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Holder test() {
-		model.Owner owner = new model.Owner();
-		owner.setId(new Long(2));
-		owner.setName("name");
-		Holder holder = new Holder();
-		holder.setId(new Long(4));
-		holder.setOwner(owner);
-		return holder;
-	}
+	
 }
