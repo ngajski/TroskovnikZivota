@@ -59,6 +59,12 @@ public class JPADAOImpl implements DAO {
 		return item;
 	}
 	
+	@Override
+	public IncomeItem getIncomeItemByID(Long id) throws DAOException {
+		IncomeItem item = JPAEMProvider.getEntityManager().find(IncomeItem.class, id);
+		return item;
+	}
+	
 	
 	@Override
 	public ExpenseCategory getCategoryByName(String name) throws DAOException{

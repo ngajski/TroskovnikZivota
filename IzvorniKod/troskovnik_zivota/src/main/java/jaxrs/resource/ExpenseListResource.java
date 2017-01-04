@@ -129,6 +129,21 @@ public class ExpenseListResource {
 		return "SVE PET";
 	}
 
+	
+	@POST
+	@Path("/incomeItem")
+	@Produces({ MediaType.TEXT_PLAIN })
+	public String editIncomeItem(IncomeItem incomeItem) {
+		IncomeItem item = DAOProvider.getDAO().getIncomeItemByID(incomeItem.getId());
+		item.setComment(incomeItem.getComment());
+		item.setName(incomeItem.getName());
+		item.setEndDate(incomeItem.getEndDate());
+		item.setStartDate(incomeItem.getStartDate());
+		item.setPeriod(incomeItem.getPeriod());
+		item.issetFixed(incomeItem.isFixed());
+		return "SVE PET";
+	}
+	
 	@POST
 	@Path("/income/{name_expenseList}")
 	@Produces({ MediaType.TEXT_PLAIN })
@@ -218,8 +233,15 @@ public class ExpenseListResource {
 	@GET
 	@Path("/getexpenseitem/{name}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ExpenseItem getExpenseItemByName(@PathParam("name") String id) {
+	public ExpenseItem getExpenseItemByID(@PathParam("name") String id) {
 		return DAOProvider.getDAO().getExpenseItemByID(Long.parseLong(id));
+	}
+	
+	@GET
+	@Path("/getincomeitem/{name}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public IncomeItem getIncomeItemByID(@PathParam("name") String id) {
+		return DAOProvider.getDAO().getIncomeItemByID(Long.parseLong(id));
 	}
 	
 	

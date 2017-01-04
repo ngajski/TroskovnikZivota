@@ -193,8 +193,9 @@ public class ExpenseCategory {
 
 	@Override
 	public String toString() {
-		return "ExpenseCategory [id=" + id + ", name=" + name + ", fixed=" + fixed + ", superCategory=" + superCategory
-				+ ", subCategories=" + subCategories + ", expenseItems=" + expenseItems + "]";
+//		return "ExpenseCategory [id=" + id + ", name=" + name + ", fixed=" + fixed + ", superCategory=" + superCategory
+//				+ ", subCategories=" + subCategories + ", expenseItems=" + expenseItems + "]";
+		return "ExpenseCategory";
 	}
 
 	

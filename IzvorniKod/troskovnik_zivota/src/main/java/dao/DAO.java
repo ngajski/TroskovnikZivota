@@ -94,4 +94,6 @@ public interface DAO {
 
 	ExpenseItem getExpenseItemByID(Long id) throws DAOException;
 
+	IncomeItem getIncomeItemByID(Long id) throws DAOException;
+
 }
