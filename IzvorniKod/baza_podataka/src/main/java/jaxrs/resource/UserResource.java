@@ -24,14 +24,14 @@ public class UserResource {
 		System.out.println("RESTful Service 'UserService' is running ==> ping");
 		return "received ping on " + new Date().toString();
 	}
-	
-//	@GET
-//	@Path("/username/{username}")
-//	@Produces({ MediaType.APPLICATION_JSON })
-//	public User getUserByUsername(@PathParam("username") String username) {
-//		User user = DAOProvider.getDAO().getUserByUsername(username);
-//		return user;
-//	}
+
+	// @GET
+	// @Path("/username/{username}")
+	// @Produces({ MediaType.APPLICATION_JSON })
+	// public User getUserByUsername(@PathParam("username") String username) {
+	// User user = DAOProvider.getDAO().getUserByUsername(username);
+	// return user;
+	// }
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
@@ -47,6 +47,19 @@ public class UserResource {
 		} else {
 			DAOProvider.getDAO().addUser(user);
 		}
+		return "ok";
+	}
+
+	@POST
+	@Path("/oldname/{oldname}")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.TEXT_PLAIN })
+	public String modifyUser(@PathParam("oldname") String oldname, User user) throws Exception {
+		User existingUser = DAOProvider.getDAO().getUsersByUsername(oldname).get(0);
+		existingUser.setUsername(user.getUsername());
+		existingUser.setFirstName(user.getFirstName());
+		existingUser.setLastName(user.getLastName());
+		existingUser.setEmail(user.getEmail());
 		return "ok";
 	}
 
@@ -75,8 +88,7 @@ public class UserResource {
 		}
 	}
 
-	
-	//Methods used for searching through database.
+	// Methods used for searching through database.
 	@GET
 	@Path("username/{username}")
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -90,14 +102,14 @@ public class UserResource {
 	public List<User> usersByFirstName(@PathParam("firstName") String firstName) {
 		return DAOProvider.getDAO().getUsersByUsername(firstName);
 	}
-	
+
 	@GET
 	@Path("lastName/{lastName}")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<User> usersByLastName(@PathParam("lastName") String lastName) {
 		return DAOProvider.getDAO().getUsersByUsername(lastName);
 	}
-	
+
 	@GET
 	@Path("email/{email}")
 	@Produces({ MediaType.APPLICATION_JSON })
