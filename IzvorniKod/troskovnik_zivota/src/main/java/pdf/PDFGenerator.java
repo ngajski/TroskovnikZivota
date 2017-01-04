@@ -47,6 +47,7 @@ public abstract class PDFGenerator {
 	private static PDType0Font currentFont;
 	private static float pageWidth;
 	private static float pageHeight;
+	private static String pathToFonts;
 	
 	public static void generatePDF(PDDocument document, String owner, ExpenseList expenseList) throws IOException {
 		PDFGenerator.document = document;
@@ -77,7 +78,11 @@ public abstract class PDFGenerator {
 	
 	}
 
-
+	public static void setPathToFonts(String pathToFonts) {
+		PDFGenerator.pathToFonts = pathToFonts;
+	}
+	
+	
 	private static void addTitle(String title) throws IOException {
 		stream.setFont(fontBold, TEXT_TITLE_SIZE);
 		addTitleDashes(title.length());
@@ -99,17 +104,11 @@ public abstract class PDFGenerator {
 	}
 
 
-	private static void loadFonts() throws IOException {
-		String fontDir = new File("").getAbsolutePath();
-		fontDir = fontDir.substring(0, fontDir.length()-24);
-		File file = new File(fontDir + "\\font\\Courier Prime.ttf");
+	public static void loadFonts() throws IOException {
+		File file = new File(pathToFonts + "/Courier Prime.ttf");
 		font = PDType0Font.load(document, file);
-		file = new File(fontDir + "\\font\\Courier Prime Bold.ttf");
+		file = new File(pathToFonts + "/Courier Prime Bold.ttf");
 		fontBold = PDType0Font.load(document, file);
-//		File file = new File("C:/usr/font/Courier Prime.ttf");
-//		font = PDType0Font.load(document, file);
-//		file = new File("C:/usr/font/Courier Prime Bold.ttf");
-//		fontBold = PDType0Font.load(document, file);
 		currentFont = font;
 	}
 

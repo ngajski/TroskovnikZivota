@@ -1,5 +1,7 @@
 package init;
 
+import java.io.IOException;
+
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.ServletContextEvent;
@@ -7,6 +9,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 import dao.jpa.JPAEMFProvider;
+import pdf.PDFGenerator;
 
 /**
  * This class is used to create {@linkplain EntityManagerFactory}, which is
@@ -29,9 +32,7 @@ public class Initialization implements ServletContextListener {
 		sce.getServletContext().setAttribute("emf", emf);
 		String pathToFonts = sce.getServletContext().getRealPath("font");
 		System.out.println("Putanja do direkotrija sa fontovima:" + pathToFonts);
-		// TODO Ovdje ti sad imas putanju do foldera sa fontovima, korisiti ju
-		// kako trebas, tu ispod pozovi load fonts ili kaj vec, makni ovaj gore
-		// sysout kada odradis sve kaj ti treba
+		PDFGenerator.setPathToFonts(pathToFonts);
 		JPAEMFProvider.setEmf(emf);
 
 		System.out.println("init local emf");
