@@ -23,29 +23,29 @@ public class ExpenseCategory {
 	@Id
 	@GeneratedValue
 	private Long id;
-	
+
 	@Column
 	private String name;
-	
+
 	@Column
 	private boolean fixed;
-		
+
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn
 	private ExpenseCategory superCategory;
-	
-	@OneToMany(mappedBy="superCategory", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = false)
+
+	@OneToMany(mappedBy = "superCategory", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = false)
 	private List<ExpenseCategory> subCategories;
 
-	@OneToMany(mappedBy="expenseCategoryOwner", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = false)
+	@OneToMany(mappedBy = "expenseCategoryOwner", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = false)
 	private List<ExpenseItem> expenseItems;
-	
+
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn
 	private ExpenseList expenseListOwner;
-	
+
 	public ExpenseCategory() {
 		super();
 	}
@@ -61,7 +61,7 @@ public class ExpenseCategory {
 		this.expenseItems = expenseItems;
 		this.expenseListOwner = expenseListOwner;
 	}
-	
+
 	public ExpenseCategory(Long id, String name, boolean fixed, ExpenseList expenseListOwner) {
 		super();
 		this.id = id;
@@ -72,7 +72,7 @@ public class ExpenseCategory {
 		this.expenseItems = new ArrayList<>();
 		this.expenseListOwner = expenseListOwner;
 	}
-	
+
 	public ExpenseCategory(String name, boolean fixed, ExpenseList expenseListOwner) {
 		super();
 		this.name = name;
@@ -83,7 +83,6 @@ public class ExpenseCategory {
 		this.expenseListOwner = expenseListOwner;
 	}
 
-	
 	/**
 	 * Adds new sub category to this {@link ExpenseCategory}, and sets
 	 * {@link ExpenseList} owner of this to be the owner of given
@@ -96,17 +95,17 @@ public class ExpenseCategory {
 		if (category == null) {
 			return;
 		}
-		
-//		if (fixed) {
-//			category.issetFixed(fixed);
-//		}
-		
+
+		// if (fixed) {
+		// category.issetFixed(fixed);
+		// }
+
 		category.setSuperCategory(this);
 		category.setExpenseListOwner(this.getExpenseListOwner());
-//		category.setOwnerID(new Long(this.id));
+		// category.setOwnerID(new Long(this.id));
 
 	}
-	
+
 	/**
 	 * Adds new {@link ExpenseItem} to the list of {@link #expenseItems} and
 	 * sets fixed of this to given item.
@@ -119,11 +118,11 @@ public class ExpenseCategory {
 			item.issetFixed(this.fixed);
 		}
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
-	
+
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -141,12 +140,12 @@ public class ExpenseCategory {
 	}
 
 	public void issetFixed(boolean fixed) {
-//		if (fixed) {
-//			for (ExpenseCategory subCategory : subCategories) {
-//				subCategory.issetFixed(fixed);
-//			}
-//		}
-		
+		// if (fixed) {
+		// for (ExpenseCategory subCategory : subCategories) {
+		// subCategory.issetFixed(fixed);
+		// }
+		// }
+
 		this.fixed = fixed;
 	}
 
@@ -157,7 +156,7 @@ public class ExpenseCategory {
 	public void setSuperCategory(ExpenseCategory superCategory) {
 		this.superCategory = superCategory;
 	}
-	
+
 	public List<ExpenseCategory> getSubCategories() {
 		return subCategories;
 	}
@@ -165,7 +164,6 @@ public class ExpenseCategory {
 	public void setSubCategories(List<ExpenseCategory> subCategories) {
 		this.subCategories = subCategories;
 	}
-
 
 	public List<ExpenseItem> getExpenseItems() {
 		return expenseItems;
@@ -182,7 +180,7 @@ public class ExpenseCategory {
 	public void setExpenseListOwner(ExpenseList expenseListOwner) {
 		this.expenseListOwner = expenseListOwner;
 	}
-	
+
 	public boolean isFixed() {
 		return fixed;
 	}
@@ -193,51 +191,52 @@ public class ExpenseCategory {
 
 	@Override
 	public String toString() {
-//		return "ExpenseCategory [id=" + id + ", name=" + name + ", fixed=" + fixed + ", superCategory=" + superCategory
-//				+ ", subCategories=" + subCategories + ", expenseItems=" + expenseItems + "]";
-		return "ExpenseCategory";
+		return "ExpenseCategory [id=" + id + ", name=" + name + ", fixed=" + fixed + ", subCategories=" + subCategories
+				+ ", expenseItems=" + expenseItems + "]";
 	}
 
-	
-
-//	/**
-//	 * Set this <code>id<code> to null and </code>expenseListOwner</code> to given owner.
-//	 * If this has <code>expenseCategoryOwner</code> it will also be set.
-//	 * 
-//	 * Calls <code>revalidate()</code> of all {@link ExpenseItem} and {@link ExpenseCategory}
-//	 * recursively.
-//	 * 
-//	 */
-//
-//	public void revalidate(ExpenseList expenseListOwner, ExpenseCategory categoryOwner) {
-//
-//		System.out.println("Kategorija:" + this.name);
-//		for (ExpenseItem item : expenseItems) {
-//			item.revalidate(this);
-//		}
-//
-//		if (!subCategories.isEmpty()) {
-//			for (ExpenseCategory category : subCategories) {
-//				if (category.getOwnerID().equals(this.id)) {
-//					category.revalidate(expenseListOwner, this);
-//				}
-//			}
-//		}
-//
-//		this.id = null;
-//		this.expenseListOwner = expenseListOwner;
-//		this.superCategory = categoryOwner;
-//		
-//		if (categoryOwner == null) {
-//			this.ownerID = new Long(expenseListOwner.getId());
-//		} else {
-//			this.ownerID = new Long(categoryOwner.getId());
-//		}
-//		
-//		System.out.println(this.name);
-//		System.out.println("Troskovnik vlasnik: " + this.expenseListOwner.getName());
-//		if (categoryOwner != null) {
-//			System.out.println("Kategorija vlasnik: " +  categoryOwner.getName());
-//		}
-//	}
+	// /**
+	// * Set this <code>id<code> to null and </code>expenseListOwner</code> to
+	// given owner.
+	// * If this has <code>expenseCategoryOwner</code> it will also be set.
+	// *
+	// * Calls <code>revalidate()</code> of all {@link ExpenseItem} and {@link
+	// ExpenseCategory}
+	// * recursively.
+	// *
+	// */
+	//
+	// public void revalidate(ExpenseList expenseListOwner, ExpenseCategory
+	// categoryOwner) {
+	//
+	// System.out.println("Kategorija:" + this.name);
+	// for (ExpenseItem item : expenseItems) {
+	// item.revalidate(this);
+	// }
+	//
+	// if (!subCategories.isEmpty()) {
+	// for (ExpenseCategory category : subCategories) {
+	// if (category.getOwnerID().equals(this.id)) {
+	// category.revalidate(expenseListOwner, this);
+	// }
+	// }
+	// }
+	//
+	// this.id = null;
+	// this.expenseListOwner = expenseListOwner;
+	// this.superCategory = categoryOwner;
+	//
+	// if (categoryOwner == null) {
+	// this.ownerID = new Long(expenseListOwner.getId());
+	// } else {
+	// this.ownerID = new Long(categoryOwner.getId());
+	// }
+	//
+	// System.out.println(this.name);
+	// System.out.println("Troskovnik vlasnik: " +
+	// this.expenseListOwner.getName());
+	// if (categoryOwner != null) {
+	// System.out.println("Kategorija vlasnik: " + categoryOwner.getName());
+	// }
+	// }
 }

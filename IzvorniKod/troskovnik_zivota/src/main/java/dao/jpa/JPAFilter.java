@@ -20,7 +20,7 @@ import javax.servlet.annotation.WebFilter;
  * @author Filip
  * @version 1.0
  */
-@WebFilter("/service/*")
+@WebFilter("/*")
 public class JPAFilter implements Filter {
 
 	@Override

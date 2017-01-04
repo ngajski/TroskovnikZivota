@@ -2,6 +2,7 @@ package jaxrs.resource;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.acl.Owner;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -27,6 +28,7 @@ import dao.DAOProvider;
 import model.ExpenseCategory;
 import model.ExpenseItem;
 import model.ExpenseList;
+import model.Holder;
 import model.IncomeItem;
 import wrappers.StringWrapper;
 import model.User;
@@ -114,7 +116,7 @@ public class ExpenseListResource {
 		category.issetFixed(expenseCategory.isgetFixed());
 		return "SVE PET";
 	}
-	
+
 	@POST
 	@Path("/expenseItem")
 	@Produces({ MediaType.TEXT_PLAIN })
@@ -129,7 +131,6 @@ public class ExpenseListResource {
 		return "SVE PET";
 	}
 
-	
 	@POST
 	@Path("/incomeItem")
 	@Produces({ MediaType.TEXT_PLAIN })
@@ -143,7 +144,7 @@ public class ExpenseListResource {
 		item.issetFixed(incomeItem.isFixed());
 		return "SVE PET";
 	}
-	
+
 	@POST
 	@Path("/income/{name_expenseList}")
 	@Produces({ MediaType.TEXT_PLAIN })
@@ -236,15 +237,14 @@ public class ExpenseListResource {
 	public ExpenseItem getExpenseItemByID(@PathParam("name") String id) {
 		return DAOProvider.getDAO().getExpenseItemByID(Long.parseLong(id));
 	}
-	
+
 	@GET
 	@Path("/getincomeitem/{name}")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public IncomeItem getIncomeItemByID(@PathParam("name") String id) {
 		return DAOProvider.getDAO().getIncomeItemByID(Long.parseLong(id));
 	}
-	
-	
+
 	@GET
 	@Path("/check/{username}")
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -295,11 +295,23 @@ public class ExpenseListResource {
 
 		System.out.println("doso sam do tu");
 		ResponseBuilder response = Response.ok((Object) file);
-		//neznam da li ti treba onaj tamo zadnje desno .pdf
+		// neznam da li ti treba onaj tamo zadnje desno .pdf
 		response.header("Content-Disposition", "attachment; filename=troskovnik_" + expenseList.getName() + ".pdf");
 		response.header("Content-Type", "application/force-download");
 		return response.build();
 
 	}
 
+	@GET
+	@Path("/test")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Holder test() {
+		model.Owner owner = new model.Owner();
+		owner.setId(new Long(2));
+		owner.setName("name");
+		Holder holder = new Holder();
+		holder.setId(new Long(4));
+		holder.setOwner(owner);
+		return holder;
+	}
 }

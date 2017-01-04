@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<title>Salji mail</title>
+
+<meta charset="UTF-8" name="viewport"
+	content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+
+<!-- Jquery -->
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="js/general.js"></script>
+<script src="js/htmlescaping.js"></script>
+
+<style>
+html, body, h1, h2, h3, h4, h5 {
+	font-family: "Raleway", sans-serif
+}
+</style>
+
+<body class="w3-white">
+
+	<h1 class='w3-center' id='title'>Troškovnik života</h1>
+
+	<form action='/troskovnik-zivota/servlets/sendEmail'  method="post"
+		class="w3-container w3-card-4 w3-light-grey">
+		<h2 class="w3-center ">Posalji troskovnik</h2>
+
+
+		<div class="w3-row w3-section">
+			<div class="w3-col" style="width: 50px">
+				<i class="w3-xxlarge fa fa-user"></i>
+			</div>
+			<div class="w3-rest">
+				<input class="registerInput w3-input w3-border w3-round"
+					type="email" name="ime" value="" size="30" required="required"
+					placeholder="Ime">
+			</div>
+		</div>
+		
+		<div class="w3-row w3-section">
+			<div class="w3-col" style="width: 50px">
+				<i class="w3-xxlarge fa fa-envelope-o"></i>
+			</div>
+			<div class="w3-rest">
+				<input class="registerInput w3-input w3-border w3-round"
+					type="email" name="email" value="" size="30" required="required"
+					placeholder="Email na koji zelis poslat">
+			</div>
+		</div>
+
+		<div class="w3-row w3-section">
+			<div class="w3-col" style="width: 50px">
+				<i class="w3-xxlarge fa fa-key"></i>
+			</div>
+			<div class="w3-rest">
+				<input class="registerInput w3-input w3-border w3-round" name="text"
+					type="text" required placeholder="Tekst poruke">
+			</div>
+		</div>
+
+		<input type="submit" value="Pošalji">
+	</form>
+</body>
+</html>

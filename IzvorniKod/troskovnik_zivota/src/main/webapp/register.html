@@ -25,6 +25,9 @@ html, body, h1, h2, h3, h4, h5 {
 </style>
 
 <script type="text/javascript">
+
+	var oldname;
+	
 	$(document).ready(function() {
 		var register = sessionStorage.getItem('register');
 		
@@ -32,6 +35,7 @@ html, body, h1, h2, h3, h4, h5 {
 			openModal('modal1', 'Nemate ovlasti biti na ovoj stranici.');
 		} else {
 			var username = sessionStorage.getItem('username');
+			oldname = username;
 			$("input[name='username']").val(username);
 			
 			if (register == 'true') {
@@ -66,6 +70,7 @@ html, body, h1, h2, h3, h4, h5 {
 						$('#formButton').html('Spremi promjene');
 						$('#usernameDiv').show();
 						$('#passwordDiv').show();
+						
 					},
 					error : function(responseData, textStatus, errorThrown) {
 						alert('GET failed.');
@@ -74,9 +79,7 @@ html, body, h1, h2, h3, h4, h5 {
 			}
 		}
 	});
-</script>
-
-<script type="text/javascript">
+	
 	function createRemoteUser() {
 		var username = $(" input[name='username'] ").val();
 		var firstName = $("input[name='firstName']").val();
@@ -165,12 +168,21 @@ html, body, h1, h2, h3, h4, h5 {
 
 	function persistUserToRemote() {
 		var remoteUser = createRemoteUser();
+		
+		var register = sessionStorage.getItem('register');
+		
+		var url = "http://localhost:8080/baza-podataka/service/users"
+		if (register == 'true') {
+		
+		} else {
+			url += "/oldname/" + oldname;
+		}
 
 		//contentType ono kaj se salje
 		//dataType ono kaj dobijem nazad ako primam text/plain ostavit prazno
 		$.ajax({
 			type : 'POST',
-			url : "http://localhost:8080/baza-podataka/service/users",
+			url : url,
 			crossDomain : true,
 			data : JSON.stringify(remoteUser),
 			contentType : "application/json",
@@ -312,7 +324,7 @@ html, body, h1, h2, h3, h4, h5 {
 			</div>
 			<div class="w3-rest">
 				<input class="requiredInput w3-input w3-border  w3-round"
-					name="password" type="text" required placeholder="Nova sifra *">
+					name="password" type="password" required placeholder="Nova sifra *">
 			</div>
 		</div>
 
