@@ -134,10 +134,7 @@
 	}
 
 	function editExpenseItem(currentElementID) {
-		$('#choiceHandler').hide();
-		$('#testing').hide();
-		$('#addIncomeItemDivision').hide();
-		$('#testingCREATE').hide();
+		hideAll();
 		$.ajax({
 			type : 'GET',
 			url : "service/expenseList/getexpenseitem/" + currentElementID,
@@ -165,16 +162,10 @@
 				alert('GET failed - nisam dohvatio danu kategoriju');
 			}
 		});
-
 	}
 
 	function editCategory(currentElementName) {
-		/* hiding all */
-		$('#choiceHandler').hide();
-		$('#addExpenseItemDivision').hide();
-		$('#addIncomeItemDivision').hide();
-		$('#testingCREATE').hide();
-		/* ------------------ */
+		hideAll();
 
 		$.ajax({
 			type : 'GET',
@@ -200,23 +191,27 @@
 	}
 
 	function showChoiceHandler(name) {
-		/* hiding all */
-		$('#addExpenseItemDivision').hide();
-		$('#testing').hide();
-		$('#testingCREATE').hide();
-		$('#addIncomeItemDivision').hide();
-		/* -------------------------------- */
+		hideAll();
 
 		$('#categoryIDCREATE').val(name);
+		console.log(name.length);
+		if (name.length == 0) {
+			$("#buttonExpenseItem").hide();
+		} else {
+			$("#buttonExpenseItem").show();
+		}
+
 		$('#choiceHandler').show(750);
 
 	}
 
+	function choiceExpenseItem() {
+		hideAll();
+
+		$("#addExpenseItemDivisionCREATE").show(750);
+	}
 	function choiceCategory() {
-		$('#addExpenseItemDivision').hide();
-		$('#choiceHandler').hide();
-		$('#addIncomeItemDivision').hide();
-		$('#testing').hide();
+		hideAll();
 		/* -------------------------------- */
 		$('#testingCREATE').show(750);
 	}
@@ -263,7 +258,68 @@
 
 	}
 
+	function createExpenseItemDB() {
+		var startDate = $('#startDateExpenseItemCREATE').val();
+		var endDate = $('#endDateExpenseItemCREATE').val();
+
+		var amounts = [];
+		var amount = $('#expenseValueCREATE').val();
+		amounts.push(parseFloat(amount.toString()));
+		var comment = $('#expenseCommenCREATEt').val();
+
+		var category_name = $("#categoryIDCREATE").val();
+		var name = $("#expenseNameCREATE").val();
+		var x = {
+			name : name,
+			amounts : amounts,
+			comment : comment,
+			startDate : startDate,
+			endDate : endDate
+		}
+		var json = JSON.stringify(x);
+
+		$.ajax({
+			type : 'POST',
+			url : "service/expenseList/expenseitem/" + category_name,
+			data : json,
+			contentType : "application/json",
+			dataType : 'text',
+			contentType : "application/json",
+			success : function(responseData, textStatus, jqXHR) {
+				var value = responseData;
+				if (value == "true") {
+					$("#checkFixed").val("DA");
+					console.log("Fiksnost DA");
+				} else if (value == "false") {
+					$("#checkFixed").val("NE");
+					console.log("Fiksnost NE");
+				}
+				console.log('Dodao stavku!');
+				window.location.reload();
+
+			},
+			error : function(responseData, textStatus, errorThrown) {
+				console.log('POST failed nisam dodao stavku!');
+			}
+		});
+
+	}
+
 	function processList(glavne, rootExpenseList) {
+		var valueTest = "";
+		if (expenseList.expenseCategories.length == 0) {
+			var cvor = {
+				parent : rootExpenseList,
+				text : {
+					name : {
+						val : "Dodaj kategoriju",
+						href : "javascript:showChoiceHandler('" + valueTest
+								+ "')"
+					},
+				}
+			}
+			chart_config.push(cvor);
+		}
 		for ( var i in glavne) {
 			var ime = glavne[i].name;
 			var cvor = {
@@ -339,8 +395,11 @@
 
 				var rootExpenseList = {
 					text : {
-						name : expenseListName
-
+						name : expenseListName,
+						contact : {
+							val : "Uredi",
+							href : "javascript:editExpenseList()"
+						}
 					},
 
 				};
@@ -386,7 +445,37 @@
 		});
 
 	});
-
+	
+	
+	function editExpenseList(){
+		hideAll();
+		$('#editExpenseListDivision').show(750);
+		
+	}
+	
+	function changeExpenseListName(){
+		hideAll();
+		$('#changeExpenserinoListName').show(750);
+		
+	}
+	
+	function removeExpenseList(){
+		$.ajax({
+			type : 'DELETE',
+			url : "service/expenseList/remove/" + expenseList.name,
+			dataType : 'text',
+			success : function(responseData, textStatus, jqXHR) {
+				window.location.replace("home2.html")
+				$('#appBody').html(originalCreationDivision);
+				console.log('Izbrisao troškovnik');
+			},
+			error : function(responseData, textStatus, errorThrown) {
+				console.log('POST failed nisam izbriso troskovnik.');
+			}
+		});	
+	}
+	
+	
 	function changeIncomeItem() {
 		var id = $('#incomeItemID').val();
 		var name = $('#incomeName').val();
@@ -442,13 +531,107 @@
 
 	}
 
-	function editIncomeItem(currentElementID) {
-		/* hiding all */
+	function addNewIncomeItem() {
+		hideAll();
+		
+		$('#addIncomeItemDivisionCREATE').show(750);
+		
+	}
+	
+	
+	function persistIncomeItem(){
+		var val = $('#incomeNameCREATE').val();
+		if (val.length != 0) {
+			var amounts = [];
+			var period = document.getElementById("incomePeriodCREATE");
+			var periodCheck = period.options[period.selectedIndex].value;
+			if (periodCheck == "") {
+				period = "ANUALY";
+			}
+			if (periodCheck == "Mjesečno") {
+				period = "MONTHLY";
+			}
+			if (periodCheck == "Kvartalno") {
+				period = "QUARTARLY";
+			}
+			if (periodCheck == "Jednoročno") {
+				period = "ONE_TIME";
+			}
+			var comment = $('#incomeCommentCREATE').val();
+			var startDate = $('#startDateIncomeCREATE').val();
+			var endDate = $('#endDateIncomeCREATE').val();
+
+			var sallary = true;
+			if (document.getElementById("incomeSallaryCREATE").checked) {
+				sallary = true;
+			} else if (document.getElementById("incomeOtherCREATE").checked) {
+				sallary = false;
+			}
+
+			var fixed;
+			if (document.getElementById("incomeIsFixedYesCREATE").checked) {
+				fixed = true;
+			} else if (document.getElementById("incomeIsFixedNoCREATE").checked) {
+				fixed = false;
+			}
+
+			var value = $('#incomeValueCREATE').val();
+			amounts.push(parseFloat(value.toString()));
+			/* 	for (var i = 0; i < result + 1; i++) {
+					var value = $('#incomeValue' + i).val();
+					amounts.push(parseFloat(value.toString()));
+				} */
+
+			var x = {
+				name : val,
+				amounts : amounts,
+				period : period,
+				comment : comment,
+				startDate : startDate,
+				endDate : endDate,
+				sallary : sallary,
+				fixed : fixed
+			}
+
+			json = JSON.stringify(x);
+
+			$.ajax({
+				type : 'POST',
+				url : "service/expenseList/income/" + expenseList.name,
+				data : json,
+				contentType : "application/json",
+				dataType : 'text',
+				contentType : "application/json",
+				success : function(responseData, textStatus, jqXHR) {
+					window.location.reload();
+					$('#addIncomeItemDivisionCREATE').hide();
+				},
+				error : function(responseData, textStatus, errorThrown) {
+					console.log('POST failed nisam dodao prihod.');
+				}
+			});
+		}
+		
+		
+	}
+	
+	
+	
+	function hideAll() {
 		$('#testingCREATE').hide();
 		$('#choiceHandler').hide();
 		$('#addExpenseItemDivision').hide();
+		$('#addExpenseItemDivisionCREATE').hide();
 		$('#testing').hide();
-		/*------------------------------ */
+		$('#addIncomeItemDivision').hide();
+		$('#addIncomeItemDivisionCREATE').hide();
+		$('#changeExpenserinoListName').hide();
+		$('#editExpenseListDivision').hide();
+	}
+	
+	
+	function editIncomeItem(currentElementID) {
+		hideAll();
 
 		$.ajax({
 			type : 'GET',
@@ -473,9 +656,14 @@
 	}
 	function drawIncomeItems(root) {
 		var parent = root;
+		var dijete;
+		if (expenseList.incomeItems.length == 0) {
+			dijete = parent;
+
+		}
 		for (var i = 0; i < expenseList.incomeItems.length; i++) {
 			var id = expenseList.incomeItems[i].id;
-			var dijete = {
+			dijete = {
 				parent : parent,
 				stackChildren : true,
 				text : {
@@ -490,6 +678,18 @@
 			parent = dijete;
 			chart_config.push(dijete);
 		}
+		var lastChild = {
+			parent : dijete,
+			stackChildre : true,
+			text : {
+				name : {
+					val : "Dodaj novi prihod",
+					href : "javascript:addNewIncomeItem()"
+				}
+			}
+		}
+		chart_config.push(lastChild);
+
 	}
 
 	function returnToHome() {
@@ -510,6 +710,11 @@
 	 getParentlessNodeID();
 	 } 
 	 }*/
+	 
+	 
+	 
+	 
+	 
 </script>
 
 
@@ -712,6 +917,123 @@
 		</div>
 	</div>
 
+	<!-- CREATE EXPENSE ITEM -->
+	<div class="w3-container" style="margin-top: 45px; display: none;"
+		id="addExpenseItemDivisionCREATE">
+		<div class="w3-container w3-card" id="expense">
+			<h3>Trošak</h3>
+
+			<div class="w3.container">
+				<form action="javascript:void(0);" class="w3-container">
+
+					<div>
+						<input id="expenseItemIDCREATE" type="hidden">
+					</div>
+					<div>
+						<input id="owner" type="hidden">
+					</div>
+					<div class="w3-row">
+						<div class="w3-col s3">
+							<h4 style="margin-top: 3px">Ime troška</h4>
+						</div>
+						<div class="w3-col s9 w3-center">
+							<input id="expenseNameCREATE"
+								class="w3-input w3-border w3-animate-input" type="text"
+								style="width: 30%">
+						</div>
+					</div>
+				</form>
+				<form action="javascript:void(0);" class="w3-container">
+					<div class="w3-row">
+						<div class="w3-col s3">
+							<h4 style="margin-top: 3px">Iznos</h4>
+						</div>
+						<div class="w3-col s9 w3-center">
+							<input id="expenseValueCREATE"
+								class="w3-input w3-border w3-animate-input" type="text"
+								style="width: 30%">
+						</div>
+					</div>
+				</form>
+				<form action="javascript:void(0);" class="w3-container">
+					<div class="w3-row">
+						<div class="w3-col s3">
+							<h4 style="margin-top: 3px">Period</h4>
+						</div>
+						<div class="w3-col s9 w3-center">
+							<select class="w3-select" name="option" id="expensePeriodCREATE">
+								<option value="">Godišnje</option>
+								<option value="Mjesečno">Mjesečno</option>
+								<option value="Kvartalno">Kvartalno</option>
+								<option value="Jednoročno">Jednoročno</option>
+							</select>
+						</div>
+					</div>
+				</form>
+				<form action="javascript:void(0);" class="w3-container">
+					<div class="w3-row">
+						<div class="w3-col s3">
+							<h4 style="margin-top: 3px">Komentar</h4>
+						</div>
+						<div class="w3-col s9 w3-center">
+							<input id="expenseCommentCREATE"
+								class="w3-input w3-border w3-animate-input" type="text"
+								style="width: 30%">
+						</div>
+					</div>
+				</form>
+				<form action="javascript:void(0);" class="w3-container">
+					<div class="w3-row">
+						<div class="w3-col s3">
+							<h4 style="margin-top: 15px">Fiksnost</h4>
+						</div>
+
+						<div class="w3-col s3">
+							<p id="checkFixedExpenseItemCREATE">DA/NE</p>
+
+						</div>
+					</div>
+				</form>
+				<form action="javascript:void(0);" class="w3-container">
+					<div class="w3-row-padding">
+						<div class="w3-half" style="maring-left: -15px">
+							<label>Datum početka</label> <input class="w3-input w3-border"
+								type="text" id="startDateExpenseItem" placeholder="MM/YYYY">
+						</div>
+						<div class="w3-half">
+							<label>Datum završetka</label> <input class="w3-input w3-border"
+								type="text" id="endDateExpenseItem" placeholder="MM/YYYY">
+						</div>
+					</div>
+
+				</form>
+
+
+				<div class="w3.container" style="padding-top: 15px">
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row">
+							<div class="w3-col s3">
+								<button
+									class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
+									onClick="createExpenseItemDB()">Spremi</button>
+							</div>
+						</div>
+					</form>
+
+
+				</div>
+
+
+
+
+				<br> <br>
+			</div>
+
+		</div>
+	</div>
+
+
+
 	<!-- NAPRAVI NOVU CREATE kategoriju -->
 	<div class="w3-container" style="margin-top: 45px; display: none"
 		id="testingCREATE">
@@ -781,7 +1103,7 @@
 
 
 
-	<!-- Dodaj novi prihod -->
+	<!-- Edit novi prihod -->
 
 	<div class="w3-container" style="margin-top: 45px; display: none"
 		id="addIncomeItemDivision">
@@ -936,6 +1258,227 @@
 		</div>
 	</div>
 
+	<!-- Dodaj novi prihod -->
+
+	<div class="w3-container"
+		style="margin-top: 45px; display: none"
+		id="addIncomeItemDivisionCREATE">
+		<div class="w3-container w3-card" id="incomeItemCREATE">
+			<h3>Prihod</h3>
+
+			<div class="w3.container">
+				<form action="javascript:void(0);" class="w3-container">
+					<div class="w3-row">
+						<div class="w3-col s3">
+							<h4 style="margin-top: 3px">Ime prihoda</h4>
+						</div>
+						<div class="w3-col s9 w3-center">
+							<input id="incomeNameCREATE"
+								class="w3-input w3-border w3-animate-input" type="text"
+								style="width: 30%">
+						</div>
+					</div>
+				</form>
+				<form action="javascript:void(0);" class="w3-container">
+					<div class="w3-row">
+						<div class="w3-col s3">
+							<h4 style="margin-top: 3px">Iznos</h4>
+						</div>
+						<div class="w3-col s9 w3-center">
+							<input id="incomeValueCREATE"
+								class="w3-input w3-border w3-animate-input" type="text"
+								style="width: 30%">
+						</div>
+					</div>
+				</form>
+				<form action="javascript:void(0);" class="w3-container">
+					<div class="w3-row">
+						<div class="w3-col s3">
+							<h4 style="margin-top: 3px">Period</h4>
+						</div>
+						<div class="w3-col s9 w3-center">
+							<select class="w3-select" name="option" id="incomePeriodCREATE">
+								<option value="">Godišnje</option>
+								<option value="Mjesečno">Mjesečno</option>
+								<option value="Kvartalno">Kvartalno</option>
+								<option value="Jednoročno">Jednoročno</option>
+							</select>
+						</div>
+					</div>
+				</form>
+				<form action="javascript:void(0);" class="w3-container">
+					<div class="w3-row">
+						<div class="w3-col s3">
+							<h4 style="margin-top: 3px">Komentar</h4>
+						</div>
+						<div class="w3-col s9 w3-center">
+							<input id="incomeCommentCREATE"
+								class="w3-input w3-border w3-animate-input" type="text"
+								style="width: 30%">
+						</div>
+					</div>
+				</form>
+				<form action="javascript:void(0);" class="w3-container">
+					<div class="w3-row">
+						<div class="w3-col s3">
+							<h4 style="margin-top: 15px">Fiksnost</h4>
+						</div>
+
+						<div class="w3-col s9 w3-center">
+							<p>
+								<input class="w3-radio" type="radio" name="gender"
+									id="incomeIsFixedYesCREATE" value="yes"> <label
+									class="w3-validate">Da</label>
+							</p>
+							<p>
+								<input class="w3-radio" type="radio" name="gender" value="no"
+									id="incomeIsFixedNoCREATE" checked> <label
+									class="w3-validate">Ne</label>
+							</p>
+						</div>
+					</div>
+
+
+				</form>
+				<form action="javascript:void(0);" class="w3-container">
+					<div class="w3-row">
+						<div class="w3-col s3">
+							<h4 style="margin-top: 15px">Opis prihoda</h4>
+						</div>
+
+						<div class="w3-col s9 w3-center">
+							<p>
+								<input class="w3-radio" type="radio" name="gender"
+									value="sallary" id="incomeSallaryCREATE"> <label
+									class="w3-validate">Plaća</label>
+							</p>
+							<p>
+								<input class="w3-radio" type="radio" name="gender" value="other"
+									id="incomeOtherCREATE" checked> <label
+									class="w3-validate">Ostalo</label>
+							</p>
+						</div>
+					</div>
+
+
+				</form>
+				<form action="javascript:void(0);" class="w3-container">
+					<div class="w3-row-padding">
+						<div class="w3-half" style="maring-left: -15px">
+							<label>Datum početka</label> <input class="w3-input w3-border"
+								type="text" id="startDateIncomeCREATE" placeholder="MM/YYYY">
+						</div>
+						<div class="w3-half">
+							<label>Datum završetka</label> <input class="w3-input w3-border"
+								type="text" id="endDateIncomeCREATE" placeholder="MM/YYYY">
+						</div>
+					</div>
+
+				</form>
+
+
+				<div class="w3.container" style="padding-top: 15px">
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row">
+							<div class="w3-col s3">
+								<button
+									class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
+									onClick="persistIncomeItem()">Spremi</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<!-- <div class="w3.container" style="padding-top: 15px">
+						<form action="javascript:void(0);" class="w3-container">
+							<div class="w3-row">
+								<div class="w3-col s3">
+									<button
+										class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
+										onClick="showIncomeInputs()">Prikaži</button>
+								</div>
+							</div>
+						</form>
+					</div> -->
+
+
+				<form action="javascript:void(0);" id="listOfIncomeInputs"
+					class="w3-container"></form>
+
+				<br> <br>
+			</div>
+
+		</div>
+	</div>
+
+
+	<!-- Division za izmjenit ime troškovnika -->
+	<div class="w3-container" style="margin-top: 45px; display: none"
+		id="changeExpenserinoListName">
+		<div class="w3-container w3-card">
+				<div class="w3.container">
+				<form action="javascript:void(0);" class="w3-container">
+					<div class="w3-row">
+						<div class="w3-col s3">
+							<h4 style="margin-top: 3px">Novo ime troškovnika</h4>
+						</div>
+						<div class="w3-col s9 w3-center">
+							<input id="newExpenseListNameInput"
+								class="w3-input w3-border w3-animate-input" type="text"
+								style="width: 30%">
+						</div>
+					</div>
+				</form>
+				</div>
+			</div>
+		</div>
+
+
+
+	<!-- forma za uredit sam troškovnik -->
+	<div class="w3-container" style="margin-top: 45px; display: none"
+		id="editExpenseListDivision">
+		<div class="w3-container w3-card" id="removeExpenseListDivisionInner">
+			<h4>Što želite urediti na trenutno izabranom troškovniku ?</h4>
+			<div class="w3.container">
+				<form action="javascript:void(0);" class="w3-container">
+					<div class="w3-row">
+						<div class="w3-col s3" style="padding-top: 10px">
+							<button
+								class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
+								onClick="changeExpenseListName()">Preimenuj</button>
+						</div>
+					</div>
+				</form>
+
+		
+			</div>
+						
+			<div class="w3.container">
+				<form action="javascript:void(0);" class="w3-container">
+					<div class="w3-row">
+						<div class="w3-col s3"
+							style="padding-top: 20px; padding-bottom: 20px">
+							<button
+								class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
+								onClick="removeExpenseList()">Izbriši</button>
+						</div>
+					</div>
+				</form>
+
+
+			</div>
+
+		</div>
+
+
+
+
+	</div>
+
+
+
+
+
 	<!-- forma za izabrat expenseCategory ili expenseItem -->
 	<div class="w3-container" style="margin-top: 45px; display: none"
 		id="choiceHandler">
@@ -947,7 +1490,8 @@
 						<div class="w3-col s3" style="padding-top: 10px">
 							<button
 								class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
-								onClick="choiceExpenseItem()">Stavka troška</button>
+								id="buttonExpenseItem" onClick="choiceExpenseItem()">Stavka
+								troška</button>
 						</div>
 					</div>
 				</form>
