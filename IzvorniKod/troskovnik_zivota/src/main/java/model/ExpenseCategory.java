@@ -35,10 +35,10 @@ public class ExpenseCategory {
 	@JoinColumn
 	private ExpenseCategory superCategory;
 
-	@OneToMany(mappedBy = "superCategory", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = false)
+	@OneToMany(mappedBy = "superCategory", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<ExpenseCategory> subCategories;
 
-	@OneToMany(mappedBy = "expenseCategoryOwner", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = false)
+	@OneToMany(mappedBy = "expenseCategoryOwner", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<ExpenseItem> expenseItems;
 
 	@JsonIgnore
