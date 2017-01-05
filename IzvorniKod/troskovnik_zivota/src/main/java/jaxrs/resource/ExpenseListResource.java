@@ -7,7 +7,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -32,6 +46,9 @@ import pdf.PDFGenerator;
 
 @Path("/expenseList")
 public class ExpenseListResource {
+
+	final String usernameLoggin = "oppgroupteflja@gmail.com";
+	final String password = "Qwertzuiop1";
 
 	@GET
 	@Path("/ping")
@@ -282,20 +299,86 @@ public class ExpenseListResource {
 			}
 		}
 
+		File pdfFile = cretePDFFile(username, expenseList);
+
+		System.out.println("doso sam do tu");
+		ResponseBuilder response = Response.ok((Object) pdfFile);
+		response.header("Content-Disposition", "attachment; filename=troskovnik_" + expenseList.getName() + ".pdf");
+		response.header("Content-Type", "application/force-download");
+		return response.build();
+	}
+
+	@POST
+	@Path("/sendEmail/{username}/{expenseListName}/{email}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Boolean sendEmail(@PathParam("username") String usernameFrom, @PathParam("expenseListName") String expenseListName,
+			@PathParam("email") String emailTo) throws IOException {
+		List<ExpenseList> expenseLists = getExpenseListsForUsername(usernameFrom);
+		ExpenseList expenseList = new ExpenseList();
+		for (ExpenseList list : expenseLists) {
+			if (list.getName().equals(expenseListName)) {
+				expenseList = list;
+				break;
+			}
+		}
+
+		File pdfFile = cretePDFFile(usernameFrom, expenseList);
+
+		Properties props = new Properties();
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.smtp.host", "smtp.gmail.com");
+		props.put("mail.smtp.port", "587");
+
+		Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(usernameLoggin, password);
+			}
+		});
+
+		try {
+			Message message = new MimeMessage(session);
+
+			message.setFrom(new InternetAddress(usernameLoggin, usernameFrom));
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailTo));
+			message.setSubject("Ime troškovnika: " + expenseListName);
+
+			String text = "Troškovnik je poslan u " + new Date().toString() + ".";
+
+			MimeBodyPart messageBodyPart = new MimeBodyPart();
+			messageBodyPart.setText(text);
+
+			Multipart multipart = new MimeMultipart();
+			multipart.addBodyPart(messageBodyPart);
+
+			messageBodyPart = new MimeBodyPart();
+			String fileName = "troskovnik_" + expenseList.getName() + ".pdf";
+			DataSource source = new FileDataSource(pdfFile);
+			messageBodyPart.setDataHandler(new DataHandler(source));
+			messageBodyPart.setFileName(fileName);
+			multipart.addBodyPart(messageBodyPart);
+
+			message.setContent(multipart);
+
+			Transport.send(message);
+
+		} catch (MessagingException e) {
+			throw new RuntimeException(e);
+		}
+
+		return true;
+
+	}
+
+	private File cretePDFFile(String username, ExpenseList expenseList) throws IOException {
 		PDDocument document = new PDDocument();
 		PDFGenerator.generatePDF(document, username, expenseList);
 		File file = new File("troskovnik.pdf");
 		document.save(file);
 		document.close();
 
-		System.out.println("doso sam do tu");
-		ResponseBuilder response = Response.ok((Object) file);
-		// neznam da li ti treba onaj tamo zadnje desno .pdf
-		response.header("Content-Disposition", "attachment; filename=troskovnik_" + expenseList.getName() + ".pdf");
-		response.header("Content-Type", "application/force-download");
-		return response.build();
-
+		return file;
 	}
-
 	
+
 }

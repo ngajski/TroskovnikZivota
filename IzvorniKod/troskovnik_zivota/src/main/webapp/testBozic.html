@@ -24,12 +24,21 @@ html, body, h1, h2, h3, h4, h5 {
 }
 </style>
 
+<script type="text/javascript">
+
+	function modifySendEmailUrl() {
+		var url = "/troskovnik-zivota/service/expenseList/sendEmail/";
+		url += $('#sendEmailName').val() + "/" + $('#sendEmailExpenseListName').val() + "/" +  $('#sendEmailEmail').val();
+		$('#sendEmailForm').attr('action', url);
+		return true;
+	}
+</script>
 <body class="w3-white">
 
 	<h1 class='w3-center' id='title'>Troškovnik života</h1>
 
-	<form action='/troskovnik-zivota/servlets/sendEmail'  method="post"
-		class="w3-container w3-card-4 w3-light-grey">
+	<form action='' onsubmit="return modifySendEmailUrl();" method="post"
+		class="w3-container w3-card-4 w3-light-grey" id='sendEmailForm'>
 		<h2 class="w3-center ">Posalji troskovnik</h2>
 
 
@@ -38,20 +47,10 @@ html, body, h1, h2, h3, h4, h5 {
 				<i class="w3-xxlarge fa fa-user"></i>
 			</div>
 			<div class="w3-rest">
-				<input class="registerInput w3-input w3-border w3-round"
-					type="email" name="ime" value="" size="30" required="required"
-					placeholder="Ime">
-			</div>
-		</div>
-		
-		<div class="w3-row w3-section">
-			<div class="w3-col" style="width: 50px">
-				<i class="w3-xxlarge fa fa-envelope-o"></i>
-			</div>
-			<div class="w3-rest">
-				<input class="registerInput w3-input w3-border w3-round"
-					type="email" name="email" value="" size="30" required="required"
-					placeholder="Email na koji zelis poslat">
+				<input id="sendEmailName"
+					class="registerInput w3-input w3-border w3-round" type="text"
+					name="name" value="" size="30" required="required"
+					placeholder="Ime" required>
 			</div>
 		</div>
 
@@ -60,8 +59,21 @@ html, body, h1, h2, h3, h4, h5 {
 				<i class="w3-xxlarge fa fa-key"></i>
 			</div>
 			<div class="w3-rest">
-				<input class="registerInput w3-input w3-border w3-round" name="text"
-					type="text" required placeholder="Tekst poruke">
+				<input id="sendEmailExpenseListName"
+					class="registerInput w3-input w3-border w3-round" name="text"
+					type="text" required placeholder="Ime troskovnika">
+			</div>
+		</div>
+		
+		<div class="w3-row w3-section">
+			<div class="w3-col" style="width: 50px">
+				<i class="w3-xxlarge fa fa-envelope-o"></i>
+			</div>
+			<div class="w3-rest">
+				<input id="sendEmailEmail"
+					class="registerInput w3-input w3-border w3-round" type="email"
+					name="email" value="" size="30" required="required"
+					placeholder="Email na koji zelis poslat">
 			</div>
 		</div>
 

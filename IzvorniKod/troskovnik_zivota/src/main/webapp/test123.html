@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<title>Salji mail</title>
+
+<meta charset="UTF-8" name="viewport"
+	content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+
+<!-- Jquery -->
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="js/general.js"></script>
+<script src="js/htmlescaping.js"></script>
+
+<style>
+html, body, h1, h2, h3, h4, h5 {
+	font-family: "Raleway", sans-serif
+}
+</style>
+
+<script type="text/javascript">
+	function modifySendEmailUrl() {
+		var url = "/troskovnik-zivota/service/expenseList/sendEmail/";
+		url += $('#sendEmailName').val() + "/"
+				+ $('#sendEmailExpenseListName').val() + "/"
+				+ $('#sendEmailEmail').val();
+		$('#sendEmailForm').attr('action', url);
+		return true;
+	}
+</script>
+<body class="w3-white">
+<div class="w3-container">
+  <h2>Radio Buttons</h2>
+  <p>
+  <input class="w3-radio" type="radio" name="gender" value="male" checked>
+  <label class="w3-validate">Male</label></p>
+  <p>
+  <input class="w3-radio" type="radio" name="gender" value="female">
+  <label class="w3-validate">Female</label></p>
+  <p>
+  <input class="w3-radio" type="radio" name="gender" value="" disabled>
+  <label class="w3-validate">Don't know (Disabled)</label></p>
+</div>
+
+<button onclick="displaySelected()">prikazi o</button>
+
+</body>
+</html>
