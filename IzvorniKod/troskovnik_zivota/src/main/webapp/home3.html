@@ -17,6 +17,7 @@
 <script src="js/general.js"></script>
 <script src="js/htmlescaping.js"></script>
 <script src="js/sendExpenseList.js"></script>
+<script src="js/statistics.js"></script>
 
 <style>
 html, body, h1, h2, h3, h4, h5 {
@@ -62,8 +63,8 @@ html, body, h1, h2, h3, h4, h5 {
 		console.log('hide new f');
 	}
 	
-	function editExpenseListHide(){
-		console.log('hide edit f');
+	function analizeExpenseListHide(){
+		console.log('hide analize f');
 	}
 	
 	function sendExpenseListHide(){
@@ -107,95 +108,6 @@ html, body, h1, h2, h3, h4, h5 {
 		changeWindowUrl('index.html');
 	}
 </script>
-
-<!-- Skup fja za upravljanje trazilicom i slanjem troskovnika -->
-<script type="text/javascript">
-	function displayUsers(users, searchParameter, parameterValue) {
-		var hookup = $("#searchResultCheckboxHookup").empty();
-		if (users.length != 0) {
-			hookup
-					.append("Označite kome želite poslat troškovnik<p>");
-
-			for (var i = 0; i < users.length; ++i) {
-				var checkboxTemplate = $("#radioTemplate");
-				var cloned = checkboxTemplate.clone().removeAttr("style")
-						.removeAttr("id");				
-				var html = "";
-				html += "Ime: " + users[i].firstName + "  Prezime: "
-						+ users[i].lastName + "  ";
-				
-				cloned.children("input").attr("name","userRadioBtn").attr("value",users[i].username);
-				cloned.children("label").html(html);
-				
-				hookup.append(cloned);
-			}
-
-			hookup
-					.append("<button class='w3-btn w3-red w3-round-large' onclick='sendExpenseList()'>Pošalji troškovnik</button><p>")
-		} else {
-			hookup.append("Za odabrani parametar pretrage'"
-					+ "'i vrijednost paramtera '" + parameterValue
-					+ "'ne postoji niti jedan rezultat rezultat.<p>");
-		}
-	}
-
-	function searchForUsers() {
-		var searchParameter = $("select[name='searchParametersOptions']").find(
-				":selected").val();
-		var parameterValue = $("#parameterValue").val();
-		if (parameterValue == "") {
-			return;
-		}
-
-		$.ajax({
-			type : 'GET',
-			url : "http://localhost:8080/baza-podataka/service/users/"
-					+ searchParameter + "/" + parameterValue,
-			crossDomain : true,
-			dataType : 'json',
-			success : function(responseData, textStatus, jqXHR) {
-				displayUsers(responseData, searchParameter, parameterValue);
-			},
-			error : function(responseData, textStatus, errorThrown) {
-				alert('GET failed.');
-			}
-		});
-
-	}
-	
-	function generateExpenseListsCheckBox(expenseLists){
-		var hookup = $("#expenseListCheckboxHookup").empty();
-		if (expenseLists.length != 0) {
-			hookup
-					.append("<h5>Raspoloživi troškovnici</h5>");
-			for (var i = 0; i < expenseLists.length; ++i) {
-				var checkboxTemplate = $("#radioTemplate");
-				var cloned = checkboxTemplate.clone().removeAttr("style")
-						.removeAttr("id");
-				
-				cloned.children("input").attr("name","expenseListRadioBtn").attr("value",expenseLists[i].name);
-				cloned.children("label").html(expenseLists[i].name);
-				hookup.append(cloned);
-			}
-		} else {
-			hookup
-					.append("<label style='font-size: 20px'>Za slanje troškovnika potrebno je prvo izraditi jedan. </label>");
-		}
-	}
-
-	function searchForExpenseLists() {
-		var username = sessionStorage.getItem('username');
-		getExpenseLists(username, generateExpenseListsCheckBox);
-	}
-	
-	function sendExpenseList() {
-		var username = $('input[name="userRadioBtn"]:checked').val();	
-		var expenseListName = $('input[name="expenseListRadioBtn"]:checked').val();
-		send(expenseListName,username);
-	}
-	
-</script>
-
 
 <script type="text/javascript">
 
@@ -288,7 +200,7 @@ function setHref() {
 		<a href="#"	class="w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black"	onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i> Close Menu</a>
 		<a href="#"	class="w3-padding w3-blue" id="displayExpenseListLink" onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4))"><i class="fa fa-eye"></i> Pregledaj troškovnik</a>
 		<a href="#" class="w3-padding" id="newExpenseListLink" onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4), 'newExpenseListCreation')"><i class="fa fa-plus-circle"></i> Novi troškovnik</a>
-		<a href="#" class="w3-padding" id="editExpenseListLink" onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4))"><i class="fa fa-edit"></i> Uredi postojeći</a>
+		<a href="#" class="w3-padding" id="analizeExpenseListLink" onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4),'searchExpenseListsForStatistics')"><i class="fa fa-line-chart"></i> Analiza</a>
 		<a href="#" class="w3-padding" id="sendExpenseListLink" onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4), 'searchForExpenseLists')"><i class="fa fa-send-o"></i> Pošalji troškovnik</a>
 		<a href="#" class="w3-padding" id="generatePDFLink" onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4), 'prepareGeneratePDF')"><i	class="fa fa-file-pdf-o"></i> Generiraj PDF</a>
 	</nav>
@@ -310,16 +222,19 @@ function setHref() {
 		</header>
 
 		<div class="w3-row-padding w3-margin-bottom">
-			<div class="w3-quarter" style="cursor: pointer">
+			<div class="w3-quarter" id="analizeExpenseListQuarter"
+				onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 7),'searchExpenseListsForStatistics')"
+				style="cursor: pointer">
 				<div class="w3-container w3-red w3-padding-16">
 					<div class="w3-left">
-						<i class="fa fa-envelope w3-xxxlarge"></i>
+						<i class="fa fa-line-chart w3-xxxlarge"></i>
+
 					</div>
 					<div class="w3-right">
 						<h3 id="messageNumberHolder"></h3>
 					</div>
 					<div class="w3-clear"></div>
-					<h4>Obavijesti</h4>
+					<h4>Analiza</h4>
 				</div>
 			</div>
 			
@@ -378,14 +293,50 @@ function setHref() {
 				<br>
 			</div>
 
-			<div class="w3-container" id="newExpenseListDiv"
+			<div class="w3-container" id="analizeExpenseListDiv"
 				style="display: none;">
-				<h4>newExpenseListDiv TODO</h4>
-			</div>
+				<h1>Analiza troškovnika</h1>
+				
+				<div class="w3-container w3-card-4 w3-light-grey"
+					id="expenseListAnalizeRadioBox"></div>
+				<hr>
+				
 
-			<div class="w3-container" id="editExpenseListDiv"
-				style="display: none;">
-				<h4>editExpenseListDiv TODO</h4>
+			<form action='javascript:void(0);' id=''
+				class="w3-container w3-card-4 w3-light-grey"
+				>
+
+				<h3 class="w3-left ">Odaberite razdoblje za prikaz</h3>
+				<hr><br>
+				<div class="w3-row w3-section">
+					<div class="w3-col" style="width: 50px;" >
+						<i class="fa fa-calendar-check-o fa-2x" aria-hidden="true"></i>
+					</div>
+					<div class="w3-rest">
+						<input class="loginInput w3-input w3-border w3-round"
+							name="startForm" type="text" required id="startInput"
+							placeholder="mm/yyyy">
+					</div>
+				</div>
+
+				<div class="w3-row w3-section">
+					<div class="w3-col" style="width: 50px">
+						<i class="fa fa-calendar-times-o fa-2x" aria-hidden="true"></i>
+					</div>
+					<div class="w3-rest">
+						<input class="loginInput w3-input w3-border w3-round"
+							name="endForm" type="text" required id="endInput"
+							placeholder="mm/yyyy">
+					</div>
+				</div>
+
+				<button class="w3-btn-block w3-section w3-blue w3-ripple w3-padding"
+					onclick="analizeExpenseList()" id='analiteBtn'>Prikaži</button>
+			</form>
+			
+			<div id="slika"> </div>
+		
+				
 			</div>
 
 			<div class="w3-container" id="sendExpenseListDiv"

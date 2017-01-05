@@ -100,7 +100,7 @@ public class Date {
 		
 		int yearDif = Math.abs(year1 - year2);
 		int monthDif = month1 - month2;
-		return yearDif * 12 + monthDif;
+		return yearDif * 12 - monthDif;
 	}
 	
 	/**

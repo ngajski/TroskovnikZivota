@@ -115,7 +115,7 @@ public class IncomeItem {
 		} else if (period != Period.ONE_TIME && Date.happenedAfter(date, startDate)
 				&& Date.happenedBefore(date, endDate)) {
 
-			int payingMonth = Date.difference2(date,startDate);
+			int payingMonth = Date.difference2(this.startDate,date);
 
 			return amounts.get(payingMonth);
 		} else {

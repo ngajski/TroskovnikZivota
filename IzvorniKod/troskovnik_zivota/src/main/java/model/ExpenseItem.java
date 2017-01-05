@@ -129,7 +129,7 @@ public class ExpenseItem {
 				return amounts.get(0);
 			}
 			
-			int payingMonth = Date.difference2(date,startDate);
+			int payingMonth = Date.difference2(this.startDate,date);
 			
 			return amounts.get(payingMonth);
 		} else {
