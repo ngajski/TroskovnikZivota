@@ -88,11 +88,17 @@ public class JPADAOImpl implements DAO {
 		EntityManager em = JPAEMProvider.getEntityManager();
 		em.remove(expenseList);
 	}
-	
+		
 	@Override
-	public void removeExpenseCategoryFromDatabase(ExpenseCategory expenseCategory){
+	public void removeExpenseCategory(ExpenseCategory expenseCategory){
 		EntityManager em = JPAEMProvider.getEntityManager();
 		em.remove(expenseCategory);
+	}
+	
+	@Override
+	public void removeExpenseItem(ExpenseItem expenseItem){
+		EntityManager em = JPAEMProvider.getEntityManager();
+		em.remove(expenseItem);
 	}
 	
 	@Override

@@ -107,24 +107,50 @@ public class ExpenseListResource {
 	public String removeExpenseListFromDatabase(@PathParam("name_expenseList") String name) {
 		ExpenseList expenseList = DAOProvider.getDAO().getExpenseListByName(name);
 		DAOProvider.getDAO().removeExpenseListFromDatabase(expenseList);
-		return "ok2";
+		return "DA";
 	}
 
+	
+	@DELETE
+	@Path("/removeExpenseItem/{id}/{name_expenseList}")
+	@Produces({ MediaType.TEXT_PLAIN })
+	public String removeExpenseItem(@PathParam("name_expenseList") String name, @PathParam("id") Long id) {
+		ExpenseList expenseList = DAOProvider.getDAO().getExpenseListByName(name);
+		for ( ExpenseCategory category : expenseList.getExpenseCategories()){
+			for ( ExpenseItem item : category.getExpenseItems()){
+				if ( item.getId() == id ){
+					DAOProvider.getDAO().removeExpenseItem(item);
+					return "DA";
+				}
+			}
+		}
+		return "DA";
+	}
+	
+	
+	
 	@DELETE
 	@Path("/removeCategory/{currentCategoryName}/{expenseListName}")
 	@Produces({ MediaType.TEXT_PLAIN })
-	public void removeExpenseCategoryFromDatabase(@PathParam("currentCategoryName") String name,
+	public String removeExpenseCategoryFromDatabase(@PathParam("currentCategoryName") String name,
 			@PathParam("expenseListName") String expenseListName) {
 		ExpenseList expenseList = DAOProvider.getDAO().getExpenseListByName(expenseListName);
-		System.out.println("\n\n\nExpenseListName : " + expenseList.getName());
-		System.out.println("\n\n\nCategory name : " + name);
 		for (ExpenseCategory category : expenseList.getExpenseCategories()) {
 			if (category.getName().equals(name)) {
-				DAOProvider.getDAO().removeExpenseCategoryFromDatabase(category);
-				return;
+				for ( ExpenseCategory subcategory : category.getSubCategories()){
+					for ( ExpenseItem item : subcategory.getExpenseItems()){
+						DAOProvider.getDAO().removeExpenseItem(item);
+					}
+					DAOProvider.getDAO().removeExpenseCategory(subcategory);
+				}
+				for (ExpenseItem item : category.getExpenseItems()){
+					DAOProvider.getDAO().removeExpenseItem(item);
+				}
+				DAOProvider.getDAO().removeExpenseCategory(category);
 			}
 
 		}
+		return "DA";
 	}
 
 	@POST
@@ -134,6 +160,9 @@ public class ExpenseListResource {
 		ExpenseCategory category = DAOProvider.getDAO().getCategoryByID(expenseCategory.getId());
 		category.setName(expenseCategory.getName());
 		category.issetFixed(expenseCategory.isgetFixed());
+		for ( ExpenseItem item : category.getExpenseItems()){
+			item.issetFixed(expenseCategory.isgetFixed());
+		}
 		return "SVE PET";
 	}
 

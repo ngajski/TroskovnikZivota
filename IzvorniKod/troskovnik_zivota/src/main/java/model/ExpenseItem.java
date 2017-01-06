@@ -142,12 +142,14 @@ public class ExpenseItem {
 	 * to right format.
 	 */
 	public void validateDates() {
+		if ( startDate != null && endDate != null){
 		if (this.startDate.startsWith("0")) {
 			startDate = startDate.substring(1);
 		}
 		
 		if (this.endDate.startsWith("0")) {
 			endDate = endDate.substring(1);
+		}
 		}
 	}
 	

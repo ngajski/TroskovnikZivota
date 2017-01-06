@@ -88,7 +88,7 @@ public interface DAO {
 
 	List<User> getUsers() throws DAOException;
 
-	void removeExpenseCategoryFromDatabase(ExpenseCategory expenseCategory);
+	void removeExpenseCategory(ExpenseCategory expenseCategory);
 
 	ExpenseCategory getCategoryByID(Long id) throws DAOException;
 
@@ -97,5 +97,7 @@ public interface DAO {
 	IncomeItem getIncomeItemByID(Long id) throws DAOException;
 	
 	List<ExpenseCategory> getDirectExpenseCategories(ExpenseList expenseList); 
+
+	void removeExpenseItem(ExpenseItem expenseItem);
 
 }

@@ -21,10 +21,47 @@
 	var expenseList;
 	var currentEditCategoryName;
 
+	function removeExpenseList() {
+		$.ajax({
+			type : 'DELETE',
+			url : "service/expenseList/remove/" + expenseList.name,
+			dataType : 'text',
+			success : function(responseData, textStatus, jqXHR) {
+				window.location.replace("home2.html")
+				$('#appBody').html(originalCreationDivision);
+				console.log('Izbrisao troškovnik');
+			},
+			error : function(responseData, textStatus, errorThrown) {
+				console.log('POST failed nisam izbriso troskovnik.');
+			}
+		});
+	}
+	
+	
+	
+	function removeExpenseItemFromDatabase(){
+		
+		var id = $("#expenseItemID").val();
+		
+		$.ajax({
+			type : 'DELETE',
+			url : "service/expenseList/removeExpenseItem/" + id + "/" + expenseList.name,
+			dataType : 'text',
+			success : function(responseData, textStatus, jqXHR) {
+				window.location.reload();
+			},
+			error : function(responseData, textStatus, errorThrown) {
+				console.log('DELETE failed nisam izbriso kategoriju.');
+			}
+		});
+		
+	}
+	
+	
 	function removeCategoryFromExpenseList() {
 		var currentCategoryName = $('#categoryName').val();
 
-		var url = "/troskovnik-zivota/service/expenseList/removeCategory/"
+		var url = "service/expenseList/removeCategory/"
 				+ currentCategoryName + "/" + expenseList.name;
 
 		$.ajax({
@@ -51,7 +88,7 @@
 		var endDate = $('#endDateExpenseItem').val();
 		var amounts = [];
 
-		/* 		var period = document.getElementById("expensePeriod");
+		 var period = document.getElementById("expensePeriod");
 		 var periodCheck = period.options[period.selectedIndex].value;
 		 if (periodCheck == "") {
 		 period = "ANUALY";
@@ -64,7 +101,7 @@
 		 }
 		 if (periodCheck == "Jednoročno") {
 		 period = "ONE_TIME";
-		 } */
+		 }
 
 		amounts.push(parseFloat(value.toString()));
 		var x = {
@@ -73,8 +110,8 @@
 			comment : comment,
 			amounts : amounts,
 			startDate : startDate,
-			endDate : endDate
-		/* 	period : period */
+			endDate : endDate,
+			period : period 
 
 		}
 		var json = JSON.stringify(x);
@@ -159,6 +196,21 @@
 					fixed = "NE";
 				}
 				document.getElementById("checkFixed").innerHTML = fixed;
+				
+				var period = expenseItem.period;
+				if (period == "ANUALY") {
+					$("#expensePeriod").val("");
+				}
+				if (period == "MONTHLY") {
+					$("#expensePeriod").val("Mjesečno");
+				}
+				if (period == "QUARTARLY") {
+					$("#expensePeriod").val("Kvartalno");
+				}
+				if (period == "ONE_TIME") {
+					$("#expensePeriod").val("Jednoročno");
+				}				
+				
 				$('#addExpenseItemDivision').show(750);
 			},
 
@@ -198,7 +250,7 @@
 		hideAll();
 
 		$('#categoryIDCREATE').val(name);
-		console.log(name.length);
+
 		if (name.length == 0) {
 			$("#buttonExpenseItem").hide();
 		} else {
@@ -212,7 +264,29 @@
 	function choiceExpenseItem() {
 		hideAll();
 
-		$("#addExpenseItemDivisionCREATE").show(750);
+		var categoryname = $('#categoryIDCREATE').val();
+
+		$.ajax({
+			type : 'GET',
+			url : "service/expenseList/expensecategoryByExpenseList/"
+					+ categoryname + "/" + expenseList.name,
+			dataType : 'json',
+			success : function(responseData, textStatus, jqXHR) {
+				var category = responseData;
+				var fixed;
+				if (category.fixed == true) {
+					fixed = "DA";
+				} else {
+					fixed = "NE";
+				}
+				document.getElementById("checkFixedExpenseItemCREATE").innerHTML = fixed;
+				$("#addExpenseItemDivisionCREATE").show(750);
+			},
+			error : function(responseData, textStatus, errorThrown) {
+				alert('GET failed.');
+			}
+		});
+
 	}
 	function choiceCategory() {
 		hideAll();
@@ -253,8 +327,7 @@
 			success : function(responseData, textStatus, jqXHR) {
 				if (responseData == "DA") {
 					window.location.reload();
-				}
-				else {
+				} else {
 					/* POZOVI ALERT */
 					/* nema reload-a */
 				}
@@ -271,18 +344,36 @@
 		var endDate = $('#endDateExpenseItemCREATE').val();
 
 		var amounts = [];
-		var amount = $('#expenseValueCREATE').val();
-		amounts.push(parseFloat(amount.toString()));
-		var comment = $('#expenseCommenCREATEt').val();
+		var amount = $('#expenseValue').val();
+		for (var i = 0; i < amount.split(";").length; i++) {
+			amounts.push(amount.split(";")[i]);
+		}
+		var comment = $('#expenseCommentCREATE').val();
 
 		var category_name = $("#categoryIDCREATE").val();
 		var name = $("#expenseNameCREATE").val();
+		var period = document.getElementById("expensePeriodCREATE");
+		var periodCheck = period.options[period.selectedIndex].value;
+		if (periodCheck == "") {
+			period = "ANUALY";
+		}
+		if (periodCheck == "Mjesečno") {
+			period = "MONTHLY";
+		}
+		if (periodCheck == "Kvartalno") {
+			period = "QUARTARLY";
+		}
+		if (periodCheck == "Jednoročno") {
+			period = "ONE_TIME";
+		}
+
 		var x = {
 			name : name,
 			amounts : amounts,
 			comment : comment,
 			startDate : startDate,
-			endDate : endDate
+			endDate : endDate,
+			period : period
 		}
 		var json = JSON.stringify(x);
 
@@ -295,9 +386,9 @@
 			dataType : 'text',
 			contentType : "application/json",
 			success : function(responseData, textStatus, jqXHR) {
-				if ( responseData == "DA"){
-				window.location.reload();}
-				else {
+				if (responseData == "DA") {
+					window.location.reload();
+				} else {
 					/* POZOVI ALERT */
 					/* nema reload-a */
 				}
@@ -366,7 +457,6 @@
 			//sada ulazimo u potkategorije
 
 			if (glavne[i].subCategories.length == 0) {
-				console.log("nema potkategorija");
 			} else {
 
 				processList(glavne[i].subCategories, cvor);
@@ -384,10 +474,7 @@
 			dataType : 'json',
 			success : function(responseData, textStatus, jqXHR) {
 				indexi = responseData;
-				console.log(indexi);
 				var expenseListName = expenseList.name;
-				console.log("Kolicina kategorija "
-						+ expenseList.expenseCategories.length);
 				var config = {
 					container : "#wholeFuckingTree",
 
@@ -464,55 +551,37 @@
 
 	}
 
-	function renameExpenseList(){
+	function renameExpenseList() {
 		var newName = $('#newExpenseListNameInput').val();
 		var oldName = expenseList.name;
-		if ( newName.length != 0){
+		if (newName.length != 0) {
 			$.ajax({
 				type : 'POST',
-				url : "service/expenseList/expenseListRename/" + oldName + "/" + newName,
-				dataType : 'text',		
+				url : "service/expenseList/expenseListRename/" + oldName + "/"
+						+ newName,
+				dataType : 'text',
 				success : function(responseData, textStatus, jqXHR) {
-					if ( responseData == "DA"){
+					if (responseData == "DA") {
 						sessionStorage.setItem('expenseListName', newName);
 						window.location.reload();
-					}
-					else {
+					} else {
 						/* POZOVI ALERT */
 						/* nema reload-a */
 						console.log("Ime troskovnika se vec nalazi u bazi");
-						
+
 					}
 				},
 				error : function(responseData, textStatus, errorThrown) {
 					console.log('POST failed nisam updateo item!');
 				}
-			});	
-			
-			
-		}
-		else {
+			});
+
+		} else {
 			console.log("IME JE PRAZNO!");
 		}
-		
-		
+
 	}
-	
-	function removeExpenseList() {
-		$.ajax({
-			type : 'DELETE',
-			url : "service/expenseList/remove/" + expenseList.name,
-			dataType : 'text',
-			success : function(responseData, textStatus, jqXHR) {
-				window.location.replace("home2.html")
-				$('#appBody').html(originalCreationDivision);
-				console.log('Izbrisao troškovnik');
-			},
-			error : function(responseData, textStatus, errorThrown) {
-				console.log('POST failed nisam izbriso troskovnik.');
-			}
-		});
-	}
+
 
 	function changeIncomeItem() {
 		var id = $('#incomeItemID').val();
@@ -640,9 +709,9 @@
 				dataType : 'text',
 				contentType : "application/json",
 				success : function(responseData, textStatus, jqXHR) {
-					if ( responseData == "DA"){
-					window.location.reload();}
-					else {
+					if (responseData == "DA") {
+						window.location.reload();
+					} else {
 						/* POZOVI ALERT */
 						/* nema reload-a */
 					}
@@ -757,7 +826,7 @@
 	<div class="w3-container" id="fillIn">
 
 		<button class='w3-btn w3-left w3-light-grey' onClick='returnToHome()'>&laquo;
-			Previous</button>
+			Povratak</button>
 
 
 		<!-- <button class='w3-btn w3-left w3-light-grey' onClick='togglex()' id = "toggleItems" style = "margin-left: 10px;">Prikaži
@@ -1030,11 +1099,12 @@
 					<div class="w3-row-padding">
 						<div class="w3-half" style="maring-left: -15px">
 							<label>Datum početka</label> <input class="w3-input w3-border"
-								type="text" id="startDateExpenseItem" placeholder="MM/YYYY">
+								type="text" id="startDateExpenseItemCREATE"
+								placeholder="MM/YYYY">
 						</div>
 						<div class="w3-half">
 							<label>Datum završetka</label> <input class="w3-input w3-border"
-								type="text" id="endDateExpenseItem" placeholder="MM/YYYY">
+								type="text" id="endDateExpenseItemCREATE" placeholder="MM/YYYY">
 						</div>
 					</div>
 
