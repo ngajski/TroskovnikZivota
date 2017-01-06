@@ -23,9 +23,13 @@
 
 	function removeCategoryFromExpenseList() {
 		var currentCategoryName = $('#categoryName').val();
+
+		var url = "/troskovnik-zivota/service/expenseList/removeCategory/"
+				+ currentCategoryName + "/" + expenseList.name;
+
 		$.ajax({
 			type : 'DELETE',
-			url : "service/expenseList/removeCategory/" + currentCategoryName,
+			url : url,
 			dataType : 'text',
 			success : function(responseData, textStatus, jqXHR) {
 				window.location.reload();
@@ -247,9 +251,13 @@
 			dataType : 'text',
 			contentType : "application/json",
 			success : function(responseData, textStatus, jqXHR) {
-				var val = responseData;
-				console.log('Dodao kategoriju');
-				window.location.reload();
+				if (responseData == "DA") {
+					window.location.reload();
+				}
+				else {
+					/* POZOVI ALERT */
+					/* nema reload-a */
+				}
 			},
 			error : function(responseData, textStatus, errorThrown) {
 				console.log('POST failed nisam dodao kategoriju.');
@@ -280,22 +288,19 @@
 
 		$.ajax({
 			type : 'POST',
-			url : "service/expenseList/expenseitem/" + category_name,
+			url : "service/expenseList/expenseitem/" + category_name + "/"
+					+ expenseList.name,
 			data : json,
 			contentType : "application/json",
 			dataType : 'text',
 			contentType : "application/json",
 			success : function(responseData, textStatus, jqXHR) {
-				var value = responseData;
-				if (value == "true") {
-					$("#checkFixed").val("DA");
-					console.log("Fiksnost DA");
-				} else if (value == "false") {
-					$("#checkFixed").val("NE");
-					console.log("Fiksnost NE");
+				if ( responseData == "DA"){
+				window.location.reload();}
+				else {
+					/* POZOVI ALERT */
+					/* nema reload-a */
 				}
-				console.log('Dodao stavku!');
-				window.location.reload();
 
 			},
 			error : function(responseData, textStatus, errorThrown) {
@@ -322,12 +327,13 @@
 		}
 		for ( var i in glavne) {
 			var ime = glavne[i].name;
+			var id = glavne[i].id;
 			var cvor = {
 				parent : rootExpenseList,
 				text : {
 					name : {
 						val : glavne[i].name,
-						href : "javascript:editCategory('" + ime + "')"
+						href : "javascript:editCategory('" + id + "')"
 					},
 					title : "Kategorija",
 					contact : {
@@ -445,21 +451,54 @@
 		});
 
 	});
-	
-	
-	function editExpenseList(){
+
+	function editExpenseList() {
 		hideAll();
 		$('#editExpenseListDivision').show(750);
-		
+
 	}
-	
-	function changeExpenseListName(){
+
+	function changeExpenseListName() {
 		hideAll();
 		$('#changeExpenserinoListName').show(750);
+
+	}
+
+	function renameExpenseList(){
+		var newName = $('#newExpenseListNameInput').val();
+		var oldName = expenseList.name;
+		if ( newName.length != 0){
+			$.ajax({
+				type : 'POST',
+				url : "service/expenseList/expenseListRename/" + oldName + "/" + newName,
+				dataType : 'text',		
+				success : function(responseData, textStatus, jqXHR) {
+					if ( responseData == "DA"){
+						sessionStorage.setItem('expenseListName', newName);
+						window.location.reload();
+					}
+					else {
+						/* POZOVI ALERT */
+						/* nema reload-a */
+						console.log("Ime troskovnika se vec nalazi u bazi");
+						
+					}
+				},
+				error : function(responseData, textStatus, errorThrown) {
+					console.log('POST failed nisam updateo item!');
+				}
+			});	
+			
+			
+		}
+		else {
+			console.log("IME JE PRAZNO!");
+		}
+		
 		
 	}
 	
-	function removeExpenseList(){
+	function removeExpenseList() {
 		$.ajax({
 			type : 'DELETE',
 			url : "service/expenseList/remove/" + expenseList.name,
@@ -472,10 +511,9 @@
 			error : function(responseData, textStatus, errorThrown) {
 				console.log('POST failed nisam izbriso troskovnik.');
 			}
-		});	
+		});
 	}
-	
-	
+
 	function changeIncomeItem() {
 		var id = $('#incomeItemID').val();
 		var name = $('#incomeName').val();
@@ -533,13 +571,12 @@
 
 	function addNewIncomeItem() {
 		hideAll();
-		
+
 		$('#addIncomeItemDivisionCREATE').show(750);
-		
+
 	}
-	
-	
-	function persistIncomeItem(){
+
+	function persistIncomeItem() {
 		var val = $('#incomeNameCREATE').val();
 		if (val.length != 0) {
 			var amounts = [];
@@ -603,20 +640,21 @@
 				dataType : 'text',
 				contentType : "application/json",
 				success : function(responseData, textStatus, jqXHR) {
-					window.location.reload();
-					$('#addIncomeItemDivisionCREATE').hide();
+					if ( responseData == "DA"){
+					window.location.reload();}
+					else {
+						/* POZOVI ALERT */
+						/* nema reload-a */
+					}
 				},
 				error : function(responseData, textStatus, errorThrown) {
 					console.log('POST failed nisam dodao prihod.');
 				}
 			});
 		}
-		
-		
+
 	}
-	
-	
-	
+
 	function hideAll() {
 		$('#testingCREATE').hide();
 		$('#choiceHandler').hide();
@@ -628,8 +666,7 @@
 		$('#changeExpenserinoListName').hide();
 		$('#editExpenseListDivision').hide();
 	}
-	
-	
+
 	function editIncomeItem(currentElementID) {
 		hideAll();
 
@@ -710,11 +747,6 @@
 	 getParentlessNodeID();
 	 } 
 	 }*/
-	 
-	 
-	 
-	 
-	 
 </script>
 
 
@@ -1260,8 +1292,7 @@
 
 	<!-- Dodaj novi prihod -->
 
-	<div class="w3-container"
-		style="margin-top: 45px; display: none"
+	<div class="w3-container" style="margin-top: 45px; display: none"
 		id="addIncomeItemDivisionCREATE">
 		<div class="w3-container w3-card" id="incomeItemCREATE">
 			<h3>Prihod</h3>
@@ -1415,7 +1446,7 @@
 	<div class="w3-container" style="margin-top: 45px; display: none"
 		id="changeExpenserinoListName">
 		<div class="w3-container w3-card">
-				<div class="w3.container">
+			<div class="w3.container">
 				<form action="javascript:void(0);" class="w3-container">
 					<div class="w3-row">
 						<div class="w3-col s3">
@@ -1427,10 +1458,17 @@
 								style="width: 30%">
 						</div>
 					</div>
+					<div class="w3-row">
+						<div class="w3-col s3" style="padding-top: 10px">
+							<button
+								class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
+								onClick="renameExpenseList()">Preimenuj</button>
+						</div>
+					</div>
 				</form>
-				</div>
 			</div>
 		</div>
+	</div>
 
 
 
@@ -1450,9 +1488,9 @@
 					</div>
 				</form>
 
-		
+
 			</div>
-						
+
 			<div class="w3.container">
 				<form action="javascript:void(0);" class="w3-container">
 					<div class="w3-row">

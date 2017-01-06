@@ -83,8 +83,6 @@ html, body, h1, h2, h3, h4, h5 {
 .w3-sidenav a {
 	font-family: "Roboto", sans-serif
 }
-
-
 </style>
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -245,21 +243,33 @@ html, body, h1, h2, h3, h4, h5 {
 
 		$.ajax({
 			type : 'POST',
-			url : "service/expenseList/expenseitem/" + category_name,
+			url : "service/expenseList/expenseitem/" + category_name + "/"
+					+ name_expenseList,
 			data : json,
 			contentType : "application/json",
 			dataType : 'text',
 			contentType : "application/json",
 			success : function(responseData, textStatus, jqXHR) {
-				var value = responseData;
-				if (value == "true") {
-					$("#checkFixed").val("DA");
-					console.log("Fiksnost DA");
-				} else if (value == "false") {
-					$("#checkFixed").val("NE");
-					console.log("Fiksnost NE");
+				if ( responseData == "DA"){
+					$('#addExpenseItemDivision').hide(750);
+					if (val.length != 0) {
+						var html = $("#" + currentElementId).html();
+						$('#' + currentElementId)
+								.html(
+										"<a href='#' id='expense"
+												+ val
+												+ "' onClick='showExpenseItem(this)'><i class='fa fa-circle' style='font-size:5px;position:relative;top:-3px;'></i> "
+												+ val + "</a>" + html);
+					}
+					/* $("#expenseItem").val(''); */
+					reset();					
+					
 				}
-				console.log('Dodao stavku!')
+				else{
+					/* POZOVI ALERT */
+					reset();
+					console.log("IME EXPENSEITEMA JE VEC U DB");
+				}
 			},
 			error : function(responseData, textStatus, errorThrown) {
 				console.log('POST failed nisam dodao stavku!');
@@ -289,8 +299,41 @@ html, body, h1, h2, h3, h4, h5 {
 			dataType : 'text',
 			contentType : "application/json",
 			success : function(responseData, textStatus, jqXHR) {
-				var val = responseData;
-				console.log('Dodao kategoriju')
+				if ( responseData == "DA"){
+					$('#testing').hide(750);
+
+					var name = "Kategorija" + val;
+
+					if (val.length != 0) {
+						var html = $('#' + currentElementId).html();
+
+						/* var itemHolder = "<div id='val' class='w3-accordion-content w3-padding-large w3-medium'><a href='#' onClick='addCategory()'>"+val+"<i class='fa fa-plus w3-margin-right'></i></a></div>";
+						$('#KategorijaDefault').html(html + itemHolder); */
+						$('#' + currentElementId)
+								.html(
+										"<div class='w3-accordion'><a href='#' id='"
+												+ val
+												+ "Href' onClick='myAccFuncDynamic(this)'>"
+												+ val
+												+ " <i class='fa fa-caret-down'></i></a>"
+												+ "<div id='Kategorija" 
+												+ val 
+												+ "' class='w3-accordion-content w3-padding-large w3-medium'><a href='#' onClick='addCategory(this)' id='addCategory"
+												+ val
+												+ "'>Dodaj kategoriju <i class='fa fa-plus w3-margin-right'></i></a><a href='#' onClick='addExpenseItem(this)' id='addItemTo"
+												+ val
+												+ "'>Dodaj stavku <i class='fa fa-plus w3-margin-right'></i></a></div></div>"
+												+ html);
+					}
+					reset();
+					
+					
+				}
+				else {
+					/* POZOVI ALERT */
+					reset();
+					console.log("Kategorija vec postoji!");
+				}
 			},
 			error : function(responseData, textStatus, errorThrown) {
 				console.log('POST failed nisam dodao troskovnik.');
@@ -341,8 +384,18 @@ html, body, h1, h2, h3, h4, h5 {
 			dataType : 'text',
 			contentType : "application/json",
 			success : function(responseData, textStatus, jqXHR) {
-				name_expenseList = responseData;
-				console.log('Dodao troskovnik')
+				name_expenseList = name;
+				if ( responseData == "DA"){
+					$("#navMenu").removeAttr("style");
+					$("#newExpenseListDivision").attr("style", "display:none;");
+					var val = $("#input-1").val();
+					$("#navMenu1").children("#imeHeader").html("<b>" + val + "</b>");
+				}
+				else {
+					/* POZOVI ALERT */
+					$('#input-1').val("");
+					console.log("ime troskovnika vec postoji !")
+				}
 			},
 			error : function(responseData, textStatus, errorThrown) {
 				console.log('POST failed nisam dodao troskovnik.');
@@ -434,8 +487,8 @@ html, body, h1, h2, h3, h4, h5 {
 	}
 
 	function showPageContent() {
-/* 		$("#mySidenav").removeAttr("style", "padding-top"); */
- 		$('#mySidenav').css("padding-top","0px");
+		/* 		$("#mySidenav").removeAttr("style", "padding-top"); */
+		$('#mySidenav').css("padding-top", "0px");
 		$('#mySidenav').addClass("w3-collapse");
 		$('#menuButton').addClass("w3-hide-large");
 		$("#pageContentNewExpenseList").hide();
@@ -459,10 +512,6 @@ html, body, h1, h2, h3, h4, h5 {
 
 	function getLayout() {
 		persistExpenseList();
-		$("#navMenu").removeAttr("style");
-		$("#newExpenseListDivision").attr("style", "display:none;");
-		var val = $("#input-1").val();
-		$("#navMenu1").children("#imeHeader").html("<b>" + val + "</b>");
 	}
 
 	function addCategory(currentElement) {
@@ -485,20 +534,21 @@ html, body, h1, h2, h3, h4, h5 {
 		/* TODO NASLJEĐIVANJE FIKSNOSTI*/
 		$.ajax({
 			type : 'GET',
-			url : "service/expenseList/expensecategory/" + currentElement["id"].substring(9),
+			url : "service/expenseList/expensecategoryByExpenseList/"
+					+ currentElement["id"].substring(9) + "/"
+					+ name_expenseList,
 			dataType : 'json',
 			success : function(responseData, textStatus, jqXHR) {
 				var category = responseData;
 				var fixed;
-				if ( category.fixed == true){
+				if (category.fixed == true) {
 					fixed = "DA";
-				}
-				else{
+				} else {
 					fixed = "NE";
 				}
 				document.getElementById("checkFixed").innerHTML = fixed;
 				$('#addExpenseItemDivision').show(750);
-				
+
 			},
 			error : function(responseData, textStatus, errorThrown) {
 				alert('GET failed.');
@@ -513,18 +563,6 @@ html, body, h1, h2, h3, h4, h5 {
 		} else {
 			console.log("IME JE PRAZNO");
 		}
-		$('#addExpenseItemDivision').hide(750);
-		if (val.length != 0) {
-			var html = $("#" + currentElementId).html();
-			$('#' + currentElementId)
-					.html(
-							"<a href='#' id='expense"
-									+ val
-									+ "' onClick='showExpenseItem(this)'><i class='fa fa-circle' style='font-size:5px;position:relative;top:-3px;'></i> "
-									+ val + "</a>" + html);
-		}
-		/* $("#expenseItem").val(''); */
-		reset();
 	}
 
 	function showExpenseItem(currentExpenseItem) {
@@ -549,32 +587,7 @@ html, body, h1, h2, h3, h4, h5 {
 		} else {
 			console.log("IME JE PRAZNO");
 		}
-		$('#testing').hide(750);
 
-		var name = "Kategorija" + val;
-
-		if (val.length != 0) {
-			var html = $('#' + currentElementId).html();
-
-			/* var itemHolder = "<div id='val' class='w3-accordion-content w3-padding-large w3-medium'><a href='#' onClick='addCategory()'>"+val+"<i class='fa fa-plus w3-margin-right'></i></a></div>";
-			$('#KategorijaDefault').html(html + itemHolder); */
-			$('#' + currentElementId)
-					.html(
-							"<div class='w3-accordion'><a href='#' id='"
-									+ val
-									+ "Href' onClick='myAccFuncDynamic(this)'>"
-									+ val
-									+ " <i class='fa fa-caret-down'></i></a>"
-									+ "<div id='Kategorija" 
-									+ val 
-									+ "' class='w3-accordion-content w3-padding-large w3-medium'><a href='#' onClick='addCategory(this)' id='addCategory"
-									+ val
-									+ "'>Dodaj kategoriju <i class='fa fa-plus w3-margin-right'></i></a><a href='#' onClick='addExpenseItem(this)' id='addItemTo"
-									+ val
-									+ "'>Dodaj stavku <i class='fa fa-plus w3-margin-right'></i></a></div></div>"
-									+ html);
-		}
-		reset();
 		/* $("#categoryName").val(''); */
 
 		/* 	var val = $('#KategorijaDefault').children();
@@ -588,7 +601,8 @@ html, body, h1, h2, h3, h4, h5 {
 		if (swap_x == 0) {
 			$("#mySidenavDropdown").removeClass("w3-collapse");
 			w3_close1();
-			$("#mySidenav").attr("style", "z-index: 3; width: 300px;padding-top: 43px;");
+			$("#mySidenav").attr("style",
+					"z-index: 3; width: 300px;padding-top: 43px;");
 			w3_open();
 			swap_x = 1;
 		} else {
@@ -664,23 +678,21 @@ html, body, h1, h2, h3, h4, h5 {
 			var comment = $('#incomeComment').val();
 			var startDate = $('#startDateIncome').val();
 			var endDate = $('#endDateIncome').val();
-			
-			
+
 			var sallary = true;
 			if (document.getElementById("incomeSallary").checked) {
 				sallary = true;
 			} else if (document.getElementById("incomeOther").checked) {
 				sallary = false;
 			}
-			
+
 			var fixed;
 			if (document.getElementById("incomeIsFixedYes").checked) {
 				fixed = true;
 			} else if (document.getElementById("incomeIsFixedNo").checked) {
 				fixed = false;
 			}
-			
-			
+
 			var value = $('#incomeValue').val();
 			amounts.push(parseFloat(value.toString()));
 			/* 	for (var i = 0; i < result + 1; i++) {
@@ -691,27 +703,35 @@ html, body, h1, h2, h3, h4, h5 {
 					startDate, endDate, sallary, fixed);
 			var json = JSON.stringify(income);
 
-			$.ajax({
-				type : 'POST',
-				url : "service/expenseList/income/" + name_expenseList,
-				data : json,
-				contentType : "application/json",
-				dataType : 'text',
-				contentType : "application/json",
-				success : function(responseData, textStatus, jqXHR) {
-					console.log('Dodao prihod')
-				},
-				error : function(responseData, textStatus, errorThrown) {
-					console.log('POST failed nisam dodao troskovnik.');
-				}
-			});
-
-			$('#addIncomeItemDivision').hide(750);
-			var val = $("#incomeName").val();
-			if (val.length != 0) {
-				var html = $("#Prihodi").html();
-				$('#Prihodi').html("<a href='#'><i class='fa fa-circle' style='font-size:5px;position:relative;top:-3px;'></i> " + val + "</a>" + html);
-			}
+			$
+					.ajax({
+						type : 'POST',
+						url : "service/expenseList/income/" + name_expenseList,
+						data : json,
+						contentType : "application/json",
+						dataType : 'text',
+						contentType : "application/json",
+						success : function(responseData, textStatus, jqXHR) {
+							if ( responseData == "DA"){
+							$('#addIncomeItemDivision').hide(750);
+							var val = $("#incomeName").val();
+							var html = $("#Prihodi").html();
+							$('#Prihodi')
+									.html(
+											"<a href='#'><i class='fa fa-circle' style='font-size:5px;position:relative;top:-3px;'></i> "
+													+ val + "</a>" + html);
+							reset();
+							}
+							else{
+								/* POZOVI ALERT */
+								reset();
+								console.log("Prihod s ovim imenom vec postoji!");
+							}
+						},
+						error : function(responseData, textStatus, errorThrown) {
+							console.log('POST failed nisam dodao troskovnik.');
+						}
+					});
 			/* 	$("#incomeName").val('');
 			 */
 		} else {
@@ -1351,8 +1371,9 @@ html, body, h1, h2, h3, h4, h5 {
 					id="sendEmailExpenseListRBGHookup"></div>
 				<hr>
 
-				<form class="w3-container w3-card-4 w3-white" id="sendEmailSearchUsersForm"
-					action="javascript:void(0);" style="display: none;">
+				<form class="w3-container w3-card-4 w3-white"
+					id="sendEmailSearchUsersForm" action="javascript:void(0);"
+					style="display: none;">
 					<h5>Parametar pretrage</h5>
 					<select class="w3-select w3-border w3-hover-blue w3-round"
 						name="searchParametersOptions"
@@ -1371,13 +1392,13 @@ html, body, h1, h2, h3, h4, h5 {
 						<button class="w3-btn w3-teal w3-round-large"
 							onclick="searchForUsers()">Pretraži</button>
 					<p>
-					
 				</form>
-				
+
 				<hr>
-				
-				<div class="w3-container w3-card-4 w3-white" id="sendEmailUsersRBGHookup"></div>
-				
+
+				<div class="w3-container w3-card-4 w3-white"
+					id="sendEmailUsersRBGHookup"></div>
+
 			</div>
 
 			<div class="w3-container" id="generatePDFDiv" style="display: none;">
@@ -1397,10 +1418,10 @@ html, body, h1, h2, h3, h4, h5 {
 		<input class="w3-check" type="checkbox"> <label
 			class="w3-validate"></label>
 	</p>
-	
-	<p style="display: none" id="radioTemplate" >
-		<input class="w3-radio" type="radio"> 
-		<label class="w3-validate"></label>
+
+	<p style="display: none" id="radioTemplate">
+		<input class="w3-radio" type="radio"> <label
+			class="w3-validate"></label>
 	</p>
 
 	<div id="modal1" class="w3-modal">
@@ -1421,7 +1442,7 @@ html, body, h1, h2, h3, h4, h5 {
 			</div>
 		</div>
 	</div>
-	
+
 	<div id="modal2" class="w3-modal">
 		<div class="w3-modal-content w3-card-4 w3-animate-zoom">
 			<header class="w3-container w3-red">

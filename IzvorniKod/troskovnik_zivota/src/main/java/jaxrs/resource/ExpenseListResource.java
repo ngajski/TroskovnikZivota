@@ -2,7 +2,7 @@ package jaxrs.resource;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.acl.Owner;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -90,10 +90,15 @@ public class ExpenseListResource {
 	@Path("/{username}")
 	@Produces({ MediaType.TEXT_PLAIN })
 	public String addExpenseListToUser(@PathParam("username") String username, ExpenseList expenseList) {
-		User user = DAOProvider.getDAO().getUserByUsername(username);
-		expenseList.setUserOwner(user);
-		DAOProvider.getDAO().addExpenseList(expenseList);
-		return expenseList.getName();
+		ExpenseList expenseListCheck = DAOProvider.getDAO().getExpenseListByName(expenseList.getName());
+		if (expenseListCheck == null) {
+			User user = DAOProvider.getDAO().getUserByUsername(username);
+			expenseList.setUserOwner(user);
+			DAOProvider.getDAO().addExpenseList(expenseList);
+			return "DA";
+		} else {
+			return "NE";
+		}
 	}
 
 	@DELETE
@@ -106,16 +111,19 @@ public class ExpenseListResource {
 	}
 
 	@DELETE
-	@Path("/removeCategory/{currentCategoryName}")
+	@Path("/removeCategory/{currentCategoryName}/{expenseListName}")
 	@Produces({ MediaType.TEXT_PLAIN })
-	public void removeExpenseCategoryFromDatabase(@PathParam("currentCategoryName") String name) {
-		ExpenseCategory expenseCategory = DAOProvider.getDAO().getCategoryByName(name);
-		expenseCategory.getExpenseListOwner().getExpenseCategories().remove(expenseCategory);
-		DAOProvider.getDAO().removeExpenseCategoryFromDatabase(expenseCategory);
-		for (ExpenseCategory category : expenseCategory.getSubCategories()) {
-			// category.getExpenseListOwner().getExpenseCategories().remove(category);
-			// DAOProvider.getDAO().removeExpenseCategoryFromDatabase(category);
-			removeExpenseCategoryFromDatabase(category.getName());
+	public void removeExpenseCategoryFromDatabase(@PathParam("currentCategoryName") String name,
+			@PathParam("expenseListName") String expenseListName) {
+		ExpenseList expenseList = DAOProvider.getDAO().getExpenseListByName(expenseListName);
+		System.out.println("\n\n\nExpenseListName : " + expenseList.getName());
+		System.out.println("\n\n\nCategory name : " + name);
+		for (ExpenseCategory category : expenseList.getExpenseCategories()) {
+			if (category.getName().equals(name)) {
+				DAOProvider.getDAO().removeExpenseCategoryFromDatabase(category);
+				return;
+			}
+
 		}
 	}
 
@@ -144,6 +152,20 @@ public class ExpenseListResource {
 	}
 
 	@POST
+	@Path("/expenseListRename/{oldName}/{newName}")
+	@Produces({ MediaType.TEXT_PLAIN })
+	public String renameExpenseList(@PathParam("oldName") String oldName, @PathParam("newName") String newName) {
+		ExpenseList expenseListOld = DAOProvider.getDAO().getExpenseListByName(oldName);
+		ExpenseList expenseListNew = DAOProvider.getDAO().getExpenseListByName(newName);
+		if (expenseListNew == null) {
+			expenseListOld.setName(newName);
+			return "DA";
+		} else {
+			return "NE";
+		}
+	}
+
+	@POST
 	@Path("/incomeItem")
 	@Produces({ MediaType.TEXT_PLAIN })
 	public String editIncomeItem(IncomeItem incomeItem) {
@@ -162,11 +184,14 @@ public class ExpenseListResource {
 	@Produces({ MediaType.TEXT_PLAIN })
 	public String addIncomeItem(@PathParam("name_expenseList") String name, IncomeItem item) {
 		ExpenseList expenseList = DAOProvider.getDAO().getExpenseListByName(name);
-		System.out.println(item);
-		System.out.println(item.getAmounts().toString());
+		for (IncomeItem itemCheck : expenseList.getIncomeItems()) {
+			if (itemCheck.getName().equals(item.getName())) {
+				return "NE";
+			}
+		}
 		expenseList.addNewIncomeItem(item);
 		DAOProvider.getDAO().addIncomeItem(item);
-		return "ok2";
+		return "DA";
 	}
 
 	@POST
@@ -175,32 +200,55 @@ public class ExpenseListResource {
 	public String addExpenseCategoryToExpenseList(@PathParam("name_expenseList") String name,
 			ExpenseCategory expenseCategory) {
 		ExpenseList expenseList = DAOProvider.getDAO().getExpenseListByName(name);
+		for (ExpenseCategory categoryCheck : expenseList.getExpenseCategories()) {
+			if (categoryCheck.getName()
+					.equals(expenseCategory.getName().substring(0, expenseCategory.getName().indexOf('&')))) {
+				return "NE";
+			}
+		}
 		String catName = expenseCategory.getName().substring(0, expenseCategory.getName().indexOf('&'));
 		String superCategoryName = expenseCategory.getName().substring(expenseCategory.getName().lastIndexOf("&") + 1);
 		expenseCategory.setName(catName);
 		if (!superCategoryName.equals("Default")) {
-			ExpenseCategory superCategory = DAOProvider.getDAO().getCategoryByName(superCategoryName);
-			expenseCategory.setSuperCategory(superCategory);
+			for (ExpenseCategory category : expenseList.getExpenseCategories()) {
+				if (category.getName().equals(superCategoryName)) {
+					ExpenseCategory superCategory = DAOProvider.getDAO().getCategoryByName(superCategoryName);
+					expenseCategory.setSuperCategory(superCategory);
+					break;
+				}
+			}
 		}
 		expenseCategory.setExpenseListOwner(expenseList);
 		expenseList.addNewCategory(expenseCategory);
 
 		DAOProvider.getDAO().addExpenseCategory(expenseCategory);
-		return "ok1";
+		return "DA";
 	}
 
 	@POST
-	@Path("/expenseitem/{category_name}")
+	@Path("/expenseitem/{category_name}/{name}")
 	@Produces({ MediaType.TEXT_PLAIN })
-	public String addExpenseItemToExpenseList(@PathParam("category_name") String name, ExpenseItem expenseItem) {
-		System.out.println(expenseItem);
-		ExpenseCategory expenseCategory = DAOProvider.getDAO().getCategoryByName(name);
-		System.out.println(expenseCategory);
+	public String addExpenseItemToExpenseList(@PathParam("category_name") String categoryName,
+			@PathParam("name") String name, ExpenseItem expenseItem) {
+		ExpenseList expenseList = DAOProvider.getDAO().getExpenseListByName(name);
+		for (ExpenseCategory category : expenseList.getExpenseCategories()) {
+			for (ExpenseItem item : category.getExpenseItems()) {
+				if (item.getName().equals(expenseItem.getName())) {
+					return "NE";
+				}
+			}
+		}
+		ExpenseCategory expenseCategory = null;
+		for (ExpenseCategory category : expenseList.getExpenseCategories()) {
+			if (category.getName().equals(categoryName)) {
+				expenseCategory = category;
+			}
+		}
 		expenseItem.setExpenseCategoryOwner(expenseCategory);
 		expenseItem.issetFixed(expenseCategory.isgetFixed());
 		expenseCategory.getExpenseItems().add(expenseItem);
 		DAOProvider.getDAO().addExpenseItem(expenseItem);
-		return String.valueOf(expenseCategory.isgetFixed());
+		return "DA";
 	}
 
 	@GET
@@ -237,10 +285,24 @@ public class ExpenseListResource {
 	}
 
 	@GET
-	@Path("/expensecategory/{name}")
+	@Path("/expensecategory/{id}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ExpenseCategory getExpenseCategoryByName(@PathParam("name") String name) {
-		return DAOProvider.getDAO().getCategoryByName(name);
+	public ExpenseCategory getExpenseCategoryByID(@PathParam("id") Long id) {
+		return DAOProvider.getDAO().getCategoryByID(id);
+	}
+
+	@GET
+	@Path("/expensecategoryByExpenseList/{category_name}/{expenseListName}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ExpenseCategory getExpenseCategoryByExpenseList(@PathParam("category_name") String categoryName,
+			@PathParam("expenseListName") String name) {
+		ExpenseList expenseList = DAOProvider.getDAO().getExpenseListByName(name);
+		for (ExpenseCategory category : expenseList.getExpenseCategories()) {
+			if (category.getName().equals(categoryName)) {
+				return category;
+			}
+		}
+		return null;
 	}
 
 	@GET
@@ -311,8 +373,9 @@ public class ExpenseListResource {
 	@POST
 	@Path("/sendEmail/{username}/{expenseListName}/{email}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Boolean sendEmail(@PathParam("username") String usernameFrom, @PathParam("expenseListName") String expenseListName,
-			@PathParam("email") String emailTo) throws IOException {
+	public Boolean sendEmail(@PathParam("username") String usernameFrom,
+			@PathParam("expenseListName") String expenseListName, @PathParam("email") String emailTo)
+			throws IOException {
 		List<ExpenseList> expenseLists = getExpenseListsForUsername(usernameFrom);
 		ExpenseList expenseList = new ExpenseList();
 		for (ExpenseList list : expenseLists) {
@@ -379,6 +442,5 @@ public class ExpenseListResource {
 
 		return file;
 	}
-	
 
 }
