@@ -246,6 +246,7 @@ public class ExpenseListResource {
 		}
 		
 		expenseItem.validateDates();
+		expenseItem.validateAmounts();
 		expenseItem.setExpenseCategoryOwner(expenseCategory);
 		expenseItem.issetFixed(expenseCategory.isgetFixed());
 		expenseCategory.getExpenseItems().add(expenseItem);

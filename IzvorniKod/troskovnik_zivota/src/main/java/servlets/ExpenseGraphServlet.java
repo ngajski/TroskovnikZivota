@@ -2,6 +2,7 @@ package servlets;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -17,6 +18,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import dao.DAOProvider;
+import model.ExpenseCategory;
 import model.ExpenseList;
 
 @WebServlet (name="expenseGraph", urlPatterns="/graph/expenses")
@@ -45,13 +47,14 @@ public class ExpenseGraphServlet extends HttpServlet {
 		}
 		
 		ExpenseList expenseList = DAOProvider.getDAO().getExpenseListByName(expenseListName);
-		
+		List<ExpenseCategory> categories = DAOProvider.getDAO().getDirectExpenseCategories(expenseList);
+
 		Map<String, Double> fixedExpense = expenseList.findExpenseAmount(startDate,
-				endDate, new LinkedHashMap<>(), expenseList.getExpenseCategories(), true);
+				endDate, new LinkedHashMap<>(), categories, true);
 		Map<String, Double> variableExpense = expenseList.findExpenseAmount(startDate,
-				endDate, new LinkedHashMap<>(), expenseList.getExpenseCategories(), false);
+				endDate, new LinkedHashMap<>(), categories, false);
 		Map<String, Double> allExpenses = expenseList.findExpenseAmount(startDate,
-				endDate, new LinkedHashMap<>(), expenseList.getExpenseCategories(), null);
+				endDate, new LinkedHashMap<>(), categories, null);
 		
 		DefaultCategoryDataset graf2DataSet = new DefaultCategoryDataset();
 		

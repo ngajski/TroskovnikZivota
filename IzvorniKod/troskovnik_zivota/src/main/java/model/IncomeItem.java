@@ -1,6 +1,7 @@
 package model;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CollectionTable;
@@ -114,7 +115,10 @@ public class IncomeItem {
 			return amounts.get(0);
 		} else if (period != Period.ONE_TIME && Date.happenedAfter(date, startDate)
 				&& Date.happenedBefore(date, endDate)) {
-
+			if (fixed) {
+				return amounts.get(0);
+			}
+			
 			int payingMonth = Date.difference2(this.startDate,date);
 
 			return amounts.get(payingMonth);
@@ -221,6 +225,43 @@ public class IncomeItem {
 	public void revalidate(ExpenseList owner) {
 		this.id = null;
 		this.expenseListOwner = owner;
+	}
+
+	public void validateAmounts() {
+		if (this.fixed) {
+			return;
+		} else if (this.period == Period.MONTHLY) {
+			return;
+		}
+		
+		List<Double> validatedAmounts = new ArrayList<>();
+		int payingMonths = Date.difference2(startDate, endDate) + 1;
+		
+		int position = 0;
+		if (period == Period.QUARTARLY) {
+			for (int i = 0; i < payingMonths; ++i) {
+				if (i % 3 == 0 && position < amounts.size()) {
+					validatedAmounts.add(amounts.get(position));
+					position++;
+				} else {
+					validatedAmounts.add(new Double(0));
+				}
+			}
+		} else if (period == Period.ANUALY) {
+			for (int i = 0; i < payingMonths; ++i) {
+				if (i % 12 == 0 && position < amounts.size()) {
+					validatedAmounts.add(amounts.get(position));
+					position++;
+				} else {
+					validatedAmounts.add(new Double(0));
+				}
+			}
+		} else {
+			return;
+		}
+		
+		this.amounts = validatedAmounts; 
+		
 	}
 
 	

@@ -107,6 +107,8 @@ public class ExpenseList {
 			item.setEndDate(endDate.substring(1));
 		}
 		
+		item.validateAmounts();
+		
 		if (item != null) {
 			item.setExpenseListOwner(this);
 		}

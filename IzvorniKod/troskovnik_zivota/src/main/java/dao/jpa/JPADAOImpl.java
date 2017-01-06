@@ -160,6 +160,18 @@ public class JPADAOImpl implements DAO {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ExpenseCategory> getDirectExpenseCategories(ExpenseList expenseList) {
+		EntityManager em = JPAEMProvider.getEntityManager();	
+		try{
+			return em.createQuery("select b from ExpenseCategory as b where b.expenseListOwner=:expenseList and b.superCategory is null").setParameter("expenseList", expenseList).getResultList();
+		}
+		catch (NoResultException e){
+			return null;
+		}
+	}
+
 
 
 
