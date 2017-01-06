@@ -41,7 +41,7 @@ public class ExpenseGraphServlet extends HttpServlet {
 		}
 		
 		if (endDate.startsWith("0")) {
-			startDate = startDate.substring(1);
+			endDate = endDate.substring(1);
 		}
 		
 		ExpenseList expenseList = DAOProvider.getDAO().getExpenseListByName(expenseListName);
