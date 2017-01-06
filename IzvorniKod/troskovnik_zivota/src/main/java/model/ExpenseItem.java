@@ -137,6 +137,20 @@ public class ExpenseItem {
 		}
 	}
 	
+	/**
+	 * Sets <code>this.startDate</code> and <code>this.endDate</code>
+	 * to right format.
+	 */
+	public void validateDates() {
+		if (this.startDate.startsWith("0")) {
+			startDate = startDate.substring(1);
+		}
+		
+		if (this.endDate.startsWith("0")) {
+			endDate = endDate.substring(1);
+		}
+	}
+	
 	public String getStartDate() {
 		return startDate;
 	}
@@ -226,7 +240,6 @@ public class ExpenseItem {
 		return "ExpenseItem [id=" + id + ", name=" + name + ", amounts=" + amounts + ", period=" + period + ", fixed="
 				+ fixed + ", comment=" + comment + ", startDate=" + startDate + ", endDate=" + endDate + "]";
 	}
-	
 	
 	
 }

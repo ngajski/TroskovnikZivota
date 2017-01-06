@@ -218,7 +218,9 @@ html, body, h1, h2, h3, h4, h5 {
 
 		var amounts = [];
 		var amount = $('#expenseValue').val();
-		amounts.push(parseFloat(amount.toString()));
+		for (var i = 0; i < amount.split(";").length ; i++){
+			amounts.push(amount.split(";")[i]);
+		}
 		var comment = $('#expenseComment').val();
 		var period = document.getElementById("expensePeriod");
 		var periodCheck = period.options[period.selectedIndex].value;
@@ -693,8 +695,10 @@ html, body, h1, h2, h3, h4, h5 {
 				fixed = false;
 			}
 
-			var value = $('#incomeValue').val();
-			amounts.push(parseFloat(value.toString()));
+			var amount = $('#incomeValue').val();
+			for (var i = 0; i < amount.split(";").length ; i++){
+				amounts.push(amount.split(";")[i]);
+			}
 			/* 	for (var i = 0; i < result + 1; i++) {
 					var value = $('#incomeValue' + i).val();
 					amounts.push(parseFloat(value.toString()));

@@ -95,6 +95,18 @@ public class ExpenseList {
 	 *            {@link ExpenseCategory}
 	 */
 	public void addNewIncomeItem(IncomeItem item) {
+		
+		String stardDate = item.getStartDate();
+		String endDate = item.getEndDate();
+		
+		if (stardDate.startsWith("0")) {
+			item.setStartDate(stardDate.substring(1));
+		}
+		
+		if (stardDate.startsWith("0")) {
+			item.setEndDate(endDate.substring(1));
+		}
+		
 		if (item != null) {
 			item.setExpenseListOwner(this);
 		}
