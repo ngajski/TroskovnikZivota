@@ -48,7 +48,7 @@ public class User {
 	@Column(nullable = false)
 	private String email;
 
-	@OneToMany(mappedBy = "userOwner", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+	@OneToMany(mappedBy = "userOwner", fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<ExpenseList> expenseLists;
 
 	public User() {

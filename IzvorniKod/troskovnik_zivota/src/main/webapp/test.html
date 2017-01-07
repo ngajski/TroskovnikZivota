@@ -28,8 +28,7 @@
 			url : "service/expenseList/remove/" + expenseList.name,
 			dataType : 'text',
 			success : function(responseData, textStatus, jqXHR) {
-				window.location.replace("home2.html")
-				$('#appBody').html(originalCreationDivision);
+				changeWindowUrl("home2.html")
 				console.log('Izbrisao troškovnik');
 			},
 			error : function(responseData, textStatus, errorThrown) {
@@ -83,11 +82,15 @@
 		var id = $('#expenseItemID').val();
 		var name = $('#expenseName').val();
 		var owner = $('#owner').val();
-		var value = $('#expenseValue').val();
 		var comment = $('#expenseComment').val();
 		var startDate = $('#startDateExpenseItem').val();
 		var endDate = $('#endDateExpenseItem').val();
+		
 		var amounts = [];
+		var amount = $('#expenseValue').val();
+		for (var i = 0; i < amount.split(";").length ; i++){
+			amounts.push(amount.split(";")[i]);
+		}
 
 		 var period = document.getElementById("expensePeriod");
 		 var periodCheck = period.options[period.selectedIndex].value;
@@ -104,7 +107,6 @@
 		 period = "ONE_TIME";
 		 }
 
-		amounts.push(parseFloat(value.toString()));
 		var x = {
 			id : id,
 			name : name,
@@ -596,8 +598,12 @@
 		var startDate = $('#startDateIncome').val();
 		var endDate = $('#endDateIncome').val();
 		var amounts = [];
+		var amount = $('#expenseValue').val();
+		for (var i = 0; i < amount.split(";").length ; i++){
+			amounts.push(amount.split(";")[i]);
+		}
 
-		/* 		var period = document.getElementById("expensePeriod");
+		 var period = document.getElementById("incomePeriod");
 		 var periodCheck = period.options[period.selectedIndex].value;
 		 if (periodCheck == "") {
 		 period = "ANUALY";
@@ -610,17 +616,15 @@
 		 }
 		 if (periodCheck == "Jednoročno") {
 		 period = "ONE_TIME";
-		 } */
-
-		amounts.push(parseFloat(value.toString()));
+		 }
 		var x = {
 			id : id,
 			name : name,
 			comment : comment,
 			amounts : amounts,
 			startDate : startDate,
-			endDate : endDate
-		/* 	period : period */
+			endDate : endDate,
+		 	period : period 
 
 		}
 		var json = JSON.stringify(x);
@@ -686,12 +690,11 @@
 				fixed = false;
 			}
 
-			var value = $('#incomeValueCREATE').val();
-			amounts.push(parseFloat(value.toString()));
-			/* 	for (var i = 0; i < result + 1; i++) {
-					var value = $('#incomeValue' + i).val();
-					amounts.push(parseFloat(value.toString()));
-				} */
+			var amounts = [];
+			var amount = $('#incomeValueCREATE').val();
+			for (var i = 0; i < amount.split(";").length ; i++){
+				amounts.push(amount.split(";")[i]);
+			}
 
 			var x = {
 				name : val,

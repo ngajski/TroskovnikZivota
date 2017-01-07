@@ -32,10 +32,10 @@ public class ExpenseList {
 	@Column(nullable = false, unique = true)
 	private String name;
 
-	@OneToMany(mappedBy = "expenseListOwner", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
+	@OneToMany(mappedBy = "expenseListOwner", fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<ExpenseCategory> expenseCategories;
 
-	@OneToMany(mappedBy = "expenseListOwner", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
+	@OneToMany(mappedBy = "expenseListOwner", fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<IncomeItem> incomeItems;
 
 	@JsonIgnore

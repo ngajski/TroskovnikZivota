@@ -138,18 +138,18 @@ public class ExpenseItem {
 	}
 	
 	/**
-	 * Sets <code>this.startDate</code> and <code>this.endDate</code>
-	 * to right format.
+	 * Sets <code>this.startDate</code> and <code>this.endDate</code> to right
+	 * format.
 	 */
 	public void validateDates() {
-		if ( startDate != null && endDate != null){
-		if (this.startDate.startsWith("0")) {
-			startDate = startDate.substring(1);
-		}
-		
-		if (this.endDate.startsWith("0")) {
-			endDate = endDate.substring(1);
-		}
+		if (startDate != null && endDate != null) {
+			if (this.startDate.startsWith("0")) {
+				startDate = startDate.substring(1);
+			}
+
+			if (this.endDate.startsWith("0")) {
+				endDate = endDate.substring(1);
+			}
 		}
 	}
 	

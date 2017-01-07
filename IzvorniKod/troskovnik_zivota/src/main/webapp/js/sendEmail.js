@@ -12,10 +12,14 @@ function generateSendEmailExpenseListRBG(expenseLists) {
 			var cloned = radioTemplate.clone().removeAttr("style").removeAttr(
 					'id');
 			cloned.children("label").html(expenseLists[i].name);
-			if (i == 0){
-				cloned.children("input").attr("name","sendEmailExpenseListRBG").attr('value', expenseLists[i].name).attr('checked', true);
+			if (i == 0) {
+				cloned.children("input")
+						.attr("name", "sendEmailExpenseListRBG").attr('value',
+								expenseLists[i].name).attr('checked', true);
 			} else {
-				cloned.children("input").attr("name","sendEmailExpenseListRBG").attr('value', expenseLists[i].name);
+				cloned.children("input")
+						.attr("name", "sendEmailExpenseListRBG").attr('value',
+								expenseLists[i].name);
 			}
 			hookup.append(cloned);
 		}
@@ -37,21 +41,27 @@ function generateSendEmailUsersRBG(users, searchParameter, parameterValue) {
 			var cloned = checkboxTemplate.clone().removeAttr("style")
 					.removeAttr("id");
 
-			var html = "<i>Korisničko ime:</i>  <b>" + users[i].username + "</b><i>  Ime:</i>  <b>"
-					+ users[i].firstName + "</b><i>  Prezime:</i>  <b>" + users[i].lastName
+			var html = "<i>Korisničko ime:</i>  <b>" + users[i].username
+					+ "</b><i>  Ime:</i>  <b>" + users[i].firstName
+					+ "</b><i>  Prezime:</i>  <b>" + users[i].lastName
 					+ "</b><i>  Email:</i>  <b>" + users[i].email + "</b>";
 			cloned.children("label").html(html);
-			if (i == 0){
-				cloned.children("input").attr("name","sendEmailUsersRBG").attr('value', users[i].email).attr('checked', true);
+			if (i == 0) {
+				cloned.children("input").attr("name", "sendEmailUsersRBG")
+						.attr('value', users[i].email).attr('checked', true);
 			} else {
-				cloned.children("input").attr("name","sendEmailUsersRBG").attr('value', users[i].email);
+				cloned.children("input").attr("name", "sendEmailUsersRBG")
+						.attr('value', users[i].email);
 			}
-			
+
 			hookup.append(cloned);
 		}
 
 		hookup
-				.append("<button class='w3-btn w3-red w3-round-large' onclick='sendEmail()'>Pošalji troškovnik</button><p>");
+				.append("<div id='loaderHolder1' style='display: none;'>Šaljem mail<div class='loader'></div></div>");
+
+		hookup
+				.append("<button class='w3-btn w3-red w3-round-large' onclick='sendEmail()' id='sendEmailButton'>Pošalji troškovnik</button><p>");
 	} else {
 		hookup.append("Za odabrani parametar pretrage'"
 				+ "'i vrijednost paramtera '" + parameterValue
@@ -85,21 +95,24 @@ function searchForUsers() {
 }
 
 function sendEmail() {
-	var expenseListName = $('#sendEmailExpenseListRBGHookup').find('input:checked').val();
-	var userEmailTo =  $('#sendEmailUsersRBGHookup').find('input:checked').val();
+	var expenseListName = $('#sendEmailExpenseListRBGHookup').find(
+			'input:checked').val();
+	var userEmailTo = $('#sendEmailUsersRBGHookup').find('input:checked').val();
 	var username = sessionStorage.getItem('username');
-	
+
 	var url = "/troskovnik-zivota/service/expenseList/sendEmail/";
-	url += username + "/"
-			+ expenseListName + "/"
-			+ userEmailTo;
-	
+	url += username + "/" + expenseListName + "/" + userEmailTo;
+
+	showLoader('loaderHolder1', 'sendEmailButton');
+
 	$.ajax({
 		type : 'POST',
 		url : url,
 		dataType : 'json',
 		success : function(responseData, textStatus, jqXHR) {
-			openModal('modal1', 'Troskovnik ' + expenseListName + ' uspješno poslan.');
+			openModal('modal1', 'Troskovnik ' + expenseListName
+					+ ' uspješno poslan.');
+			hideLoader('loaderHolder1', 'sendEmailButton');
 		},
 		error : function(responseData, textStatus, errorThrown) {
 			alert('POST failed.');

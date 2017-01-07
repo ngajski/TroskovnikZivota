@@ -104,7 +104,7 @@ public class ExpenseListResource {
 	@DELETE
 	@Path("/remove/{name_expenseList}")
 	@Produces({ MediaType.TEXT_PLAIN })
-	public String removeExpenseListFromDatabase(@PathParam("name_expenseList") String name) {
+	public String removeExpenseList(@PathParam("name_expenseList") String name) {
 		ExpenseList expenseList = DAOProvider.getDAO().getExpenseListByName(name);
 		DAOProvider.getDAO().removeExpenseListFromDatabase(expenseList);
 		return "DA";
@@ -137,6 +137,7 @@ public class ExpenseListResource {
 		for ( ExpenseCategory category : expenseList.getExpenseCategories()){
 			for ( ExpenseItem item : category.getExpenseItems()){
 				if ( item.getId() == id ){
+					System.out.println("\n\ndoso u if remove expense item\n\n");
 					DAOProvider.getDAO().removeExpenseItem(item);
 					return "DA";
 				}
@@ -195,6 +196,22 @@ public class ExpenseListResource {
 		item.setStartDate(expenseItem.getStartDate());
 		item.setPeriod(expenseItem.getPeriod());
 		item.issetFixed(expenseItem.isFixed());
+		item.setAmounts(expenseItem.getAmounts());
+		return "SVE PET";
+	}
+
+	@POST
+	@Path("/incomeItem")
+	@Produces({ MediaType.TEXT_PLAIN })
+	public String editIncomeItem(IncomeItem incomeItem) {
+		IncomeItem item = DAOProvider.getDAO().getIncomeItemByID(incomeItem.getId());
+		item.setComment(incomeItem.getComment());
+		item.setName(incomeItem.getName());
+		item.setEndDate(incomeItem.getEndDate());
+		item.setStartDate(incomeItem.getStartDate());
+		item.setPeriod(incomeItem.getPeriod());
+		item.issetFixed(incomeItem.isFixed());
+		item.setAmounts(incomeItem.getAmounts());
 		return "SVE PET";
 	}
 
@@ -210,20 +227,6 @@ public class ExpenseListResource {
 		} else {
 			return "NE";
 		}
-	}
-
-	@POST
-	@Path("/incomeItem")
-	@Produces({ MediaType.TEXT_PLAIN })
-	public String editIncomeItem(IncomeItem incomeItem) {
-		IncomeItem item = DAOProvider.getDAO().getIncomeItemByID(incomeItem.getId());
-		item.setComment(incomeItem.getComment());
-		item.setName(incomeItem.getName());
-		item.setEndDate(incomeItem.getEndDate());
-		item.setStartDate(incomeItem.getStartDate());
-		item.setPeriod(incomeItem.getPeriod());
-		item.issetFixed(incomeItem.isFixed());
-		return "SVE PET";
 	}
 
 	@POST
@@ -285,6 +288,9 @@ public class ExpenseListResource {
 				}
 			}
 		}
+		
+		System.out.println(expenseItem.getAmounts().toString());
+		
 		ExpenseCategory expenseCategory = null;
 		for (ExpenseCategory category : expenseList.getExpenseCategories()) {
 			if (category.getName().equals(categoryName)) {
@@ -292,8 +298,8 @@ public class ExpenseListResource {
 			}
 		}
 		
-		expenseItem.validateDates();
-		expenseItem.validateAmounts();
+//		expenseItem.validateDates();
+//		expenseItem.validateAmounts();
 		expenseItem.setExpenseCategoryOwner(expenseCategory);
 		expenseItem.issetFixed(expenseCategory.isgetFixed());
 		expenseCategory.getExpenseItems().add(expenseItem);

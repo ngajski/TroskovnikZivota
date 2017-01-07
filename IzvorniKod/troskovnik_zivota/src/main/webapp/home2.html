@@ -10,7 +10,7 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 	rel="stylesheet">
-
+<link href="css/loader.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="css/set2.css" />
 
 <!-- Jquery -->
@@ -21,6 +21,8 @@
 <script src="js/general.js"></script>
 <script src="js/sendEmail.js"></script>
 <script src="js/modalAlerts.js"></script>
+<script src="js/loader.js"></script>
+<script src="js/generatePDF.js"></script>
 
 <style>
 html, body, h1, h2, h3, h4, h5 {
@@ -821,7 +823,7 @@ html, body, h1, h2, h3, h4, h5 {
 			onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4), 'searchForExpenseListsToSend')"><i
 			class="fa fa-send-o"></i> Pošalji troškovnik</a> <a href="#"
 			class="w3-padding" id="generatePDFLink"
-			onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4), 'generatePDF')"><i
+			onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4), 'prepareGeneratePDF')"><i
 			class="fa fa-file-pdf-o"></i> Generiraj PDF</a>
 	</nav>
 
@@ -954,8 +956,6 @@ html, body, h1, h2, h3, h4, h5 {
 
 		</div>
 
-
-
 		<div class="w3-accordion" id="itemAccordionHolder"></div>
 
 		<!-- Dodaj novu kategoriju -->
@@ -1016,10 +1016,7 @@ html, body, h1, h2, h3, h4, h5 {
 			</div>
 		</div>
 
-
-
 		<!-- Dodaj novi prihod -->
-
 		<div class="w3-container"
 			style="margin-left: 375px; margin-top: 45px; display: none"
 			id="addIncomeItemDivision">
@@ -1170,10 +1167,7 @@ html, body, h1, h2, h3, h4, h5 {
 			</div>
 		</div>
 
-
-
 		<!-- Dodaj novi stavak -->
-
 		<div class="w3-container"
 			style="margin-left: 375px; margin-top: 45px; display: none"
 			id="addExpenseItemDivision">
@@ -1282,11 +1276,7 @@ html, body, h1, h2, h3, h4, h5 {
 			</div>
 		</div>
 
-
-
-
 	</div>
-
 
 
 	<!-- !PAGE CONTENT! -->
@@ -1314,7 +1304,7 @@ html, body, h1, h2, h3, h4, h5 {
 				</div>
 			</div>
 			<div class="w3-quarter" id="sendExpenseListQuarter"
-				onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 7))"
+				onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 7), 'searchForExpenseListsToSend')"
 				style="cursor: pointer">
 				<div class="w3-container w3-blue w3-padding-16">
 					<div class="w3-left">
@@ -1328,7 +1318,7 @@ html, body, h1, h2, h3, h4, h5 {
 				</div>
 			</div>
 			<div class="w3-quarter" id="generatePDFQuarter"
-				onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 7))"
+				onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 7), 'prepareGeneratePDF')"
 				style="cursor: pointer">
 				<div class="w3-container w3-teal w3-padding-16">
 					<div class="w3-left">
@@ -1341,7 +1331,8 @@ html, body, h1, h2, h3, h4, h5 {
 					<h4>Generiraj PDF</h4>
 				</div>
 			</div>
-			<div class="w3-quarter" style="cursor: pointer">
+			<div class="w3-quarter" style="cursor: pointer"
+				onclick="sessionStorage.setItem('register', 'false'); changeWindowUrl('register.html')">
 				<div class="w3-container w3-orange w3-text-white w3-padding-16">
 					<div class="w3-left">
 						<i class="fa fa-users w3-xxxlarge"></i>
@@ -1411,13 +1402,22 @@ html, body, h1, h2, h3, h4, h5 {
 				<div class="w3-container w3-card-4 w3-white"
 					id="sendEmailUsersRBGHookup"></div>
 
+				<hr>
+				
 			</div>
 
 			<div class="w3-container" id="generatePDFDiv" style="display: none;">
-				<p>
-					<button class="w3-btn w3-teal w3-round-large"
-						onClick="generatePDF_test()" id="testButton">TEST123</button>
-				</p>
+				
+				<div class="w3-container w3-card-4 w3-white"
+					id="generatePDFExpenseListsRGBHookup"></div>
+
+				<div class="w3-container" id="generatePDFDiv">
+					<div>
+						<a class="w3-btn w3-right w3-white w3-border"
+							id='generatePDFLinkButton' onclick="return setHref();">GENERIRAJ</a>
+					</div>
+				</div>
+
 			</div>
 
 		</div>
@@ -1425,6 +1425,9 @@ html, body, h1, h2, h3, h4, h5 {
 		<hr>
 	</div>
 
+	<hr>
+	
+	
 	<!-- TEMPLATES -->
 	<p style="display: none" id="checkboxTemplate">
 		<input class="w3-check" type="checkbox"> <label
@@ -1436,6 +1439,8 @@ html, body, h1, h2, h3, h4, h5 {
 			class="w3-validate"></label>
 	</p>
 
+	
+	<!-- MODALS -->
 	<div id="modal1" class="w3-modal">
 		<div class="w3-modal-content w3-card-4 w3-animate-zoom">
 			<header class="w3-container w3-green">

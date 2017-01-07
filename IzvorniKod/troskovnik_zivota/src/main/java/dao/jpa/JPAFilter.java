@@ -34,6 +34,7 @@ public class JPAFilter implements Filter {
 			chain.doFilter(request, response);
 		} finally {
 			JPAEMProvider.close();
+			System.out.println("ZATVARAM LOKALNA");
 		}
 	}
 

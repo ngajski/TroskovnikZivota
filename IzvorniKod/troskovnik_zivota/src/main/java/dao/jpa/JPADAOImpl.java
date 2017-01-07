@@ -99,6 +99,7 @@ public class JPADAOImpl implements DAO {
 	public void removeExpenseItem(ExpenseItem expenseItem){
 		EntityManager em = JPAEMProvider.getEntityManager();
 		em.remove(expenseItem);
+		em.flush();
 	}
 	
 	@Override
