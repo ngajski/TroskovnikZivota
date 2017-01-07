@@ -17,6 +17,7 @@
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="js/general.js"></script>
 <script src="js/htmlescaping.js"></script>
+<script src="js/modalAlerts.js"></script>
 
 <style>
 html, body, h1, h2, h3, h4, h5 {
@@ -46,7 +47,7 @@ html, body, h1, h2, h3, h4, h5 {
 					success : function(responseData, textStatus, jqXHR) {
 						var exists = responseData;
 						if (exists == "true") {
-							alert("Korisnicko ime postoji, izaberite drugo!");
+							displayModalAlert("Korisničko ime je već zauzeto.<br>Molimo izaberite drugo.");
 						} else {
 							sessionStorage.setItem('register', 'true');
 							sessionStorage.setItem('username', username);
@@ -84,7 +85,7 @@ html, body, h1, h2, h3, h4, h5 {
 			success : function(responseData, textStatus, jqXHR) {
 				var isValid = responseData;
 				if (isValid == "false") {
-					alert("Netočna kombinacija korisničkog imena i lozinke");
+					displayModalAlert("Korisničko ime ne postoji ili je lozinka kriva.<br> Pokušajte ponovno. ");
 				} else {
 					sessionStorage.setItem('username', username);
 					changeWindowUrl('home2.html');
@@ -120,6 +121,8 @@ html, body, h1, h2, h3, h4, h5 {
 				"w3-text-white");
 
 	}
+
+
 </script>
 
 
@@ -225,7 +228,9 @@ html, body, h1, h2, h3, h4, h5 {
 
 	</div>
 
-
+<script>
+	createModalAlert();
+</script>
 
 
 </body>

@@ -20,6 +20,7 @@
 <!-- Slijed skup importova od kojih svaki upravlja jednom funkcionalnošću aplikacije -->
 <script src="js/general.js"></script>
 <script src="js/sendEmail.js"></script>
+<script src="js/modalAlerts.js"></script>
 
 <style>
 html, body, h1, h2, h3, h4, h5 {
@@ -264,13 +265,14 @@ html, body, h1, h2, h3, h4, h5 {
 												+ val + "</a>" + html);
 					}
 					/* $("#expenseItem").val(''); */
-					reset();					
-					
+					reset();
+
 				}
 				else{
 					/* POZOVI ALERT */
 					reset();
 					console.log("IME EXPENSEITEMA JE VEC U DB");
+					displayModalAlert("Stavka sa istim nazivom već postoji.<br>Molimo vas izaberite drugi naziv. ");
 				}
 			},
 			error : function(responseData, textStatus, errorThrown) {
@@ -318,8 +320,8 @@ html, body, h1, h2, h3, h4, h5 {
 												+ "Href' onClick='myAccFuncDynamic(this)'>"
 												+ val
 												+ " <i class='fa fa-caret-down'></i></a>"
-												+ "<div id='Kategorija" 
-												+ val 
+												+ "<div id='Kategorija"
+												+ val
 												+ "' class='w3-accordion-content w3-padding-large w3-medium'><a href='#' onClick='addCategory(this)' id='addCategory"
 												+ val
 												+ "'>Dodaj kategoriju <i class='fa fa-plus w3-margin-right'></i></a><a href='#' onClick='addExpenseItem(this)' id='addItemTo"
@@ -328,13 +330,14 @@ html, body, h1, h2, h3, h4, h5 {
 												+ html);
 					}
 					reset();
-					
-					
+
+
 				}
 				else {
 					/* POZOVI ALERT */
 					reset();
 					console.log("Kategorija vec postoji!");
+					displayModalAlert("Kategorija sa istim nazivom već postoji.<br>Molimo vas izaberite drugi naziv. ");
 				}
 			},
 			error : function(responseData, textStatus, errorThrown) {
@@ -396,7 +399,8 @@ html, body, h1, h2, h3, h4, h5 {
 				else {
 					/* POZOVI ALERT */
 					$('#input-1').val("");
-					console.log("ime troskovnika vec postoji !")
+					console.log("ime troskovnika vec postoji !");
+					displayModalAlert("Troškovnik sa istim nazivom već postoji.<br>Molimo vas izaberite drugi naziv. ");
 				}
 			},
 			error : function(responseData, textStatus, errorThrown) {
@@ -730,6 +734,7 @@ html, body, h1, h2, h3, h4, h5 {
 								/* POZOVI ALERT */
 								reset();
 								console.log("Prihod s ovim imenom vec postoji!");
+								displayModalAlert("Prihod sa istim nazivom već postoji.<br>Molimo vas izaberite drugi naziv. ");
 							}
 						},
 						error : function(responseData, textStatus, errorThrown) {
@@ -757,6 +762,9 @@ html, body, h1, h2, h3, h4, h5 {
 		$('#addIncomeItemDivision').find(':input').val('');
 
 	}
+
+
+
 </script>
 
 <body class="w3-light-grey" id="appBody">
@@ -1533,6 +1541,8 @@ html, body, h1, h2, h3, h4, h5 {
 			document.getElementById("mySidenavDropdown").style.display = "none";
 			document.getElementById("myOverlay").style.display = "none";
 		}
+		//skrpao se modal
+		createModalAlert()
 	</script>
 
 </body>
