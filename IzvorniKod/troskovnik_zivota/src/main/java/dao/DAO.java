@@ -100,4 +100,6 @@ public interface DAO {
 
 	void removeExpenseItem(ExpenseItem expenseItem);
 
+	public void removeIncomeItem(IncomeItem item);
+
 }

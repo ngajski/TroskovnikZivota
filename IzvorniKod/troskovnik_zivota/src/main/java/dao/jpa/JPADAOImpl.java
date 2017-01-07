@@ -102,6 +102,14 @@ public class JPADAOImpl implements DAO {
 	}
 	
 	@Override
+	public void removeIncomeItem(IncomeItem incomeItem){
+		EntityManager em = JPAEMProvider.getEntityManager();
+		em.remove(incomeItem);
+	}
+	
+	
+	
+	@Override
 	public User getUserByUsername(String username) throws DAOException {
 		EntityManager em = JPAEMProvider.getEntityManager();
 		System.out.println("getUserByUsername:  " + Thread.currentThread());

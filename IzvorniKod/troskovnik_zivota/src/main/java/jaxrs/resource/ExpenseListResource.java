@@ -110,6 +110,24 @@ public class ExpenseListResource {
 		return "DA";
 	}
 
+	@DELETE
+	@Path("/removeIncomeItem/{id}/{name_expenseList}")
+	@Produces({MediaType.TEXT_PLAIN})
+	public String removeIncomeItem(@PathParam("name_expenseList") String name, @PathParam("id") Long id){
+		ExpenseList expenseList = DAOProvider.getDAO().getExpenseListByName(name);
+		for (IncomeItem item : expenseList.getIncomeItems()){
+			if (item.getId() == id ){
+				DAOProvider.getDAO().removeIncomeItem(item);
+				return "DA";
+			}
+			
+		}
+		
+		return "DA";
+		
+		
+	}
+	
 	
 	@DELETE
 	@Path("/removeExpenseItem/{id}/{name_expenseList}")
