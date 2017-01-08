@@ -1,5 +1,6 @@
 package dao.jpa;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -7,7 +8,7 @@ import javax.persistence.NoResultException;
 
 import dao.DAO;
 import dao.DAOException;
-import model.ExpenseList;
+import model.Notification;
 import model.User;
 
 /**
@@ -24,20 +25,13 @@ public class JPADAOImpl implements DAO {
 		EntityManager em = JPAEMProvider.getEntityManager();
 		em.persist(user);
 	}
-	
+
 	@Override
 	public User getUserByID(Long id) throws DAOException {
 		User user = JPAEMProvider.getEntityManager().find(User.class, id);
 		return user;
 	}
 
-	@Override
-	public void removeExpenseListFromDatabase(ExpenseList expenseList){
-		EntityManager em = JPAEMProvider.getEntityManager();
-		em.remove(expenseList);
-	}
-	
-	
 	@Override
 	public User getUserByUsername(String username) throws DAOException {
 		EntityManager em = JPAEMProvider.getEntityManager();
@@ -88,30 +82,43 @@ public class JPADAOImpl implements DAO {
 		return em.createQuery(" select b from User as b where b." + searchParamter + " LIKE :searchKeyword", User.class)
 				.setParameter("searchKeyword", searchValue + "%").getResultList();
 	}
-	
+
 	@Override
-	public void addExpenseList(ExpenseList expenseList) {
+	public void addNotification(Notification notification) {
 		EntityManager em = JPAEMProvider.getEntityManager();
-		try {
-			em.persist(expenseList);
-			System.out.println("Nema pogreške: " + expenseList);
-		} catch (Exception ex) {
-			System.out.println(expenseList);
-			System.out.println(ex.getMessage());
+		em.persist(notification);
+
+	}
+
+	@Override
+	public Notification getNotification(Long id) {
+		Notification notification = JPAEMProvider.getEntityManager().find(Notification.class, id);
+		return notification;
+	}
+
+	@Override
+	public List<Notification> getNotificationsForUser(String username) {
+		User user = getUserByUsername(username);
+		if (user.getNotifications().isEmpty()) {
+			return Collections.emptyList();
+		} else {
+			return user.getNotifications();
 		}
 	}
 
 	@Override
-	public ExpenseList getExpenseListByName(String name) {
-		EntityManager em = JPAEMProvider.getEntityManager();	
-		try{
-			return (ExpenseList) em.createQuery("select b from ExpenseList as b where b.name=:name").setParameter("name", name).getSingleResult();
-		}
-		catch (NoResultException e){
-			return null;
+	public void removeNotification(Long id) {
+		EntityManager em = JPAEMProvider.getEntityManager();
+		em.remove(getNotification(id));
+	}
+
+	@Override
+	public void removeNotificationsForUser(String username) {
+		User user = getUserByUsername(username);
+		List<Notification> notifications = user.getNotifications();
+		int size = notifications.size();
+		for (int i = 0; i < size; ++i) {
+			removeNotification(notifications.get(i).getId());
 		}
 	}
-	
-	
-
 }

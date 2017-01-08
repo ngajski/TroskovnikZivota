@@ -2,8 +2,9 @@ package dao;
 
 import java.util.List;
 
-import model.ExpenseList;
+import model.Notification;
 import model.User;
+import net.sf.ehcache.search.expression.Not;
 
 /**
  * Interface towards subsystem for data persistence.
@@ -112,26 +113,55 @@ public interface DAO {
 	public List<User> getUsersByEmail(String email);
 
 	/**
-	 * Removes given {@link ExpenseList} from database.
+	 * Method used to add new notification to subsystem for data persistence.
 	 * 
-	 * @param expenseList {@link ExpenseList}
+	 * @param notification
+	 *            notification to be added
 	 */
-	void removeExpenseListFromDatabase(ExpenseList expenseList);
-	
+	public void addNotification(Notification notification);
+
 	/**
-	 * Stores given {@link ExpenseList} to database.
+	 * Method which returns {@link Notification} with given <code>id</code>. If
+	 * such does not exists method returns <code>null</code>.
 	 * 
-	 * @param expenseList {@link ExpenseList}
+	 * @param id
+	 *            notification id
+	 * @return notification with given <code>id</code>, or <code>null</code> if
+	 *         such does not exist
 	 */
-	public void addExpenseList(ExpenseList expenseList);
-	
+	public Notification getNotification(Long id);
+
 	/**
-	 * Returns {@link ExpenseList} from database whose name is equal
-	 * to name given with <code>name</code>.
+	 * Method used to remove notification wiht given<code>id</code> from the
+	 * subsystem for data persistence. If such notification does not exists
+	 * method throws {@link DAOException}
 	 * 
-	 * @param name of {@link ExpenseList}
-	 * @return {@link ExpenseList} with given name, else null
+	 * @param id
+	 *            notification id
 	 */
-	public ExpenseList getExpenseListByName(String name);
+	public void removeNotification(Long id);
+
+	/**
+	 * Method used to retrieve all notifications binded to user with given
+	 * <code>username</code>. If there are no notifications for that user method
+	 * returns empty list. If there is no user with such <code>username</code>
+	 * method throws {@link DAOException}
+	 * 
+	 * @param username
+	 *            username
+	 * @return list of notifications binded to user with given
+	 *         <code>username</code>
+	 */
+	public List<Notification> getNotificationsForUser(String username);
+
+	/**
+	 * Method used to remove all notifications binded to user with given
+	 * <code>username</code>. If there are no notifications for that user method
+	 * does nothing.
+	 * 
+	 * @param username
+	 *            username
+	 */
+	public void removeNotificationsForUser(String username);
 
 }
