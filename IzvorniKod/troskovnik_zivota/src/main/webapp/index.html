@@ -18,6 +18,7 @@
 <script src="js/general.js"></script>
 <script src="js/htmlescaping.js"></script>
 <script src="js/modalAlerts.js"></script>
+<script src="js/loader.js"></script>
 
 <style>
 html, body, h1, h2, h3, h4, h5 {
@@ -34,6 +35,8 @@ html, body, h1, h2, h3, h4, h5 {
 			return;
 		}
 
+		showLoader('loaderHolderRegister', 'registerFormButton');
+
 		var username = $(" input[name='registerUsername'] ").val();
 		var password = $(" input[name='registerPassword'] ").val();
 
@@ -48,6 +51,9 @@ html, body, h1, h2, h3, h4, h5 {
 						var exists = responseData;
 						if (exists == "true") {
 							displayModalAlert("Korisničko ime je već zauzeto.<br>Molimo izaberite drugo.");
+							hideLoader('loaderHolderRegister',
+									'registerFormButton');
+
 						} else {
 							sessionStorage.setItem('register', 'true');
 							sessionStorage.setItem('username', username);
@@ -68,6 +74,8 @@ html, body, h1, h2, h3, h4, h5 {
 			return;
 		}
 
+		showLoader('loaderHolderLogin', 'loginFormButton');
+
 		var username = $(" input[name='loginUsername'] ").val();
 		var password = $(" input[name='loginPassword'] ").val();
 		var user = {
@@ -87,11 +95,11 @@ html, body, h1, h2, h3, h4, h5 {
 						var isValid = responseData;
 						if (isValid == "false") {
 							displayModalAlert("Korisničko ime ne postoji ili je lozinka kriva.<br> Pokušajte ponovno. ");
+							hideLoader('loaderHolderLogin', 'loginFormButton');
 						} else {
 							sessionStorage.setItem('username', username);
 							changeWindowUrl('home2.html');
 						}
-
 					},
 					error : function(responseData, textStatus, errorThrown) {
 						alert('POST failed.');
@@ -130,8 +138,7 @@ html, body, h1, h2, h3, h4, h5 {
 
 	<h1 class='w3-center' id='title'>Troškovnik života</h1>
 
-	<div action='javascript:void(0);' id=''
-		class="w3-container w3-card-4 w3-light-grey"
+	<div id='' class="w3-container w3-card-4 w3-light-grey"
 		style="width: 60%; position: relative; left: 20%;">
 
 		<div class=" w3-margin-top">
@@ -178,8 +185,15 @@ html, body, h1, h2, h3, h4, h5 {
 					</div>
 				</div>
 
+				<div class="w3-container" id="loaderHolderLogin"
+					style="display: none;">
+					Validiram podatakte
+					<div class="loader"></div>
+				</div>
+
 				<button class="w3-btn-block w3-section w3-blue w3-ripple w3-padding"
-					onclick="validateLoginForm()" id='formButton'>Prijavi se</button>
+					onclick="validateLoginForm()" id='loginFormButton'>Prijavi
+					se</button>
 
 			</form>
 		</div>
@@ -215,8 +229,14 @@ html, body, h1, h2, h3, h4, h5 {
 					</div>
 				</div>
 
+				<div class="w3-container" id="loaderHolderRegister"
+					style="display: none;">
+					Validiram podatakte
+					<div class="loader"></div>
+				</div>
+
 				<button class="w3-btn-block w3-section w3-blue w3-ripple w3-padding"
-					onclick="validateRegisterForm()" id='formButton'>Registriraj
+					onclick="validateRegisterForm()" id='registerFormButton'>Registriraj
 					se</button>
 
 			</form>

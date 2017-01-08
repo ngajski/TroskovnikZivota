@@ -23,6 +23,7 @@
 <script src="js/modalAlerts.js"></script>
 <script src="js/loader.js"></script>
 <script src="js/generatePDF.js"></script>
+<script src="js/notifications.js"></script>
 
 <style>
 html, body, h1, h2, h3, h4, h5 {
@@ -84,10 +85,13 @@ html, body, h1, h2, h3, h4, h5 {
 }
 
 .w3-sidenav a {
-	font-family: "Roboto", sans-serif
+	font-family: "Raleway", sans-serif
 }
+
 </style>
 <script type="text/javascript">
+
+
 	$(document).ready(function() {
 		var username = sessionStorage.getItem('username');
 		if (isEmpty(username)) {
@@ -96,6 +100,7 @@ html, body, h1, h2, h3, h4, h5 {
 		} else {
 			$('#usernameHolder').html(username);
 			getExpenseLists(username, generateTableOfExpenseLists);
+			getNotifications(username);
 		}
 	});
 
@@ -110,11 +115,11 @@ html, body, h1, h2, h3, h4, h5 {
 													.html(
 															'Trenutno ne postoji niti jedan troškovnik u bazi podataka!')));
 		} else {
+
 			for (var i = 0; i < expenseLists.length; ++i) {
 				$("#expenseListsTable").find('tbody').append(
-						$(
-								'<tr onClick="testFunct(this)" id="'
-										+ expenseLists[i].name + '">').append(
+						$("<tr style='cursor: pointer' onClick='testFunct(this)' id='"
+										+ expenseLists[i].name + "'>").append(
 								$('<td>').html(expenseLists[i].name)));
 			}
 		}
@@ -221,7 +226,7 @@ html, body, h1, h2, h3, h4, h5 {
 
 		var amounts = [];
 		var amount = $('#expenseValue').val();
-		for (var i = 0; i < amount.split(";").length ; i++){
+		for (var i = 0; i < amount.split(";").length; i++) {
 			amounts.push(amount.split(";")[i]);
 		}
 		var comment = $('#expenseComment').val();
@@ -246,41 +251,41 @@ html, body, h1, h2, h3, h4, h5 {
 				startDate, endDate);
 		var json = JSON.stringify(expenseItem);
 
-		$.ajax({
-			type : 'POST',
-			url : "service/expenseList/expenseitem/" + category_name + "/"
-					+ name_expenseList,
-			data : json,
-			contentType : "application/json",
-			dataType : 'text',
-			contentType : "application/json",
-			success : function(responseData, textStatus, jqXHR) {
-				if ( responseData == "DA"){
-					$('#addExpenseItemDivision').hide(750);
-					if (val.length != 0) {
-						var html = $("#" + currentElementId).html();
-						$('#' + currentElementId)
-								.html(
-										"<a href='#' id='expense"
-												+ val
-												+ "' onClick='showExpenseItem(this)'><i class='fa fa-circle' style='font-size:5px;position:relative;top:-3px;'></i> "
-												+ val + "</a>" + html);
-					}
-					/* $("#expenseItem").val(''); */
-					reset();
+		$
+				.ajax({
+					type : 'POST',
+					url : "service/expenseList/expenseitem/" + category_name
+							+ "/" + name_expenseList,
+					data : json,
+					contentType : "application/json",
+					dataType : 'text',
+					contentType : "application/json",
+					success : function(responseData, textStatus, jqXHR) {
+						if (responseData == "DA") {
+							$('#addExpenseItemDivision').hide(750);
+							if (val.length != 0) {
+								var html = $("#" + currentElementId).html();
+								$('#' + currentElementId)
+										.html(
+												"<a href='#' id='expense"
+														+ val
+														+ "' onClick='showExpenseItem(this)'><i class='fa fa-circle' style='font-size:5px;position:relative;top:-3px;'></i> "
+														+ val + "</a>" + html);
+							}
+							/* $("#expenseItem").val(''); */
+							reset();
 
-				}
-				else{
-					/* POZOVI ALERT */
-					reset();
-					console.log("IME EXPENSEITEMA JE VEC U DB");
-					displayModalAlert("Stavka sa istim nazivom već postoji.<br>Molimo vas izaberite drugi naziv. ");
-				}
-			},
-			error : function(responseData, textStatus, errorThrown) {
-				console.log('POST failed nisam dodao stavku!');
-			}
-		});
+						} else {
+							/* POZOVI ALERT */
+							reset();
+							console.log("IME EXPENSEITEMA JE VEC U DB");
+							displayModalAlert("Stavka sa istim nazivom već postoji.<br>Molimo vas izaberite drugi naziv. ");
+						}
+					},
+					error : function(responseData, textStatus, errorThrown) {
+						console.log('POST failed nisam dodao stavku!');
+					}
+				});
 	}
 
 	function persistCategoryToExpenseList() {
@@ -297,55 +302,54 @@ html, body, h1, h2, h3, h4, h5 {
 				null);
 		var json = JSON.stringify(category);
 
-		$.ajax({
-			type : 'POST',
-			url : "service/expenseList/category/" + name_expenseList,
-			data : json,
-			contentType : "application/json",
-			dataType : 'text',
-			contentType : "application/json",
-			success : function(responseData, textStatus, jqXHR) {
-				if ( responseData == "DA"){
-					$('#testing').hide(750);
+		$
+				.ajax({
+					type : 'POST',
+					url : "service/expenseList/category/" + name_expenseList,
+					data : json,
+					contentType : "application/json",
+					dataType : 'text',
+					contentType : "application/json",
+					success : function(responseData, textStatus, jqXHR) {
+						if (responseData == "DA") {
+							$('#testing').hide(750);
 
-					var name = "Kategorija" + val;
+							var name = "Kategorija" + val;
 
-					if (val.length != 0) {
-						var html = $('#' + currentElementId).html();
+							if (val.length != 0) {
+								var html = $('#' + currentElementId).html();
 
-						/* var itemHolder = "<div id='val' class='w3-accordion-content w3-padding-large w3-medium'><a href='#' onClick='addCategory()'>"+val+"<i class='fa fa-plus w3-margin-right'></i></a></div>";
-						$('#KategorijaDefault').html(html + itemHolder); */
-						$('#' + currentElementId)
-								.html(
-										"<div class='w3-accordion'><a href='#' id='"
-												+ val
-												+ "Href' onClick='myAccFuncDynamic(this)'>"
-												+ val
-												+ " <i class='fa fa-caret-down'></i></a>"
-												+ "<div id='Kategorija"
+								/* var itemHolder = "<div id='val' class='w3-accordion-content w3-padding-large w3-medium'><a href='#' onClick='addCategory()'>"+val+"<i class='fa fa-plus w3-margin-right'></i></a></div>";
+								$('#KategorijaDefault').html(html + itemHolder); */
+								$('#' + currentElementId)
+										.html(
+												"<div class='w3-accordion'><a href='#' id='"
+														+ val
+														+ "Href' onClick='myAccFuncDynamic(this)'>"
+														+ val
+														+ " <i class='fa fa-caret-down'></i></a>"
+														+ "<div id='Kategorija"
 												+ val
 												+ "' class='w3-accordion-content w3-padding-large w3-medium'><a href='#' onClick='addCategory(this)' id='addCategory"
-												+ val
-												+ "'>Dodaj kategoriju <i class='fa fa-plus w3-margin-right'></i></a><a href='#' onClick='addExpenseItem(this)' id='addItemTo"
-												+ val
-												+ "'>Dodaj stavku <i class='fa fa-plus w3-margin-right'></i></a></div></div>"
-												+ html);
+														+ val
+														+ "'>Dodaj kategoriju <i class='fa fa-plus w3-margin-right'></i></a><a href='#' onClick='addExpenseItem(this)' id='addItemTo"
+														+ val
+														+ "'>Dodaj stavku <i class='fa fa-plus w3-margin-right'></i></a></div></div>"
+														+ html);
+							}
+							reset();
+
+						} else {
+							/* POZOVI ALERT */
+							reset();
+							console.log("Kategorija vec postoji!");
+							displayModalAlert("Kategorija sa istim nazivom već postoji.<br>Molimo vas izaberite drugi naziv. ");
+						}
+					},
+					error : function(responseData, textStatus, errorThrown) {
+						console.log('POST failed nisam dodao troskovnik.');
 					}
-					reset();
-
-
-				}
-				else {
-					/* POZOVI ALERT */
-					reset();
-					console.log("Kategorija vec postoji!");
-					displayModalAlert("Kategorija sa istim nazivom već postoji.<br>Molimo vas izaberite drugi naziv. ");
-				}
-			},
-			error : function(responseData, textStatus, errorThrown) {
-				console.log('POST failed nisam dodao troskovnik.');
-			}
-		});
+				});
 
 	}
 	function createExpenseCategory(name, fixed, subCategories) {
@@ -383,32 +387,34 @@ html, body, h1, h2, h3, h4, h5 {
 		var list = createExpenseList(name, null, null, true);
 		var json = JSON.stringify(list);
 
-		$.ajax({
-			type : 'POST',
-			url : "service/expenseList/" + username,
-			data : json,
-			contentType : "application/json",
-			dataType : 'text',
-			contentType : "application/json",
-			success : function(responseData, textStatus, jqXHR) {
-				name_expenseList = name;
-				if ( responseData == "DA"){
-					$("#navMenu").removeAttr("style");
-					$("#newExpenseListDivision").attr("style", "display:none;");
-					var val = $("#input-1").val();
-					$("#navMenu1").children("#imeHeader").html("<b>" + val + "</b>");
-				}
-				else {
-					/* POZOVI ALERT */
-					$('#input-1').val("");
-					console.log("ime troskovnika vec postoji !");
-					displayModalAlert("Troškovnik sa istim nazivom već postoji.<br>Molimo vas izaberite drugi naziv. ");
-				}
-			},
-			error : function(responseData, textStatus, errorThrown) {
-				console.log('POST failed nisam dodao troskovnik.');
-			}
-		});
+		$
+				.ajax({
+					type : 'POST',
+					url : "service/expenseList/" + username,
+					data : json,
+					contentType : "application/json",
+					dataType : 'text',
+					contentType : "application/json",
+					success : function(responseData, textStatus, jqXHR) {
+						name_expenseList = name;
+						if (responseData == "DA") {
+							$("#navMenu").removeAttr("style");
+							$("#newExpenseListDivision").attr("style",
+									"display:none;");
+							var val = $("#input-1").val();
+							$("#navMenu1").children("#imeHeader").html(
+									"<b>" + val + "</b>");
+						} else {
+							/* POZOVI ALERT */
+							$('#input-1').val("");
+							console.log("ime troskovnika vec postoji !");
+							displayModalAlert("Troškovnik sa istim nazivom već postoji.<br>Molimo vas izaberite drugi naziv. ");
+						}
+					},
+					error : function(responseData, textStatus, errorThrown) {
+						console.log('POST failed nisam dodao troskovnik.');
+					}
+				});
 	}
 
 	function generatePDF_test() {
@@ -702,7 +708,7 @@ html, body, h1, h2, h3, h4, h5 {
 			}
 
 			var amount = $('#incomeValue').val();
-			for (var i = 0; i < amount.split(";").length ; i++){
+			for (var i = 0; i < amount.split(";").length; i++) {
 				amounts.push(amount.split(";")[i]);
 			}
 			/* 	for (var i = 0; i < result + 1; i++) {
@@ -722,20 +728,20 @@ html, body, h1, h2, h3, h4, h5 {
 						dataType : 'text',
 						contentType : "application/json",
 						success : function(responseData, textStatus, jqXHR) {
-							if ( responseData == "DA"){
-							$('#addIncomeItemDivision').hide(750);
-							var val = $("#incomeName").val();
-							var html = $("#Prihodi").html();
-							$('#Prihodi')
-									.html(
-											"<a href='#'><i class='fa fa-circle' style='font-size:5px;position:relative;top:-3px;'></i> "
-													+ val + "</a>" + html);
-							reset();
-							}
-							else{
+							if (responseData == "DA") {
+								$('#addIncomeItemDivision').hide(750);
+								var val = $("#incomeName").val();
+								var html = $("#Prihodi").html();
+								$('#Prihodi')
+										.html(
+												"<a href='#'><i class='fa fa-circle' style='font-size:5px;position:relative;top:-3px;'></i> "
+														+ val + "</a>" + html);
+								reset();
+							} else {
 								/* POZOVI ALERT */
 								reset();
-								console.log("Prihod s ovim imenom vec postoji!");
+								console
+										.log("Prihod s ovim imenom vec postoji!");
 								displayModalAlert("Prihod sa istim nazivom već postoji.<br>Molimo vas izaberite drugi naziv. ");
 							}
 						},
@@ -764,9 +770,6 @@ html, body, h1, h2, h3, h4, h5 {
 		$('#addIncomeItemDivision').find(':input').val('');
 
 	}
-
-
-
 </script>
 
 <body class="w3-light-grey" id="appBody">
@@ -835,7 +838,8 @@ html, body, h1, h2, h3, h4, h5 {
 
 
 	<!-- PAGE CONTENT za NEWEXPENSELIST -->
-	<div class="w3-main w3-light-grey" style="display: none; padding-top: 50px"
+	<div class="w3-main w3-light-grey"
+		style="display: none; padding-top: 50px"
 		id="pageContentNewExpenseList">
 		<div class="w3-container" id="newExpenseListDivision">
 			<div class="w3-display-middle">
@@ -1145,7 +1149,7 @@ html, body, h1, h2, h3, h4, h5 {
 							</div>
 						</form>
 					</div>
-			<!-- 		<div class="w3.container" style="padding-top: 15px">
+					<!-- 		<div class="w3.container" style="padding-top: 15px">
 						<form action="javascript:void(0);" class="w3-container">
 							<div class="w3-row">
 								<div class="w3-col s3">
@@ -1403,11 +1407,11 @@ html, body, h1, h2, h3, h4, h5 {
 					id="sendEmailUsersRBGHookup"></div>
 
 				<hr>
-				
+
 			</div>
 
 			<div class="w3-container" id="generatePDFDiv" style="display: none;">
-				
+
 				<div class="w3-container w3-card-4 w3-white"
 					id="generatePDFExpenseListsRGBHookup"></div>
 
@@ -1426,8 +1430,8 @@ html, body, h1, h2, h3, h4, h5 {
 	</div>
 
 	<hr>
-	
-	
+
+
 	<!-- TEMPLATES -->
 	<p style="display: none" id="checkboxTemplate">
 		<input class="w3-check" type="checkbox"> <label
@@ -1439,7 +1443,9 @@ html, body, h1, h2, h3, h4, h5 {
 			class="w3-validate"></label>
 	</p>
 
-	
+
+
+
 	<!-- MODALS -->
 	<div id="modal1" class="w3-modal">
 		<div class="w3-modal-content w3-card-4 w3-animate-zoom">

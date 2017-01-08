@@ -2,93 +2,27 @@
 <html>
 <!-- Jquery -->
 <head>
-<script
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
+<meta charset="UTF-8" name="viewport"
+	content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+<link href="css/loader.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="css/set2.css" />
 </head>
 
 
 <body>
 
-	<p>A function is triggered when the user releases a key in the
-		input field. The function transforms the character to upper case.</p>
-	Enter your name:
-	<input type="text" id="fname" onkeyup="myFunction(event)">
-
-	<script>
-		var exepctNumber = true;
-
-		function myFunction(event) {
-			if (event.key == "Delete" || event.key == "Backspace" || event.key == "Del" || event.key == "Escape" ) {
-				return;
-			}
-
-			if ($('#fname').val() == null || $('#fname').val() == "") {
-				exepctNumber = true;
-			}
-
-			if (exepctNumber) {
-				if (isNumber(event.key)) {
-					exepctNumber = false;
-					return;
-				} else {
-					$('#fname').val(
-							$('#fname').val().substring(0,
-									$('#fname').val().length - 1));
-					return;
-				}
-			} else {
-				if (isDot(event.key)){
-					return;
-				}
-				if (isSepartor(event.key)) {
-
-					$('#fname').val($('#fname').val().trim() + ';');
-					exepctNumber = true;
-					return;
-				} else if (isNumber(event.key)) {
-					return;
-
-				} else {
-					$('#fname').val(
-							$('#fname').val().substring(0,
-									$('#fname').val().length - 1));
-					return;
-				}
-
-			}
-
-		}
-
-		function isNumber(char) {
-			if (char >= '0' && char <= '9') {
-				return true;
-			} else {
-				return false;
-			}
-		}
-		function isSepartor(char) {
-			if (char == " ") {
-				return true;
-			} else {
-				return false;
-			}
-		}
-		function isDot(char) {
-			if (char == ".") {
-				return true;
-			} else {
-				return false;
-			}
-		}
-		
-
-		function removeLast() {
-			$('#fname').val(
-					$('#fname').val()
-							.substring(0, $('#fname').val().length - 1));
-		}
-	</script>
+	<div class="w3-row w3-section">Imate jedan novi pristigli email</div>
+	<div class="w3-row w3-section">Imate jedan novi pristigli email</div>
+	<div class="w3-row w3-section">Imate jedan novi pristigli email</div>
+	<div class="w3-row w3-section">Imate jedan novi pristigli email</div>
 
 </body>
 </html>

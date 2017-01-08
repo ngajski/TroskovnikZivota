@@ -110,6 +110,31 @@ function sendEmail() {
 		url : url,
 		dataType : 'json',
 		success : function(responseData, textStatus, jqXHR) {
+			addNotification(username, expenseListName);
+		},
+		error : function(responseData, textStatus, errorThrown) {
+			alert('POST failed.');
+		}
+	});
+}
+
+function addNotification(username, expenseListName) {
+	var messageText = 'Korisnik s korisničkim imenom: <b>' + username
+			+ ' </b>vam je poslao jedan troškovnik imena: <b>' + expenseListName
+			+ '</b>. Provjerite vaš email.';
+	var notification = {
+		message : messageText
+	}
+
+	$.ajax({
+		type : 'POST',
+		url : "http://localhost:8080/baza-podataka/service/notifications/"
+				+ username,
+		crossDomain : true,
+		data : JSON.stringify(notification),
+		contentType : 'application/json',
+		dataType : 'text',
+		success : function(responseData, textStatus, jqXHR) {
 			openModal('modal1', 'Troskovnik ' + expenseListName
 					+ ' uspješno poslan.');
 			hideLoader('loaderHolder1', 'sendEmailButton');
