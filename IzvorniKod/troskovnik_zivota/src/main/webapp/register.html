@@ -32,6 +32,8 @@ html, body, h1, h2, h3, h4, h5 {
 	$(document)
 			.ready(
 					function() {
+						addNoBackButton();
+						validateBackButton();
 						var register = sessionStorage.getItem('register');
 
 						if (isEmpty(register)) {
@@ -209,6 +211,7 @@ html, body, h1, h2, h3, h4, h5 {
 				sessionStorage.removeItem('register');
 				sessionStorage.removeItem('user');
 				sessionStorage.setItem('username', remoteUser.username);
+				sessionStorage.setItem('access', 'true');
 				changeWindowUrl('home2.html');
 			},
 			error : function(responseData, textStatus, errorThrown) {

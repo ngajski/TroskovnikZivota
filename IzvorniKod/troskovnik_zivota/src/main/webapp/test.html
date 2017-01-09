@@ -15,8 +15,30 @@
 <script src="js/general.js"></script>
 <script src="js/modalAlerts.js"></script>
 
-
 <script type="text/javascript">
+	$(document).ready(
+
+	function() {
+		var access = sessionStorage.getItem('access');
+		if (isEmpty(access)) {
+			addNoBackButton();
+			openModal('modal2', 'Nemate ovlasti biti ovdje');
+		} else {
+			$.ajax({
+				type : 'GET',
+				url : "service/expenseList/expenselistTree/" + name,
+				dataType : 'json',
+				success : function(responseData, textStatus, jqXHR) {
+					expenseList = responseData;
+					getParentlessNodeID();
+				},
+				error : function(responseData, textStatus, errorThrown) {
+					alert('GET failed.');
+				}
+			});
+		}
+	});
+
 	var indexi = [];
 	var name = sessionStorage.getItem('expenseListName');
 	var expenseList;
@@ -37,15 +59,14 @@
 		});
 	}
 
-
-
-	function removeExpenseItemFromDatabase(){
+	function removeExpenseItemFromDatabase() {
 
 		var id = $("#expenseItemID").val();
 
 		$.ajax({
 			type : 'DELETE',
-			url : "service/expenseList/removeExpenseItem/" + id + "/" + expenseList.name,
+			url : "service/expenseList/removeExpenseItem/" + id + "/"
+					+ expenseList.name,
 			dataType : 'text',
 			success : function(responseData, textStatus, jqXHR) {
 				window.location.reload();
@@ -57,12 +78,11 @@
 
 	}
 
-
 	function removeCategoryFromExpenseList() {
 		var currentCategoryName = $('#categoryName').val();
 
-		var url = "service/expenseList/removeCategory/"
-				+ currentCategoryName + "/" + expenseList.name;
+		var url = "service/expenseList/removeCategory/" + currentCategoryName
+				+ "/" + expenseList.name;
 
 		$.ajax({
 			type : 'DELETE',
@@ -85,27 +105,27 @@
 		var comment = $('#expenseComment').val();
 		var startDate = $('#startDateExpenseItem').val();
 		var endDate = $('#endDateExpenseItem').val();
-		
+
 		var amounts = [];
 		var amount = $('#expenseValue').val();
-		for (var i = 0; i < amount.split(";").length ; i++){
+		for (var i = 0; i < amount.split(";").length; i++) {
 			amounts.push(amount.split(";")[i]);
 		}
 
-		 var period = document.getElementById("expensePeriod");
-		 var periodCheck = period.options[period.selectedIndex].value;
-		 if (periodCheck == "") {
-		 period = "ANUALY";
-		 }
-		 if (periodCheck == "Mjesečno") {
-		 period = "MONTHLY";
-		 }
-		 if (periodCheck == "Kvartalno") {
-		 period = "QUARTARLY";
-		 }
-		 if (periodCheck == "Jednoročno") {
-		 period = "ONE_TIME";
-		 }
+		var period = document.getElementById("expensePeriod");
+		var periodCheck = period.options[period.selectedIndex].value;
+		if (periodCheck == "") {
+			period = "ANUALY";
+		}
+		if (periodCheck == "Mjesečno") {
+			period = "MONTHLY";
+		}
+		if (periodCheck == "Kvartalno") {
+			period = "QUARTARLY";
+		}
+		if (periodCheck == "Jednoročno") {
+			period = "ONE_TIME";
+		}
 
 		var x = {
 			id : id,
@@ -269,26 +289,27 @@
 
 		var categoryname = $('#categoryIDCREATE').val();
 
-		$.ajax({
-			type : 'GET',
-			url : "service/expenseList/expensecategoryByExpenseList/"
-					+ categoryname + "/" + expenseList.name,
-			dataType : 'json',
-			success : function(responseData, textStatus, jqXHR) {
-				var category = responseData;
-				var fixed;
-				if (category.fixed == true) {
-					fixed = "DA";
-				} else {
-					fixed = "NE";
-				}
-				document.getElementById("checkFixedExpenseItemCREATE").innerHTML = fixed;
-				$("#addExpenseItemDivisionCREATE").show(750);
-			},
-			error : function(responseData, textStatus, errorThrown) {
-				alert('GET failed.');
-			}
-		});
+		$
+				.ajax({
+					type : 'GET',
+					url : "service/expenseList/expensecategoryByExpenseList/"
+							+ categoryname + "/" + expenseList.name,
+					dataType : 'json',
+					success : function(responseData, textStatus, jqXHR) {
+						var category = responseData;
+						var fixed;
+						if (category.fixed == true) {
+							fixed = "DA";
+						} else {
+							fixed = "NE";
+						}
+						document.getElementById("checkFixedExpenseItemCREATE").innerHTML = fixed;
+						$("#addExpenseItemDivisionCREATE").show(750);
+					},
+					error : function(responseData, textStatus, errorThrown) {
+						alert('GET failed.');
+					}
+				});
 
 	}
 	function choiceCategory() {
@@ -320,27 +341,28 @@
 				fixed, null);
 		var json = JSON.stringify(category);
 
-		$.ajax({
-			type : 'POST',
-			url : "service/expenseList/category/" + expenseList.name,
-			data : json,
-			contentType : "application/json",
-			dataType : 'text',
-			contentType : "application/json",
-			success : function(responseData, textStatus, jqXHR) {
-				if (responseData == "DA") {
-					window.location.reload();
-				} else {
-					/* POZOVI ALERT */
-					/* nema reload-a */
-					displayModalAlert("Kategorija sa istim nazivom već postoji.<br>Molimo izaberite drugi naziv.");
+		$
+				.ajax({
+					type : 'POST',
+					url : "service/expenseList/category/" + expenseList.name,
+					data : json,
+					contentType : "application/json",
+					dataType : 'text',
+					contentType : "application/json",
+					success : function(responseData, textStatus, jqXHR) {
+						if (responseData == "DA") {
+							window.location.reload();
+						} else {
+							/* POZOVI ALERT */
+							/* nema reload-a */
+							displayModalAlert("Kategorija sa istim nazivom već postoji.<br>Molimo izaberite drugi naziv.");
 
-				}
-			},
-			error : function(responseData, textStatus, errorThrown) {
-				console.log('POST failed nisam dodao kategoriju.');
-			}
-		});
+						}
+					},
+					error : function(responseData, textStatus, errorThrown) {
+						console.log('POST failed nisam dodao kategoriju.');
+					}
+				});
 
 	}
 
@@ -382,28 +404,29 @@
 		}
 		var json = JSON.stringify(x);
 
-		$.ajax({
-			type : 'POST',
-			url : "service/expenseList/expenseitem/" + category_name + "/"
-					+ expenseList.name,
-			data : json,
-			contentType : "application/json",
-			dataType : 'text',
-			contentType : "application/json",
-			success : function(responseData, textStatus, jqXHR) {
-				if (responseData == "DA") {
-					window.location.reload();
-				} else {
-					/* POZOVI ALERT */
-					/* nema reload-a */
-					displayModalAlert("Kategorija sa istim nazivom već postoji.<br>Molimo Vas izaberite drugi naziv.");
-				}
+		$
+				.ajax({
+					type : 'POST',
+					url : "service/expenseList/expenseitem/" + category_name
+							+ "/" + expenseList.name,
+					data : json,
+					contentType : "application/json",
+					dataType : 'text',
+					contentType : "application/json",
+					success : function(responseData, textStatus, jqXHR) {
+						if (responseData == "DA") {
+							window.location.reload();
+						} else {
+							/* POZOVI ALERT */
+							/* nema reload-a */
+							displayModalAlert("Kategorija sa istim nazivom već postoji.<br>Molimo Vas izaberite drugi naziv.");
+						}
 
-			},
-			error : function(responseData, textStatus, errorThrown) {
-				console.log('POST failed nisam dodao stavku!');
-			}
-		});
+					},
+					error : function(responseData, textStatus, errorThrown) {
+						console.log('POST failed nisam dodao stavku!');
+					}
+				});
 
 	}
 
@@ -526,25 +549,6 @@
 		});
 	}
 
-	$(document).ready(
-
-	function() {
-
-		$.ajax({
-			type : 'GET',
-			url : "service/expenseList/expenselistTree/" + name,
-			dataType : 'json',
-			success : function(responseData, textStatus, jqXHR) {
-				expenseList = responseData;
-				getParentlessNodeID();
-			},
-			error : function(responseData, textStatus, errorThrown) {
-				alert('GET failed.');
-			}
-		});
-
-	});
-
 	function editExpenseList() {
 		hideAll();
 		$('#editExpenseListDivision').show(750);
@@ -561,34 +565,36 @@
 		var newName = $('#newExpenseListNameInput').val();
 		var oldName = expenseList.name;
 		if (newName.length != 0) {
-			$.ajax({
-				type : 'POST',
-				url : "service/expenseList/expenseListRename/" + oldName + "/"
-						+ newName,
-				dataType : 'text',
-				success : function(responseData, textStatus, jqXHR) {
-					if (responseData == "DA") {
-						sessionStorage.setItem('expenseListName', newName);
-						window.location.reload();
-					} else {
-						/* POZOVI ALERT */
-						/* nema reload-a */
-						console.log("Ime troskovnika se vec nalazi u bazi");
-						displayModalAlert("Troškovnik sa istim nazivom već postoji.<br>Molimo Vas izaberite drugi naziv.");
+			$
+					.ajax({
+						type : 'POST',
+						url : "service/expenseList/expenseListRename/"
+								+ oldName + "/" + newName,
+						dataType : 'text',
+						success : function(responseData, textStatus, jqXHR) {
+							if (responseData == "DA") {
+								sessionStorage.setItem('expenseListName',
+										newName);
+								window.location.reload();
+							} else {
+								/* POZOVI ALERT */
+								/* nema reload-a */
+								console
+										.log("Ime troskovnika se vec nalazi u bazi");
+								displayModalAlert("Troškovnik sa istim nazivom već postoji.<br>Molimo Vas izaberite drugi naziv.");
 
-					}
-				},
-				error : function(responseData, textStatus, errorThrown) {
-					console.log('POST failed nisam updateo item!');
-				}
-			});
+							}
+						},
+						error : function(responseData, textStatus, errorThrown) {
+							console.log('POST failed nisam updateo item!');
+						}
+					});
 
 		} else {
 			console.log("IME JE PRAZNO!");
 		}
 
 	}
-
 
 	function changeIncomeItem() {
 		var id = $('#incomeItemID').val();
@@ -599,24 +605,24 @@
 		var endDate = $('#endDateIncome').val();
 		var amounts = [];
 		var amount = $('#expenseValue').val();
-		for (var i = 0; i < amount.split(";").length ; i++){
+		for (var i = 0; i < amount.split(";").length; i++) {
 			amounts.push(amount.split(";")[i]);
 		}
 
-		 var period = document.getElementById("incomePeriod");
-		 var periodCheck = period.options[period.selectedIndex].value;
-		 if (periodCheck == "") {
-		 period = "ANUALY";
-		 }
-		 if (periodCheck == "Mjesečno") {
-		 period = "MONTHLY";
-		 }
-		 if (periodCheck == "Kvartalno") {
-		 period = "QUARTARLY";
-		 }
-		 if (periodCheck == "Jednoročno") {
-		 period = "ONE_TIME";
-		 }
+		var period = document.getElementById("incomePeriod");
+		var periodCheck = period.options[period.selectedIndex].value;
+		if (periodCheck == "") {
+			period = "ANUALY";
+		}
+		if (periodCheck == "Mjesečno") {
+			period = "MONTHLY";
+		}
+		if (periodCheck == "Kvartalno") {
+			period = "QUARTARLY";
+		}
+		if (periodCheck == "Jednoročno") {
+			period = "ONE_TIME";
+		}
 		var x = {
 			id : id,
 			name : name,
@@ -624,7 +630,7 @@
 			amounts : amounts,
 			startDate : startDate,
 			endDate : endDate,
-		 	period : period 
+			period : period
 
 		}
 		var json = JSON.stringify(x);
@@ -692,7 +698,7 @@
 
 			var amounts = [];
 			var amount = $('#incomeValueCREATE').val();
-			for (var i = 0; i < amount.split(";").length ; i++){
+			for (var i = 0; i < amount.split(";").length; i++) {
 				amounts.push(amount.split(";")[i]);
 			}
 
@@ -709,26 +715,27 @@
 
 			json = JSON.stringify(x);
 
-			$.ajax({
-				type : 'POST',
-				url : "service/expenseList/income/" + expenseList.name,
-				data : json,
-				contentType : "application/json",
-				dataType : 'text',
-				contentType : "application/json",
-				success : function(responseData, textStatus, jqXHR) {
-					if (responseData == "DA") {
-						window.location.reload();
-					} else {
-						/* POZOVI ALERT */
-						/* nema reload-a */
-						displayModalAlert("Stavka prihoda nije uspješno dodana. <br> Pokušajte ponovno.  ");
-					}
-				},
-				error : function(responseData, textStatus, errorThrown) {
-					console.log('POST failed nisam dodao prihod.');
-				}
-			});
+			$
+					.ajax({
+						type : 'POST',
+						url : "service/expenseList/income/" + expenseList.name,
+						data : json,
+						contentType : "application/json",
+						dataType : 'text',
+						contentType : "application/json",
+						success : function(responseData, textStatus, jqXHR) {
+							if (responseData == "DA") {
+								window.location.reload();
+							} else {
+								/* POZOVI ALERT */
+								/* nema reload-a */
+								displayModalAlert("Stavka prihoda nije uspješno dodana. <br> Pokušajte ponovno.  ");
+							}
+						},
+						error : function(responseData, textStatus, errorThrown) {
+							console.log('POST failed nisam dodao prihod.');
+						}
+					});
 		}
 
 	}
@@ -830,6 +837,8 @@
 
 
 <body>
+
+
 
 	<div class="chart" id="wholeFuckingTree"></div>
 	<div class="w3-container" id="fillIn">
@@ -1027,6 +1036,7 @@
 		</div>
 	</div>
 
+
 	<!-- CREATE EXPENSE ITEM -->
 	<div class="w3-container" style="margin-top: 45px; display: none;"
 		id="addExpenseItemDivisionCREATE">
@@ -1144,7 +1154,6 @@
 	</div>
 
 
-
 	<!-- NAPRAVI NOVU CREATE kategoriju -->
 	<div class="w3-container" style="margin-top: 45px; display: none"
 		id="testingCREATE">
@@ -1213,9 +1222,7 @@
 	</div>
 
 
-
 	<!-- Edit novi prihod -->
-
 	<div class="w3-container" style="margin-top: 45px; display: none"
 		id="addIncomeItemDivision">
 		<div class="w3-container w3-card" id="incomeItem">
@@ -1369,8 +1376,8 @@
 		</div>
 	</div>
 
-	<!-- Dodaj novi prihod -->
 
+	<!-- Dodaj novi prihod -->
 	<div class="w3-container" style="margin-top: 45px; display: none"
 		id="addIncomeItemDivisionCREATE">
 		<div class="w3-container w3-card" id="incomeItemCREATE">
@@ -1550,7 +1557,6 @@
 	</div>
 
 
-
 	<!-- forma za uredit sam troškovnik -->
 	<div class="w3-container" style="margin-top: 45px; display: none"
 		id="editExpenseListDivision">
@@ -1591,9 +1597,6 @@
 
 
 	</div>
-
-
-
 
 
 	<!-- forma za izabrat expenseCategory ili expenseItem -->
@@ -1637,9 +1640,50 @@
 
 	</div>
 
+	<!-- MODALS -->
+	<div id="modal1" class="w3-modal">
+		<div class="w3-modal-content w3-card-4 w3-animate-zoom">
+			<header class="w3-container w3-green">
+				<span onclick="$('#modal1').hide()"
+					class="w3-closebtn w3-padding-top">&times;</span>
+				<h2>
+					Obavijest <i class="w3-xxlarge fa fa-exclamation-circle"></i>
+				</h2>
+			</header>
+			<div class="w3-container">
+				<h4 class="textHolder"></h4>
+			</div>
+			<div class="w3-container w3-light-grey w3-padding">
+				<button class="w3-btn w3-right w3-white w3-border"
+					onclick="$('#modal1').hide();">Zatvori</button>
+			</div>
+		</div>
+	</div>
+
+	<div id="modal2" class="w3-modal">
+		<div class="w3-modal-content w3-card-4 w3-animate-zoom">
+			<header class="w3-container w3-red">
+				<span onclick="$('#modal2').hide(); changeWindowUrl('index.html');"
+					class="w3-closebtn w3-padding-top">&times;</span>
+				<h2>
+					Greška <i class="w3-xxlarge fa fa-exclamation-circle"></i>
+				</h2>
+			</header>
+			<div class="w3-container">
+				<h4 class="textHolder"></h4>
+			</div>
+			<div class="w3-container w3-light-grey w3-padding">
+				<button class="w3-btn w3-right w3-white w3-border"
+					onclick="$('#modal2').hide(); changeWindowUrl('index.html');">Zatvori</button>
+			</div>
+		</div>
+	</div>
+
 
 	<script src="vendor/raphael.js"></script>
-	<script>	createModalAlert();	</script>
+	<script>
+		createModalAlert();
+	</script>
 	<script src="js/Treant.js"></script>
 </body>
 </html>

@@ -30,13 +30,13 @@ public class Initialization implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent sce) {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("baza.podataka.lokalna");
 		sce.getServletContext().setAttribute("emf", emf);
-		String pathToFonts = sce.getServletContext().getRealPath("font");
-		System.out.println("Putanja do direkotrija sa fontovima:" + pathToFonts);
-		PDFGenerator.setPathToFonts(pathToFonts);
 		JPAEMFProvider.setEmf(emf);
 
 		System.out.println("init local emf");
 
+		String pathToFonts = sce.getServletContext().getRealPath("font");
+		System.out.println("Putanja do direkotrija sa fontovima:" + pathToFonts);
+		PDFGenerator.setPathToFonts(pathToFonts);
 	}
 
 	@Override

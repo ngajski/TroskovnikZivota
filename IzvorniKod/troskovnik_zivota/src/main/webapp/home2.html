@@ -87,16 +87,17 @@ html, body, h1, h2, h3, h4, h5 {
 .w3-sidenav a {
 	font-family: "Raleway", sans-serif
 }
-
 </style>
 <script type="text/javascript">
-
-
 	$(document).ready(function() {
+
+		addNoBackButton();
+		validateBackButton();
+
 		var username = sessionStorage.getItem('username');
-		if (isEmpty(username)) {
-			addNoBackButton();
-			openModal('modal1', 'Nemate ovlasti biti ovdje');
+		var access = sessionStorage.getItem('access');
+		if (isEmpty(access)) {
+			openModal('modal2', 'Nemate ovlasti biti ovdje');
 		} else {
 			$('#usernameHolder').html(username);
 			getExpenseLists(username, generateTableOfExpenseLists);
@@ -118,7 +119,8 @@ html, body, h1, h2, h3, h4, h5 {
 
 			for (var i = 0; i < expenseLists.length; ++i) {
 				$("#expenseListsTable").find('tbody').append(
-						$("<tr style='cursor: pointer' onClick='testFunct(this)' id='"
+						$(
+								"<tr style='cursor: pointer' onClick='testFunct(this)' id='"
 										+ expenseLists[i].name + "'>").append(
 								$('<td>').html(expenseLists[i].name)));
 			}
@@ -1469,7 +1471,7 @@ html, body, h1, h2, h3, h4, h5 {
 	<div id="modal2" class="w3-modal">
 		<div class="w3-modal-content w3-card-4 w3-animate-zoom">
 			<header class="w3-container w3-red">
-				<span onclick="$('#modal2').hide()"
+				<span onclick="$('#modal2').hide(); changeWindowUrl('index.html');"
 					class="w3-closebtn w3-padding-top">&times;</span>
 				<h2>
 					Greška <i class="w3-xxlarge fa fa-exclamation-circle"></i>
@@ -1480,7 +1482,7 @@ html, body, h1, h2, h3, h4, h5 {
 			</div>
 			<div class="w3-container w3-light-grey w3-padding">
 				<button class="w3-btn w3-right w3-white w3-border"
-					onclick="$('#modal2').hide();">Zatvori</button>
+					onclick="$('#modal2').hide(); changeWindowUrl('index.html');">Zatvori</button>
 			</div>
 		</div>
 	</div>

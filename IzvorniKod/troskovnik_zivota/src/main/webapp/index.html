@@ -26,7 +26,13 @@ html, body, h1, h2, h3, h4, h5 {
 }
 </style>
 
-
+<script type="text/javascript">
+	$(document)
+			.ready(
+					function() {
+						validateBackButton();
+					});
+</script>
 <script type="text/javascript">
 	/* This function checks if username is unique in remote DB, if it is it will store username
 	 and password in storage (session object) and change page to register.html*/
@@ -98,6 +104,7 @@ html, body, h1, h2, h3, h4, h5 {
 							hideLoader('loaderHolderLogin', 'loginFormButton');
 						} else {
 							sessionStorage.setItem('username', username);
+							sessionStorage.setItem('access', 'true');
 							changeWindowUrl('home2.html');
 						}
 					},
@@ -248,7 +255,6 @@ html, body, h1, h2, h3, h4, h5 {
 	<script>
 		createModalAlert();
 	</script>
-
 
 </body>
 </html>
