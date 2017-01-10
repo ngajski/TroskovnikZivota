@@ -129,6 +129,108 @@ html, body, h1, h2, h3, h4, h5 {
 	}
 </script>
 
+<!-- Funkcije za iznos input -->
+<script type="text/javascript">
+var exepctNumber = true;
+
+
+
+
+function myFunction(event) {
+	if (event.key == "Delete" || event.key == "Backspace" || event.key == "Del" || event.key == "Escape" ) {
+		return;
+	}
+	if ($('#expenseValue').val() == null || $('#expenseValue').val() == "") {
+		exepctNumber = true;
+	}
+	if (exepctNumber) {
+		if (isNumber(event.key)) {
+			exepctNumber = false;
+			return;
+		} else {
+			$('#expenseValue').val(
+					$('#expenseValue').val().substring(0,
+							$('#expenseValue').val().length - 1));
+			return;
+		}
+	} else {
+		if (isDot(event.key)){
+			return;
+		}
+		if (isSepartor(event.key)) {
+			$('#expenseValue').val($('#expenseValue').val().trim() + ';');
+			exepctNumber = true;
+			return;
+		} else if (isNumber(event.key)) {
+			return;
+		} else {
+			$('#expenseValue').val(
+					$('#expenseValue').val().substring(0,
+							$('#expenseValue').val().length - 1));
+			return;
+		}
+	}
+}
+
+function myFunction1(event) {
+	if (event.key == "Delete" || event.key == "Backspace" || event.key == "Del" || event.key == "Escape" ) {
+		return;
+	}
+	if ($('#incomeValue').val() == null || $('#incomeValue').val() == "") {
+		exepctNumber = true;
+	}
+	if (exepctNumber) {
+		if (isNumber(event.key)) {
+			exepctNumber = false;
+			return;
+		} else {
+			$('#incomeValue').val(
+					$('#incomeValue').val().substring(0,
+							$('#incomeValue').val().length - 1));
+			return;
+		}
+	} else {
+		if (isDot(event.key)){
+			return;
+		}
+		if (isSepartor(event.key)) {
+			$('#incomeValue').val($('#incomeValue').val().trim() + ';');
+			exepctNumber = true;
+			return;
+		} else if (isNumber(event.key)) {
+			return;
+		} else {
+			$('#incomeValue').val(
+					$('#incomeValue').val().substring(0,
+							$('#incomeValue').val().length - 1));
+			return;
+		}
+	}
+}
+function isNumber(char) {
+	if (char >= '0' && char <= '9') {
+		return true;
+	} else {
+		return false;
+	}
+}
+function isSepartor(char) {
+	if (char == " ") {
+		return true;
+	} else {
+		return false;
+	}
+}
+function isDot(char) {
+	if (char == ".") {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+</script>
+
 <!-- Skup fj za navigaciju po stranici. -->
 <script type="text/javascript">
 	/* TODO */
@@ -1098,7 +1200,7 @@ html, body, h1, h2, h3, h4, h5 {
 								<h4 style="margin-top: 3px">Iznos</h4>
 							</div>
 							<div class="w3-col s9 w3-center">
-								<input id="incomeValue"
+								<input id="incomeValue" onkeyup="myFunction1(event)"
 									class="requiredInputIncomeItemHome w3-input w3-border w3-animate-input" type="text"
 									style="width: 30%">
 							</div>
@@ -1249,7 +1351,7 @@ html, body, h1, h2, h3, h4, h5 {
 								<h4 style="margin-top: 3px">Iznos</h4>
 							</div>
 							<div class="w3-col s9 w3-center">
-								<input id="expenseValue"
+								<input id="expenseValue" onkeyup="myFunction(event)"
 									class="requiredInputExpenseItemHome w3-input w3-border w3-animate-input" type="text"
 									style="width: 30%">
 							</div>

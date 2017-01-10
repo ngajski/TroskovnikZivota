@@ -254,7 +254,10 @@
 				var expenseItem = responseData;
 				$('#expenseItemID').val(expenseItem.id);
 				$('#expenseName').val(expenseItem.name);
-				$('#expenseValue').val(expenseItem.amounts);
+				for (var i = 0; i < expenseItem.amounts.length; i++){
+					$('#expenseValue').val($("#expenseValue").val()+";"+expenseItem.amounts[i]);
+				}
+				$('#expenseValue').val($("#expenseValue").val().substring(1));
 				$('#owner').val(expenseItem.expenseCategoryOwner);
 				$('#expenseComment').val(expenseItem.comment);
 				$('#startDateExpenseItem').val(expenseItem.startDate);
@@ -880,7 +883,10 @@
 				var incomeItem = responseData;
 				$('#incomeItemID').val(incomeItem.id);
 				$('#incomeName').val(incomeItem.name);
-				$('#incomeValue').val(incomeItem.amounts);
+				for (var i = 0; i < incomeItem.amounts.length; i++){
+					$('#incomeValue').val($("#incomeValue").val()+";"+incomeItem.amounts[i]);
+				}
+				$('#incomeValue').val($("#incomeValue").val().substring(1));
 				/* $('#owner').val(expenseItem.expenseCategoryOwner); */
 				$('#incomeComment').val(incomeItem.comment);
 				$('#startDateIncome').val(incomeItem.startDate);
