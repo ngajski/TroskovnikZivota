@@ -120,5 +120,21 @@ function getExpenseLists(username, callback) {
 		error : function(responseData, textStatus, errorThrown) {
 			console.log('GET failed expense lists.');
 		}
-});
+	});
+}
+
+function isInteger(string) {
+	if (string != "") {
+		return /^\d+$/.test(string);
+	} else {
+		return true;
+	}
+}
+
+function addHoverToInput() {
+	$("input").each(function() {
+		$(this).hover(function() {
+			$(this).attr('title', $(this).attr('placeholder'));
+		})
+	});
 }

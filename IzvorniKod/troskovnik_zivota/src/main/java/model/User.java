@@ -174,10 +174,12 @@ public class User {
 		this.expenseLists = expenseLists;
 	}
 
+	
 	@Override
 	public String toString() {
-		return "User [username=" + username + ", password=" + password + ", firstName=" + firstName + ", lastName="
-				+ lastName + "]";
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
+				+ ", lastName=" + lastName + ", oib=" + oib + ", dateOfBirth=" + dateOfBirth + ", address=" + address
+				+ ", telefon=" + telefon + ", email=" + email + "]";
 	}
 
 	public void addExpenseList(ExpenseList expenseList) {

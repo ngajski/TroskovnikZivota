@@ -14,15 +14,32 @@
 	rel="stylesheet">
 <link href="css/loader.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="css/set2.css" />
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 </head>
 
-
+<script type="text/javascript">
+	function addHoverToInput() {
+		$("input").each(function() {
+			$(this).hover(function() {
+				$(this).attr('title', $(this).attr('placeholder'));
+			})
+		});
+	}
+</script>
 <body>
 
-	<div class="w3-row w3-section">Imate jedan novi pristigli email</div>
-	<div class="w3-row w3-section">Imate jedan novi pristigli email</div>
-	<div class="w3-row w3-section">Imate jedan novi pristigli email</div>
-	<div class="w3-row w3-section">Imate jedan novi pristigli email</div>
-
+	<div class="w3-row w3-section">
+		<div class="w3-col" style="width: 50px">
+			<i class="icon material-icons" style="font-size: 40px">location_city</i>
+		</div>
+		<div class="w3-rest">
+			<input class="w3-input w3-border w3-round" name="postcode"
+				type="text" placeholder="Poštanski broj">
+		</div>
+	</div>
+	<script type="text/javascript">
+		addHoverToInput();
+	</script>
 </body>
 </html>

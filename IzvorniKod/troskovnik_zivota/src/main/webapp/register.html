@@ -25,7 +25,6 @@ html, body, h1, h2, h3, h4, h5 {
 	font-family: "Raleway", sans-serif
 }
 </style>
-
 <script type="text/javascript">
 	var oldname;
 
@@ -40,7 +39,8 @@ html, body, h1, h2, h3, h4, h5 {
 							openModal('modal1',
 									'Nemate ovlasti biti na ovoj stranici.');
 						} else {
-
+							addHoverToInput();
+							
 							var username = sessionStorage.getItem('username');
 							oldname = username;
 							$("input[name='username']").val(username);
@@ -164,6 +164,7 @@ html, body, h1, h2, h3, h4, h5 {
 				oib : oib,
 				dateOfBirth : dateOfBirth,
 				address : address,
+				telefon : telefon,
 				email : email
 			}
 
@@ -179,6 +180,7 @@ html, body, h1, h2, h3, h4, h5 {
 				oib : oib,
 				dateOfBirth : dateOfBirth,
 				address : address,
+				telefon : telefon,
 				email : email
 			}
 			return editedUser;
@@ -266,11 +268,31 @@ html, body, h1, h2, h3, h4, h5 {
 
 	}
 
+	function validateIntegers(){
+		if ( !isInteger($("input[name='oib']").val()) ){
+			openModal('modal2', "Oib je krivo unesen.");
+			return false;
+		}
+		if ( !isInteger($("input[name='houseNumber']").val()) ){
+			openModal('modal2', "Kućni broj je krivo unesen.");
+			return false;
+		}
+		if ( !isInteger($("input[name='postCode']").val()) ){
+			openModal('modal2', "Poštanski broj je krivo unesen.");
+			return false;
+		}
+		return true;
+	}
+	
 	function validateForm() {
 		if (emptyExists('requiredInput')) {
 			return;
 		}
 
+		if (!validateIntegers()){
+			return;
+		}
+		
 		showLoader('loaderHolder1', 'formButton');
 
 		if (sessionStorage.getItem('register') == 'true') {
@@ -545,7 +567,7 @@ html, body, h1, h2, h3, h4, h5 {
 				<i class="material-icons" style="font-size: 40px">location_city</i>
 			</div>
 			<div class="w3-rest">
-				<input class="w3-input w3-border w3-round" name="postcode"
+				<input class="w3-input w3-border w3-round" name="postCode"
 					type="text" placeholder="Poštanski broj">
 			</div>
 		</div>
@@ -603,7 +625,7 @@ html, body, h1, h2, h3, h4, h5 {
 
 	<div id="modal2" class="w3-modal">
 		<div class="w3-modal-content w3-card-4 w3-animate-zoom">
-			<header class="w3-container w3-red">
+			<header class="w3-container w3-yellow">
 				<span onclick="$('#modal2').hide()"
 					class="w3-closebtn w3-padding-top">&times;</span>
 				<h2>

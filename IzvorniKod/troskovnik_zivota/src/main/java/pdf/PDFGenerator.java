@@ -80,7 +80,10 @@ public abstract class PDFGenerator {
 		PDFGenerator.document = document;
 		String author = expenseList.getUserOwner().getUsername();
 		String name = expenseList.getName();
-		List<ExpenseCategory> expenseCategories = getAllCategories(expenseList.getExpenseCategories());
+		System.out.println(expenseList.getExpenseCategories());
+		//List<ExpenseCategory> expenseCategories = getAllCategories(expenseList.getExpenseCategories());
+		List<ExpenseCategory> expenseCategories = expenseList.getExpenseCategories();
+		System.out.println(expenseCategories);
 		List<IncomeItem> incomeItems = expenseList.getIncomeItems();
 		
 		loadFonts();

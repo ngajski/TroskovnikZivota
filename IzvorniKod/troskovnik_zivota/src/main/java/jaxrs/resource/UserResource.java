@@ -28,6 +28,7 @@ public class UserResource {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.TEXT_PLAIN })
 	public String addUser(User user) {
+		System.out.println(user.toString());
 		Long existingUserId = user.getId();
 		if (existingUserId != null) {
 			User existingUser = DAOProvider.getDAO().getUserByID(existingUserId);
@@ -45,9 +46,6 @@ public class UserResource {
 		}
 		return "ok";
 	}
-	
-	
-	
 	
 	@POST
 	@Path("/validateLogin")
