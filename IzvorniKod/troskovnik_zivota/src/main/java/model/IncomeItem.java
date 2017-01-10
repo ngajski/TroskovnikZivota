@@ -126,6 +126,24 @@ public class IncomeItem {
 			return new Double(0.0);
 		}
 	}
+	
+	/**
+	 * Returns summed up income amounts between <code>startDate</code>
+	 * and <code>endDate</code>
+	 * @param startDate
+	 * @param stopDate
+	 * @return
+	 */
+	public Double getIncomeBetweenDates(String startDate,String stopDate) {
+		double income = 0;
+		
+		while (Date.happenedBefore(startDate, stopDate)) {
+			income += this.getIncomeForDate(startDate);
+			startDate = Date.nextMonth(startDate);
+		}
+		
+		return income;
+	}
 
 	public String getStartDate() {
 		return startDate;
