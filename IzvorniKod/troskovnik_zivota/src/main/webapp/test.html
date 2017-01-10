@@ -58,7 +58,23 @@
 			}
 		});
 	}
-
+	function removeIncomeItem(){
+		var id = $("#incomeItemID").val();
+		$.ajax({
+			type : 'DELETE',
+			url : "service/expenseList/removeIncomeItem/" + id + "/"
+					+ expenseList.name,
+			dataType : 'text',
+			success : function(responseData, textStatus, jqXHR) {
+				window.location.reload();
+			},
+			error : function(responseData, textStatus, errorThrown) {
+				console.log('DELETE failed nisam izbriso prihod.');
+			}
+		});
+		
+		
+	}
 	function removeExpenseItemFromDatabase() {
 
 		var id = $("#expenseItemID").val();
@@ -99,6 +115,12 @@
 	}
 
 	function changeExpenseItem() {
+		if ( emptyExists('requiredInputExpenseItemTestEdit')){
+			displayModalAlert("Molimo Vas popunite sva obavezna polja.")
+			return;
+		}
+		
+		
 		var id = $('#expenseItemID').val();
 		var name = $('#expenseName').val();
 		var owner = $('#owner').val();
@@ -106,6 +128,23 @@
 		var startDate = $('#startDateExpenseItem').val();
 		var endDate = $('#endDateExpenseItem').val();
 
+		var startDateChecker = startDate.substring(0, startDate.indexOf('/'));
+		var endDateChecker = endDate.substring(0, endDate.indexOf('/'));
+		
+		if (startDateChecker > 12 || startDateChecker < 1 || endDateChecker > 12 || endDateChecker < 1 ){
+			displayModalAlert("Krivo uneseni datumi.");
+			return;
+		}
+		
+		
+		startDateChecker = startDate.substring(startDate.indexOf('/')+1);
+		endDateChecker = endDate.substring(endDate.indexOf('/')+1);
+		
+		if ( ( startDateChecker > endDateChecker ) || ( (startDateChecker[0] != 2 ) && (startDateChecker[0] != 1)) || ((endDateChecker[0] != 2) && (endDateChecker[0] != 1 )) ){
+			displayModalAlert("Krivo uneseni datumi.");
+			return;
+		}
+		
 		var amounts = [];
 		var amount = $('#expenseValue').val();
 		for (var i = 0; i < amount.split(";").length; i++) {
@@ -147,8 +186,11 @@
 			dataType : 'text',
 			contentType : "application/json",
 			success : function(responseData, textStatus, jqXHR) {
+				if ( responseData == "NE"){
+					displayModalAlert("Ime stavke već postoji!");
+				}else {
 				window.location.reload();
-				console.log('ExpenseItem updated !')
+				console.log('ExpenseItem updated !')}
 			},
 			error : function(responseData, textStatus, errorThrown) {
 				console.log('POST failed nisam updateo item!');
@@ -159,7 +201,9 @@
 
 	function changeCategory() {
 		var name = $('#categoryName').val();
-
+		if ( name.length == 0){
+			displayModalAlert("Molimo upišite ime");
+		}
 		var fixed;
 		if (document.getElementById("fixedCategoryYes").checked) {
 			fixed = true;
@@ -184,8 +228,11 @@
 					dataType : 'text',
 					contentType : "application/json",
 					success : function(responseData, textStatus, jqXHR) {
+						if (reposnseData == "NE"){
+							displayModalAlert("Ime kategorije već postoji!");
+						}else{
 						window.location.reload();
-						console.log('Category updated !')
+						console.log('Category updated !')}
 					},
 					error : function(responseData, textStatus, errorThrown) {
 						console.log('POST failed nisam updateo kategoriju!');
@@ -214,11 +261,10 @@
 				$('#endDateExpenseItem').val(expenseItem.endDate);
 				var fixed;
 				if (expenseItem.fixed == true) {
-					fixed = "DA";
+					document.getElementById("incomeIsFixedYes").checked = true;
 				} else {
-					fixed = "NE";
+					document.getElementById("incomeIsFixedNo").checked = true;
 				}
-				document.getElementById("checkFixed").innerHTML = fixed;
 
 				var period = expenseItem.period;
 				if (period == "ANUALY") {
@@ -328,7 +374,11 @@
 	}
 
 	function createCategory() {
+		
 		var name = $('#categoryNameCREATE').val();
+		if ( name.length == 0){
+			displayModalAlert("Molimo Vas napišite ime kategorije");
+		}
 		var fixed = false;
 		if (document.getElementById("fixedCategoryYesCREATE").checked) {
 			fixed = true;
@@ -367,9 +417,30 @@
 	}
 
 	function createExpenseItemDB() {
+		if ( emptyExists('requiredInputExpenseItemTest')){
+			displayModalAlert("Molimo Vas popunite sva obavezna polja.")
+			return;
+		}
+		
 		var startDate = $('#startDateExpenseItemCREATE').val();
 		var endDate = $('#endDateExpenseItemCREATE').val();
 
+		var startDateChecker = startDate.substring(0, startDate.indexOf('/'));
+		var endDateChecker = endDate.substring(0, endDate.indexOf('/'));
+		
+		if (startDateChecker > 12 || startDateChecker < 1 || endDateChecker > 12 || endDateChecker < 1 ){
+			displayModalAlert("Krivo uneseni datumi.");
+			return;
+		}
+		
+		startDateChecker = startDate.substring(startDate.indexOf('/')+1);
+		endDateChecker = endDate.substring(endDate.indexOf('/')+1);
+		
+		if ( ( startDateChecker > endDateChecker ) || ( (startDateChecker[0] != 2 ) && (startDateChecker[0] != 1)) || ((endDateChecker[0] != 2) && (endDateChecker[0] != 1 )) ){
+			displayModalAlert("Krivo uneseni datumi.");
+			return;
+		}
+		
 		var amounts = [];
 		var amount = $('#expenseValue').val();
 		for (var i = 0; i < amount.split(";").length; i++) {
@@ -393,7 +464,6 @@
 		if (periodCheck == "Jednoročno") {
 			period = "ONE_TIME";
 		}
-
 		var x = {
 			name : name,
 			amounts : amounts,
@@ -597,12 +667,34 @@
 	}
 
 	function changeIncomeItem() {
+		if ( emptyExists('requiredInputIncomeTestEdit')){
+			displayModalAlert("Molimo Vas popunite sva obavezna polja.")
+			return;
+		}
 		var id = $('#incomeItemID').val();
 		var name = $('#incomeName').val();
 		var value = $('#incomeValue').val();
 		var comment = $('#incomeComment').val();
 		var startDate = $('#startDateIncome').val();
 		var endDate = $('#endDateIncome').val();
+		
+		var startDateChecker = startDate.substring(0, startDate.indexOf('/'));
+		var endDateChecker = endDate.substring(0, endDate.indexOf('/'));
+		
+		if (startDateChecker > 12 || startDateChecker < 1 || endDateChecker > 12 || endDateChecker < 1 ){
+			displayModalAlert("Krivo uneseni datumi.");
+			return;
+		}
+		
+		startDateChecker = startDate.substring(startDate.indexOf('/')+1);
+		endDateChecker = endDate.substring(endDate.indexOf('/')+1);
+		
+		if ( ( startDateChecker > endDateChecker ) || ( (startDateChecker[0] != 2 ) && (startDateChecker[0] != 1)) || ((endDateChecker[0] != 2) && (endDateChecker[0] != 1 )) ){
+			displayModalAlert("Krivo uneseni datumi.");
+			return;
+		}
+		
+		
 		var amounts = [];
 		var amount = $('#expenseValue').val();
 		for (var i = 0; i < amount.split(";").length; i++) {
@@ -643,8 +735,11 @@
 			dataType : 'text',
 			contentType : "application/json",
 			success : function(responseData, textStatus, jqXHR) {
+				if ( responseData == "NE"){
+					displayModalAlert("Ime prihoda već postoji!");
+				}else{
 				window.location.reload();
-				console.log('IncomeItem updated !')
+				console.log('IncomeItem updated !')}
 			},
 			error : function(responseData, textStatus, errorThrown) {
 				console.log('POST failed nisam updateo item!');
@@ -662,6 +757,10 @@
 
 	function persistIncomeItem() {
 		var val = $('#incomeNameCREATE').val();
+		if ( emptyExists('requiredInputIncomeTest')){
+			displayModalAlert("Molimo Vas popunite sva obavezna polja.")
+			return;
+		}
 		if (val.length != 0) {
 			var amounts = [];
 			var period = document.getElementById("incomePeriodCREATE");
@@ -682,6 +781,25 @@
 			var startDate = $('#startDateIncomeCREATE').val();
 			var endDate = $('#endDateIncomeCREATE').val();
 
+			
+			var startDateChecker = startDate.substring(0, startDate.indexOf('/'));
+			var endDateChecker = endDate.substring(0, endDate.indexOf('/'));
+			
+			if (startDateChecker > 12 || startDateChecker < 1 || endDateChecker > 12 || endDateChecker < 1 ){
+				displayModalAlert("Krivo uneseni datumi.");
+				return;
+			}
+			
+			startDateChecker = startDate.substring(startDate.indexOf('/')+1);
+			endDateChecker = endDate.substring(endDate.indexOf('/')+1);
+			
+			if ( ( startDateChecker > endDateChecker ) || ( (startDateChecker[0] != 2 ) && (startDateChecker[0] != 1)) || ((endDateChecker[0] != 2) && (endDateChecker[0] != 1 )) ){
+				displayModalAlert("Krivo uneseni datumi.");
+				return;
+			}
+			
+			
+			
 			var sallary = true;
 			if (document.getElementById("incomeSallaryCREATE").checked) {
 				sallary = true;
@@ -754,7 +872,6 @@
 
 	function editIncomeItem(currentElementID) {
 		hideAll();
-
 		$.ajax({
 			type : 'GET',
 			url : "service/expenseList/getincomeitem/" + currentElementID,
@@ -769,6 +886,29 @@
 				$('#startDateIncome').val(incomeItem.startDate);
 				$('#endDateIncome').val(incomeItem.endDate);
 				$('#addIncomeItemDivision').show(750);
+				
+				var fixed;
+				if (incomeItem.fixed == true) {
+					fixed = "DA";
+				} else {
+					fixed = "NE";
+				}
+				document.getElementById("checkFixed").innerHTML = fixed;
+
+				var period = incomeItem.period;
+				if (period == "ANUALY") {
+					$("#incomePeriod").val("");
+				}
+				if (period == "MONTHLY") {
+					$("#incomePeriod").val("Mjesečno");
+				}
+				if (period == "QUARTARLY") {
+					$("#incomePeriod").val("Kvartalno");
+				}
+				if (period == "ONE_TIME") {
+					$("#incomePeriod").val("Jednoročno");
+				}
+				
 			},
 
 			error : function(responseData, textStatus, errorThrown) {
@@ -935,8 +1075,8 @@
 							</div>
 							<div class="w3-col s9 w3-center">
 								<input id="expenseName"
-									class="w3-input w3-border w3-animate-input" type="text"
-									style="width: 30%">
+									class="requiredInputExpenseItemTestEdit w3-input w3-border w3-animate-input"
+									type="text" style="width: 30%">
 							</div>
 						</div>
 					</form>
@@ -947,8 +1087,8 @@
 							</div>
 							<div class="w3-col s9 w3-center">
 								<input id="expenseValue"
-									class="w3-input w3-border w3-animate-input" type="text"
-									style="width: 30%">
+									class="requiredInputExpenseItemTestEdit w3-input w3-border w3-animate-input"
+									type="text" style="width: 30%">
 							</div>
 						</div>
 					</form>
@@ -994,11 +1134,13 @@
 					<form action="javascript:void(0);" class="w3-container">
 						<div class="w3-row-padding">
 							<div class="w3-half" style="maring-left: -15px">
-								<label>Datum početka</label> <input class="w3-input w3-border"
+								<label>Datum početka</label> <input
+									class="requiredInputExpenseItemTestEdit w3-input w3-border"
 									type="text" id="startDateExpenseItem" placeholder="MM/YYYY">
 							</div>
 							<div class="w3-half">
-								<label>Datum završetka</label> <input class="w3-input w3-border"
+								<label>Datum završetka</label> <input
+									class="requiredInputExpenseItemTestEdit w3-input w3-border"
 									type="text" id="endDateExpenseItem" placeholder="MM/YYYY">
 							</div>
 						</div>
@@ -1058,8 +1200,8 @@
 						</div>
 						<div class="w3-col s9 w3-center">
 							<input id="expenseNameCREATE"
-								class="w3-input w3-border w3-animate-input" type="text"
-								style="width: 30%">
+								class="requiredInputExpenseItemTest w3-input w3-border w3-animate-input"
+								type="text" style="width: 30%">
 						</div>
 					</div>
 				</form>
@@ -1070,8 +1212,8 @@
 						</div>
 						<div class="w3-col s9 w3-center">
 							<input id="expenseValueCREATE"
-								class="w3-input w3-border w3-animate-input" type="text"
-								style="width: 30%">
+								class="requiredInputExpenseItemTest w3-input w3-border w3-animate-input"
+								type="text" style="width: 30%">
 						</div>
 					</div>
 				</form>
@@ -1117,12 +1259,14 @@
 				<form action="javascript:void(0);" class="w3-container">
 					<div class="w3-row-padding">
 						<div class="w3-half" style="maring-left: -15px">
-							<label>Datum početka</label> <input class="w3-input w3-border"
+							<label>Datum početka</label> <input
+								class="requiredInputExpenseItemTest w3-input w3-border"
 								type="text" id="startDateExpenseItemCREATE"
 								placeholder="MM/YYYY">
 						</div>
 						<div class="w3-half">
-							<label>Datum završetka</label> <input class="w3-input w3-border"
+							<label>Datum završetka</label> <input
+								class="requiredInputExpenseItemTest w3-input w3-border"
 								type="text" id="endDateExpenseItemCREATE" placeholder="MM/YYYY">
 						</div>
 					</div>
@@ -1241,8 +1385,8 @@
 						</div>
 						<div class="w3-col s9 w3-center">
 							<input id="incomeName"
-								class="w3-input w3-border w3-animate-input" type="text"
-								style="width: 30%">
+								class="requiredInputIncomeTestEdit w3-input w3-border w3-animate-input"
+								type="text" style="width: 30%">
 						</div>
 					</div>
 				</form>
@@ -1253,8 +1397,8 @@
 						</div>
 						<div class="w3-col s9 w3-center">
 							<input id="incomeValue"
-								class="w3-input w3-border w3-animate-input" type="text"
-								style="width: 30%">
+								class="requiredInputIncomeTestEdit w3-input w3-border w3-animate-input"
+								type="text" style="width: 30%">
 						</div>
 					</div>
 				</form>
@@ -1331,11 +1475,13 @@
 				<form action="javascript:void(0);" class="w3-container">
 					<div class="w3-row-padding">
 						<div class="w3-half" style="maring-left: -15px">
-							<label>Datum početka</label> <input class="w3-input w3-border"
+							<label>Datum početka</label> <input
+								class="requiredInputIncomeTestEdit w3-input w3-border"
 								type="text" id="startDateIncome" placeholder="MM/YYYY">
 						</div>
 						<div class="w3-half">
-							<label>Datum završetka</label> <input class="w3-input w3-border"
+							<label>Datum završetka</label> <input
+								class="requiredInputIncomeTestEdit w3-input w3-border"
 								type="text" id="endDateIncome" placeholder="MM/YYYY">
 						</div>
 					</div>
@@ -1351,17 +1497,14 @@
 									class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
 									onClick="changeIncomeItem()">Spremi</button>
 							</div>
-						</div>
-					</form>
-				</div>
-				<div class="w3.container" style="padding-top: 15px">
-					<form action="javascript:void(0);" class="w3-container">
-						<div class="w3-row">
 							<div class="w3-col s3">
 								<button
 									class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge"
-									onClick="showIncomeInputs()">Prikaži</button>
+									onClick="removeIncomeItem()">Izbriši prihod</button>
 							</div>
+
+
+
 						</div>
 					</form>
 				</div>
@@ -1391,8 +1534,8 @@
 						</div>
 						<div class="w3-col s9 w3-center">
 							<input id="incomeNameCREATE"
-								class="w3-input w3-border w3-animate-input" type="text"
-								style="width: 30%">
+								class="requiredInputIncomeTest w3-input w3-border w3-animate-input"
+								type="text" style="width: 30%">
 						</div>
 					</div>
 				</form>
@@ -1403,8 +1546,8 @@
 						</div>
 						<div class="w3-col s9 w3-center">
 							<input id="incomeValueCREATE"
-								class="w3-input w3-border w3-animate-input" type="text"
-								style="width: 30%">
+								class="requiredInputIncomeTest w3-input w3-border w3-animate-input"
+								type="text" style="width: 30%">
 						</div>
 					</div>
 				</form>
@@ -1482,12 +1625,14 @@
 				<form action="javascript:void(0);" class="w3-container">
 					<div class="w3-row-padding">
 						<div class="w3-half" style="maring-left: -15px">
-							<label>Datum početka</label> <input class="w3-input w3-border"
-								type="text" id="startDateIncomeCREATE" placeholder="MM/YYYY">
+							<label>Datum početka</label> <input
+								class="requiredInputIncomeTest w3-input w3-border" type="text"
+								id="startDateIncomeCREATE" placeholder="MM/YYYY">
 						</div>
 						<div class="w3-half">
-							<label>Datum završetka</label> <input class="w3-input w3-border"
-								type="text" id="endDateIncomeCREATE" placeholder="MM/YYYY">
+							<label>Datum završetka</label> <input
+								class="requiredInputIncomeTest w3-input w3-border" type="text"
+								id="endDateIncomeCREATE" placeholder="MM/YYYY">
 						</div>
 					</div>
 

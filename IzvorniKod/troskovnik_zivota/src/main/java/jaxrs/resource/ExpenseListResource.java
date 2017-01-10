@@ -147,27 +147,16 @@ public class ExpenseListResource {
 	}
 	
 	
-	
 	@DELETE
 	@Path("/removeCategory/{currentCategoryName}/{expenseListName}")
 	@Produces({ MediaType.TEXT_PLAIN })
 	public String removeExpenseCategoryFromDatabase(@PathParam("currentCategoryName") String name,
 			@PathParam("expenseListName") String expenseListName) {
 		ExpenseList expenseList = DAOProvider.getDAO().getExpenseListByName(expenseListName);
-		for (ExpenseCategory category : expenseList.getExpenseCategories()) {
-			if (category.getName().equals(name)) {
-				for ( ExpenseCategory subcategory : category.getSubCategories()){
-					for ( ExpenseItem item : subcategory.getExpenseItems()){
-						DAOProvider.getDAO().removeExpenseItem(item);
-					}
-					DAOProvider.getDAO().removeExpenseCategory(subcategory);
-				}
-				for (ExpenseItem item : category.getExpenseItems()){
-					DAOProvider.getDAO().removeExpenseItem(item);
-				}
+		for ( ExpenseCategory category : expenseList.getExpenseCategories()){
+			if ( category.getName().equals(name)){
 				DAOProvider.getDAO().removeExpenseCategory(category);
 			}
-
 		}
 		return "DA";
 	}
@@ -177,6 +166,11 @@ public class ExpenseListResource {
 	@Produces({ MediaType.TEXT_PLAIN })
 	public String editExpenseCategory(ExpenseCategory expenseCategory) {
 		ExpenseCategory category = DAOProvider.getDAO().getCategoryByID(expenseCategory.getId());
+		for (ExpenseCategory cat : category.getExpenseListOwner().getExpenseCategories()){
+			if ( cat.getName().equals(expenseCategory.getName()) && (cat.getId() != expenseCategory.getId())){
+				return "NE";
+			}
+		}
 		category.setName(expenseCategory.getName());
 		category.issetFixed(expenseCategory.isgetFixed());
 		for ( ExpenseItem item : category.getExpenseItems()){
@@ -190,6 +184,13 @@ public class ExpenseListResource {
 	@Produces({ MediaType.TEXT_PLAIN })
 	public String editExpenseItem(ExpenseItem expenseItem) {
 		ExpenseItem item = DAOProvider.getDAO().getExpenseItemByID(expenseItem.getId());
+		for ( ExpenseCategory cat : item.getExpenseCategoryOwner().getExpenseListOwner().getExpenseCategories()){
+			for ( ExpenseItem itm : cat.getExpenseItems()){
+				if ( itm.getName().equals(expenseItem.getName()) && (itm.getId() != expenseItem.getId())){
+					return "NE";
+				}
+			}
+		}
 		item.setComment(expenseItem.getComment());
 		item.setName(expenseItem.getName());
 		item.setEndDate(expenseItem.getEndDate());
@@ -205,6 +206,11 @@ public class ExpenseListResource {
 	@Produces({ MediaType.TEXT_PLAIN })
 	public String editIncomeItem(IncomeItem incomeItem) {
 		IncomeItem item = DAOProvider.getDAO().getIncomeItemByID(incomeItem.getId());
+		for ( IncomeItem itm : item.getExpenseListOwner().getIncomeItems()){
+			if ( itm.getName().equals(incomeItem.getName()) && (itm.getId() != incomeItem.getId())){
+				return "NE";
+			}
+		}
 		item.setComment(incomeItem.getComment());
 		item.setName(incomeItem.getName());
 		item.setEndDate(incomeItem.getEndDate());
