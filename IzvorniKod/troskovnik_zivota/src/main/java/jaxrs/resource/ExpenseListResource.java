@@ -308,6 +308,12 @@ public class ExpenseListResource {
 //		expenseItem.validateAmounts();
 		expenseItem.setExpenseCategoryOwner(expenseCategory);
 		expenseItem.issetFixed(expenseCategory.isgetFixed());
+		
+		if (( expenseItem.getAmounts().size() != 1 ) && expenseItem.isFixed()){
+			return "FIXED ERROR";
+		}
+
+		
 		expenseCategory.getExpenseItems().add(expenseItem);
 		DAOProvider.getDAO().addExpenseItem(expenseItem);
 		return "DA";

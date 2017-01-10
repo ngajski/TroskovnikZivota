@@ -326,12 +326,12 @@ function isDot(char) {
 	}
 
 	function persistExpenseItemToExpenseList() {
-		
+	
 		if ( emptyExists('requiredInputExpenseItemHome')){
 			displayModalAlert("Molimo Vas popunite sva obavezna polja.")
 			return;
 		}
-				
+		
 		var startDate = $('#startDateExpenseItem').val();
 		var endDate = $('#endDateExpenseItem').val();
 
@@ -343,6 +343,18 @@ function isDot(char) {
 			return;
 		}
 		
+		
+		
+		/* KAKVE SU OVO MAGIJE */
+		var string = $('#expenseValue').val();
+		var monthCounter = 1;
+		var totalMonthsTest = 1;
+		for (var i = 0 ; i < string.length ; i++){
+			if (string[i] == ";"){
+				monthCounter += 1; 
+			}
+		}
+		
 		startDateChecker = startDate.substring(startDate.indexOf('/')+1);
 		endDateChecker = endDate.substring(endDate.indexOf('/')+1);
 		
@@ -350,9 +362,29 @@ function isDot(char) {
 			displayModalAlert("Krivo uneseni datumi.");
 			return;
 		}
+		if ( (startDateChecker ==  endDateChecker) && (startDate.substring(0, startDate.indexOf('/'))>endDate.substring(0, endDate.indexOf('/')))){
+			displayModalAlert("Krivo uneseni datumi.");
+			return;
+		}	
+		if ( startDateChecker < endDateChecker ){
+			var help1 = endDateChecker - startDateChecker;
+			var help3 = startDate.substring(0, startDate.indexOf('/'));
+			var help2 = endDate.substring(0, endDate.indexOf('/'));
+			totalMonthsTest = 1 + parseInt(help1)*12 + parseInt(help2)-parseInt(help3);
+			
+		} else if ( startDateChecker == endDateChecker){
+			var help1 = endDate.substring(0, endDate.indexOf('/')) - startDate.substring(0, startDate.indexOf('/')) ;
+			totalMonthsTest = 1 + help1;
+		}else{
+			displayModalAlert("Krivo uneseni datumi.");
+			return;
+		}
 		
-		
-		
+		if ( totalMonthsTest != monthCounter){
+			displayModalAlert("Krivo uneseni iznosi u odnosu na unesene datume.");
+			return;
+		}
+		else{		
 		var amounts = [];
 		var amount = $('#expenseValue').val();
 		for (var i = 0; i < amount.split(";").length; i++) {
@@ -404,17 +436,20 @@ function isDot(char) {
 							/* $("#expenseItem").val(''); */
 							reset();
 
-						} else {
+						} else if ( responseData == "NE") {
 							/* POZOVI ALERT */
 							reset();
 							console.log("IME EXPENSEITEMA JE VEC U DB");
 							displayModalAlert("Stavka sa istim nazivom već postoji.<br>Molimo vas izaberite drugi naziv. ");
+						} else {
+							reset();
+							displayModalAlert("Fiksnost trenutnog stavka (true) onemogućava dodavanje ovakvog stavka.");
 						}
 					},
 					error : function(responseData, textStatus, errorThrown) {
 						console.log('POST failed nisam dodao stavku!');
 					}
-				});
+				});}
 	}
 
 	function persistCategoryToExpenseList() {
@@ -807,7 +842,6 @@ function isDot(char) {
 		
 		var stringOfValues = '';
 		var val = $('#incomeName').val();
-		if (val.length != 0) {
 			var amounts = [];
 			var period = document.getElementById("incomePeriod");
 			var periodCheck = period.options[period.selectedIndex].value;
@@ -835,6 +869,18 @@ function isDot(char) {
 				return;
 			}
 			
+			
+			
+			/* KAKVE SU OVO MAGIJE ŠPEGETARIJ KOD */
+			var string = $('#incomeValue').val();
+			var monthCounter = 1;
+			var totalMonthsTest = 1;
+			for (var i = 0 ; i < string.length ; i++){
+				if (string[i] == ";"){
+					monthCounter += 1; 
+				}
+			}
+			
 			startDateChecker = startDate.substring(startDate.indexOf('/')+1);
 			endDateChecker = endDate.substring(endDate.indexOf('/')+1);
 			
@@ -842,6 +888,28 @@ function isDot(char) {
 				displayModalAlert("Krivo uneseni datumi.");
 				return;
 			}
+			if ( (startDateChecker ==  endDateChecker) && (startDate.substring(0, startDate.indexOf('/'))>endDate.substring(0, endDate.indexOf('/')))){
+				displayModalAlert("Krivo uneseni datumi.");
+				return;
+			}	
+			if ( startDateChecker < endDateChecker ){
+				var help1 = endDateChecker - startDateChecker;
+				var help3 = startDate.substring(0, startDate.indexOf('/'));
+				var help2 = endDate.substring(0, endDate.indexOf('/'));
+				totalMonthsTest = 1 + parseInt(help1)*12 + parseInt(help2)-parseInt(help3);
+				
+			} else if ( startDateChecker == endDateChecker){
+				var help1 = endDate.substring(0, endDate.indexOf('/')) - startDate.substring(0, startDate.indexOf('/')) ;
+				totalMonthsTest = 1 + help1;
+			}else{
+				displayModalAlert("Krivo uneseni datumi.");
+				return;
+			}
+			
+			if ( totalMonthsTest != monthCounter){
+				displayModalAlert("Krivo uneseni iznosi u odnosu na unesene datume.");
+				return;
+			} else {
 			
 			
 			
@@ -889,24 +957,24 @@ function isDot(char) {
 												"<a href='#'><i class='fa fa-circle' style='font-size:5px;position:relative;top:-3px;'></i> "
 														+ val + "</a>" + html);
 								reset();
-							} else {
+							} else if ( responseData == "NE"){
 								/* POZOVI ALERT */
 								reset();
 								console
 										.log("Prihod s ovim imenom vec postoji!");
 								displayModalAlert("Prihod sa istim nazivom već postoji.<br>Molimo vas izaberite drugi naziv. ");
+							}else {
+								reset();
+								displayModalAlert("Fiksnost trenutnog stavka ("+fixed+") onemogućava dodavanje ovakvog stavka.");
 							}
 						},
 						error : function(responseData, textStatus, errorThrown) {
 							console.log('POST failed nisam dodao troskovnik.');
 						}
 					});
-			/* 	$("#incomeName").val('');
-			 */
-		} else {
-			console.log("IME JE PRAZNO");
-		}
+
 	}
+		}
 
 	function addIncome() {
 		reset()
@@ -970,13 +1038,11 @@ function isDot(char) {
 			class="fa fa-eye"></i> Pregledaj troškovnik</a> <a href="#"
 			class="w3-padding" id="newExpenseListLink"
 			onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4), 'newExpenseListCreation')"><i
-			class="fa fa-plus-circle"></i> Novi troškovnik</a> 
-			<a href="#"
+			class="fa fa-plus-circle"></i> Novi troškovnik</a> <a href="#"
 			class="w3-padding" id="analizeExpenseListLink"
 			onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4),'searchExpenseListsForStatistics')"><i
-			class="fa fa-line-chart"></i> Analiza</a>	
-			<a href="#"
-			class="w3-padding" id="sendExpenseListLink"
+			class="fa fa-line-chart"></i> Analiza</a> <a href="#" class="w3-padding"
+			id="sendExpenseListLink"
 			onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 4), 'searchForExpenseListsToSend')"><i
 			class="fa fa-send-o"></i> Pošalji troškovnik</a> <a href="#"
 			class="w3-padding" id="generatePDFLink"
@@ -1189,8 +1255,8 @@ function isDot(char) {
 							</div>
 							<div class="w3-col s9 w3-center">
 								<input id="incomeName"
-									class="requiredInputIncomeItemHome w3-input w3-border w3-animate-input" type="text"
-									style="width: 30%">
+									class="requiredInputIncomeItemHome w3-input w3-border w3-animate-input"
+									type="text" style="width: 30%">
 							</div>
 						</div>
 					</form>
@@ -1201,8 +1267,8 @@ function isDot(char) {
 							</div>
 							<div class="w3-col s9 w3-center">
 								<input id="incomeValue" onkeyup="myFunction1(event)"
-									class="requiredInputIncomeItemHome w3-input w3-border w3-animate-input" type="text"
-									style="width: 30%">
+									class="requiredInputIncomeItemHome w3-input w3-border w3-animate-input"
+									type="text" style="width: 30%">
 							</div>
 						</div>
 					</form>
@@ -1280,11 +1346,13 @@ function isDot(char) {
 					<form action="javascript:void(0);" class="w3-container">
 						<div class="w3-row-padding">
 							<div class="w3-half" style="maring-left: -15px">
-								<label>Datum početka</label> <input class="requiredInputIncomeItemHome w3-input w3-border"
+								<label>Datum početka</label> <input
+									class="requiredInputIncomeItemHome w3-input w3-border"
 									type="text" id="startDateIncome" placeholder="MM/YYYY">
 							</div>
 							<div class="w3-half">
-								<label>Datum završetka</label> <input class="requiredInputIncomeItemHome w3-input w3-border"
+								<label>Datum završetka</label> <input
+									class="requiredInputIncomeItemHome w3-input w3-border"
 									type="text" id="endDateIncome" placeholder="MM/YYYY">
 							</div>
 						</div>
@@ -1340,8 +1408,8 @@ function isDot(char) {
 							</div>
 							<div class="w3-col s9 w3-center">
 								<input id="expenseName"
-									class="requiredInputExpenseItemHome w3-input w3-border w3-animate-input" type="text"
-									style="width: 30%">
+									class="requiredInputExpenseItemHome w3-input w3-border w3-animate-input"
+									type="text" style="width: 30%">
 							</div>
 						</div>
 					</form>
@@ -1352,8 +1420,8 @@ function isDot(char) {
 							</div>
 							<div class="w3-col s9 w3-center">
 								<input id="expenseValue" onkeyup="myFunction(event)"
-									class="requiredInputExpenseItemHome w3-input w3-border w3-animate-input" type="text"
-									style="width: 30%">
+									class="requiredInputExpenseItemHome w3-input w3-border w3-animate-input"
+									type="text" style="width: 30%">
 							</div>
 						</div>
 					</form>
@@ -1399,11 +1467,13 @@ function isDot(char) {
 					<form action="javascript:void(0);" class="w3-container">
 						<div class="w3-row-padding">
 							<div class="w3-half" style="maring-left: -15px">
-								<label>Datum početka</label> <input class="requiredInputExpenseItemHome w3-input w3-border"
+								<label>Datum početka</label> <input
+									class="requiredInputExpenseItemHome w3-input w3-border"
 									type="text" id="startDateExpenseItem" placeholder="MM/YYYY">
 							</div>
 							<div class="w3-half">
-								<label>Datum završetka</label> <input class="requiredInputExpenseItemHome w3-input w3-border"
+								<label>Datum završetka</label> <input
+									class="requiredInputExpenseItemHome w3-input w3-border"
 									type="text" id="endDateExpenseItem" placeholder="MM/YYYY">
 							</div>
 						</div>
@@ -1464,7 +1534,7 @@ function isDot(char) {
 					<h4>Analiza</h4>
 				</div>
 			</div>
-			
+
 			<div class="w3-quarter" id="sendExpenseListQuarter"
 				onclick="swap($(this).attr('id').substr(0, $(this).attr('id').length - 7), 'searchForExpenseListsToSend')"
 				style="cursor: pointer">
@@ -1527,45 +1597,46 @@ function isDot(char) {
 			<div class="w3-container" id="analizeExpenseListDiv"
 				style="display: none;">
 				<h1>Analiza troškovnika</h1>
-				
+
 				<div class="w3-container w3-card-4 w3-light-grey"
 					id="expenseListAnalizeRadioBox"></div>
 				<hr>
-				
 
-			<form action='javascript:void(0);' id=''
-				class="w3-container w3-card-4 w3-light-grey"
-				>
 
-				<h3 class="w3-left ">Odaberite razdoblje za prikaz</h3>
-				<hr><br>
-				<div class="w3-row w3-section">
-					<div class="w3-col" style="width: 50px;" >
-						<i class="fa fa-calendar-check-o fa-2x" aria-hidden="true"></i>
-					</div>
-					<div class="w3-rest">
-						<input class="loginInput w3-input w3-border w3-round"
-							name="startForm" type="text" required id="startInput"
-							placeholder="mm/yyyy">
-					</div>
-				</div>
+				<form action='javascript:void(0);' id=''
+					class="w3-container w3-card-4 w3-light-grey">
 
-				<div class="w3-row w3-section">
-					<div class="w3-col" style="width: 50px">
-						<i class="fa fa-calendar-times-o fa-2x" aria-hidden="true"></i>
+					<h3 class="w3-left ">Odaberite razdoblje za prikaz</h3>
+					<hr>
+					<br>
+					<div class="w3-row w3-section">
+						<div class="w3-col" style="width: 50px;">
+							<i class="fa fa-calendar-check-o fa-2x" aria-hidden="true"></i>
+						</div>
+						<div class="w3-rest">
+							<input class="loginInput w3-input w3-border w3-round"
+								name="startForm" type="text" required id="startInput"
+								placeholder="mm/yyyy">
+						</div>
 					</div>
-					<div class="w3-rest">
-						<input class="loginInput w3-input w3-border w3-round"
-							name="endForm" type="text" required id="endInput"
-							placeholder="mm/yyyy">
-					</div>
-				</div>
 
-				<button class="w3-btn-block w3-section w3-blue w3-ripple w3-padding"
-					onclick="analizeExpenseList()" id='analiteBtn'>Prikaži</button>
-			</form>
-			
-			<div id="slika"> </div>
+					<div class="w3-row w3-section">
+						<div class="w3-col" style="width: 50px">
+							<i class="fa fa-calendar-times-o fa-2x" aria-hidden="true"></i>
+						</div>
+						<div class="w3-rest">
+							<input class="loginInput w3-input w3-border w3-round"
+								name="endForm" type="text" required id="endInput"
+								placeholder="mm/yyyy">
+						</div>
+					</div>
+
+					<button
+						class="w3-btn-block w3-section w3-blue w3-ripple w3-padding"
+						onclick="analizeExpenseList()" id='analiteBtn'>Prikaži</button>
+				</form>
+
+				<div id="slika"></div>
 			</div>
 
 			<div class="w3-container" id="sendExpenseListDiv"

@@ -228,7 +228,7 @@
 					dataType : 'text',
 					contentType : "application/json",
 					success : function(responseData, textStatus, jqXHR) {
-						if (reposnseData == "NE"){
+						if (responseData == "NE"){
 							displayModalAlert("Ime kategorije već postoji!");
 						}else{
 						window.location.reload();
