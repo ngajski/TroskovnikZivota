@@ -149,6 +149,9 @@ public class ExpenseList {
 			List<ExpenseItem> items = expenseCategory.getExpenseItems();
 			for (ExpenseItem item : items) {
 
+				item.validateDates();
+				item.validateAmounts();
+				
 				if (fixed != null) {
 					if (item.isFixed() != fixed) {
 						continue;
@@ -195,7 +198,8 @@ public class ExpenseList {
 		Map<String, Double> incomeByMonth = new LinkedHashMap<>();
 
 		for (IncomeItem item : incomeItems) {
-
+			item.validateAmounts();
+			
 			if (sallary != null) {
 				if (item.isSallary() != sallary) {
 					continue;
