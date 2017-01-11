@@ -324,68 +324,7 @@ function isDot(char) {
 		}
 		return x;
 	}
-	
-	function checkDates(startDate, endDate, string, fixed){
-		var startDateChecker = startDate.substring(0, startDate.indexOf('/'));
-		var endDateChecker = endDate.substring(0, endDate.indexOf('/'));
-		
-		if (startDateChecker > 12 || startDateChecker < 1 || endDateChecker > 12 || endDateChecker < 1 ){
-			displayModalAlert("Krivo uneseni datumi.");
-			return false;
-		}	
-		
-		startDateChecker = startDate.substring(startDate.indexOf('/')+1);
-		endDateChecker = endDate.substring(endDate.indexOf('/')+1);
-		
-		if ( ( startDateChecker > endDateChecker ) || ( (startDateChecker[0] != 2 ) && (startDateChecker[0] != 1)) || ((endDateChecker[0] != 2) && (endDateChecker[0] != 1 )) ){
-			displayModalAlert("Krivo uneseni datumi.");
-			return false;
-		}
-		if ( (startDateChecker ==  endDateChecker) && (startDate.substring(0, startDate.indexOf('/'))>endDate.substring(0, endDate.indexOf('/')))){
-			displayModalAlert("Krivo uneseni datumi.");
-			return false;
-		}
-		
-		
-		/* KAKVE SU OVO MAGIJE */
-		var monthCounter = 1;
-		var totalMonthsTest = 1;
-		for (var i = 0 ; i < string.length ; i++){
-			if (string[i] == ";"){
-				monthCounter += 1; 
-			}
-		}
-		if ( fixed == "NE"){
-		if ( startDateChecker < endDateChecker ){
-			var help1 = endDateChecker - startDateChecker;
-			var help3 = startDate.substring(0, startDate.indexOf('/'));
-			var help2 = endDate.substring(0, endDate.indexOf('/'));
-			totalMonthsTest = 1 + parseInt(help1)*12 + parseInt(help2)-parseInt(help3);
-			
-		} else if ( startDateChecker == endDateChecker){
-			var help1 = endDate.substring(0, endDate.indexOf('/')) - startDate.substring(0, startDate.indexOf('/')) ;
-			totalMonthsTest = 1 + parseInt(help1);
-		}else{
-			displayModalAlert("Krivo uneseni datumi.");
-			return false;
-		}
-		if ( totalMonthsTest != monthCounter){
-			displayModalAlert("Krivo uneseni iznosi u odnosu na unesene datume.");
-			return false;
-		} else {
-			return true;
-		}
-		}else{
-			if (monthCounter != 1){
-				displayModalAlert("Za fiksan trošak smije postojati samo jedan iznos.");
-				return false;
-			}
-			return true;
-		}
-		
-	}
-	
-	
+
 	function persistExpenseItemToExpenseList() {
 	
 		if ( emptyExists('requiredInputExpenseItemHome')){
@@ -395,10 +334,54 @@ function isDot(char) {
 		
 		var startDate = $('#startDateExpenseItem').val();
 		var endDate = $('#endDateExpenseItem').val();
+
+		var startDateChecker = startDate.substring(0, startDate.indexOf('/'));
+		var endDateChecker = endDate.substring(0, endDate.indexOf('/'));
+		
+		if (startDateChecker > 12 || startDateChecker < 1 || endDateChecker > 12 || endDateChecker < 1 ){
+			displayModalAlert("Krivo uneseni datumi.");
+			return;
+		}
+		
+		
+		
+		/* KAKVE SU OVO MAGIJE */
 		var string = $('#expenseValue').val();
+		var monthCounter = 1;
+		var totalMonthsTest = 1;
+		for (var i = 0 ; i < string.length ; i++){
+			if (string[i] == ";"){
+				monthCounter += 1; 
+			}
+		}
+		
+		startDateChecker = startDate.substring(startDate.indexOf('/')+1);
+		endDateChecker = endDate.substring(endDate.indexOf('/')+1);
+		
+		if ( ( startDateChecker > endDateChecker ) || ( (startDateChecker[0] != 2 ) && (startDateChecker[0] != 1)) || ((endDateChecker[0] != 2) && (endDateChecker[0] != 1 )) ){
+			displayModalAlert("Krivo uneseni datumi.");
+			return;
+		}
+		if ( (startDateChecker ==  endDateChecker) && (startDate.substring(0, startDate.indexOf('/'))>endDate.substring(0, endDate.indexOf('/')))){
+			displayModalAlert("Krivo uneseni datumi.");
+			return;
+		}	
+		if ( startDateChecker < endDateChecker ){
+			var help1 = endDateChecker - startDateChecker;
+			var help3 = startDate.substring(0, startDate.indexOf('/'));
+			var help2 = endDate.substring(0, endDate.indexOf('/'));
+			totalMonthsTest = 1 + parseInt(help1)*12 + parseInt(help2)-parseInt(help3);
 			
-		var fixerino = $("#checkFixed").text();
-		if (!checkDates(startDate, endDate, string, fixerino)){
+		} else if ( startDateChecker == endDateChecker){
+			var help1 = endDate.substring(0, endDate.indexOf('/')) - startDate.substring(0, startDate.indexOf('/')) ;
+			totalMonthsTest = 1 + help1;
+		}else{
+			displayModalAlert("Krivo uneseni datumi.");
+			return;
+		}
+		
+		if ( totalMonthsTest != monthCounter){
+			displayModalAlert("Krivo uneseni iznosi u odnosu na unesene datume.");
 			return;
 		}
 		else{		
@@ -455,8 +438,11 @@ function isDot(char) {
 
 						} else if ( responseData == "NE") {
 							/* POZOVI ALERT */
+							reset();
+							console.log("IME EXPENSEITEMA JE VEC U DB");
 							displayModalAlert("Stavka sa istim nazivom već postoji.<br>Molimo vas izaberite drugi naziv. ");
 						} else {
+							reset();
 							displayModalAlert("Fiksnost trenutnog stavka (true) onemogućava dodavanje ovakvog stavka.");
 						}
 					},
@@ -872,24 +858,56 @@ function isDot(char) {
 				period = "ONE_TIME";
 			}
 			var comment = $('#incomeComment').val();
-			var fixed;
-			var fixedd = "NE";
-			if (document.getElementById("incomeIsFixedYes").checked) {
-				fixed = true;
-				fixedd = "DA";
-			} else if (document.getElementById("incomeIsFixedNo").checked) {
-				fixed = false;
-				fixedd = "NE";
+			var startDate = $('#startDateIncome').val();
+			var endDate = $('#endDateIncome').val();
+
+			var startDateChecker = startDate.substring(0, startDate.indexOf('/'));
+			var endDateChecker = endDate.substring(0, endDate.indexOf('/'));
+			
+			if (startDateChecker > 12 || startDateChecker < 1 || endDateChecker > 12 || endDateChecker < 1 ){
+				displayModalAlert("Krivo uneseni datumi.");
+				return;
 			}
 			
 			
 			
-			var startDate = $('#startDateIncome').val();
-			var endDate = $('#endDateIncome').val();
+			/* KAKVE SU OVO MAGIJE ŠPEGETARIJ KOD */
 			var string = $('#incomeValue').val();
+			var monthCounter = 1;
+			var totalMonthsTest = 1;
+			for (var i = 0 ; i < string.length ; i++){
+				if (string[i] == ";"){
+					monthCounter += 1; 
+				}
+			}
 			
+			startDateChecker = startDate.substring(startDate.indexOf('/')+1);
+			endDateChecker = endDate.substring(endDate.indexOf('/')+1);
 			
-			if (!checkDates(startDate, endDate, string, fixedd)){
+			if ( ( startDateChecker > endDateChecker ) || ( (startDateChecker[0] != 2 ) && (startDateChecker[0] != 1)) || ((endDateChecker[0] != 2) && (endDateChecker[0] != 1 )) ){
+				displayModalAlert("Krivo uneseni datumi.");
+				return;
+			}
+			if ( (startDateChecker ==  endDateChecker) && (startDate.substring(0, startDate.indexOf('/'))>endDate.substring(0, endDate.indexOf('/')))){
+				displayModalAlert("Krivo uneseni datumi.");
+				return;
+			}	
+			if ( startDateChecker < endDateChecker ){
+				var help1 = endDateChecker - startDateChecker;
+				var help3 = startDate.substring(0, startDate.indexOf('/'));
+				var help2 = endDate.substring(0, endDate.indexOf('/'));
+				totalMonthsTest = 1 + parseInt(help1)*12 + parseInt(help2)-parseInt(help3);
+				
+			} else if ( startDateChecker == endDateChecker){
+				var help1 = endDate.substring(0, endDate.indexOf('/')) - startDate.substring(0, startDate.indexOf('/')) ;
+				totalMonthsTest = 1 + help1;
+			}else{
+				displayModalAlert("Krivo uneseni datumi.");
+				return;
+			}
+			
+			if ( totalMonthsTest != monthCounter){
+				displayModalAlert("Krivo uneseni iznosi u odnosu na unesene datume.");
 				return;
 			} else {
 			
@@ -901,6 +919,14 @@ function isDot(char) {
 			} else if (document.getElementById("incomeOther").checked) {
 				sallary = false;
 			}
+
+			var fixed;
+			if (document.getElementById("incomeIsFixedYes").checked) {
+				fixed = true;
+			} else if (document.getElementById("incomeIsFixedNo").checked) {
+				fixed = false;
+			}
+
 			var amount = $('#incomeValue').val();
 			for (var i = 0; i < amount.split(";").length; i++) {
 				amounts.push(amount.split(";")[i]);
@@ -1237,6 +1263,18 @@ function isDot(char) {
 					<form action="javascript:void(0);" class="w3-container">
 						<div class="w3-row">
 							<div class="w3-col s3">
+								<h4 style="margin-top: 3px">Iznos</h4>
+							</div>
+							<div class="w3-col s9 w3-center">
+								<input id="incomeValue" onkeyup="myFunction1(event)"
+									class="requiredInputIncomeItemHome w3-input w3-border w3-animate-input"
+									type="text" style="width: 30%">
+							</div>
+						</div>
+					</form>
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row">
+							<div class="w3-col s3">
 								<h4 style="margin-top: 3px">Period</h4>
 							</div>
 							<div class="w3-col s9 w3-center">
@@ -1320,19 +1358,6 @@ function isDot(char) {
 						</div>
 
 					</form>
-					<form action="javascript:void(0);" class="w3-container">
-						<div class="w3-row" style = "padding-top:15px">
-							<div class="w3-col s3">
-								<h4 style="margin-top: 3px">Iznos</h4>
-							</div>
-							<div class="w3-col s9 w3-center">
-								<input id="incomeValue" onkeyup="myFunction1(event)"
-									class="requiredInputIncomeItemHome w3-input w3-border w3-animate-input"
-									type="text" style="width: 30%">
-							</div>
-						</div>
-					</form>
-					
 
 
 					<div class="w3.container" style="padding-top: 15px">
@@ -1383,6 +1408,18 @@ function isDot(char) {
 							</div>
 							<div class="w3-col s9 w3-center">
 								<input id="expenseName"
+									class="requiredInputExpenseItemHome w3-input w3-border w3-animate-input"
+									type="text" style="width: 30%">
+							</div>
+						</div>
+					</form>
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row">
+							<div class="w3-col s3">
+								<h4 style="margin-top: 3px">Iznos</h4>
+							</div>
+							<div class="w3-col s9 w3-center">
+								<input id="expenseValue" onkeyup="myFunction(event)"
 									class="requiredInputExpenseItemHome w3-input w3-border w3-animate-input"
 									type="text" style="width: 30%">
 							</div>
@@ -1442,18 +1479,7 @@ function isDot(char) {
 						</div>
 
 					</form>
-					<form action="javascript:void(0);" class="w3-container">
-						<div class="w3-row" style = "padding-top:15px">
-							<div class="w3-col s3">
-								<h4 style="margin-top: 3px">Iznos</h4>
-							</div>
-							<div class="w3-col s9 w3-center">
-								<input id="expenseValue" onkeyup="myFunction(event)"
-									class="requiredInputExpenseItemHome w3-input w3-border w3-animate-input"
-									type="text" style="width: 30%">
-							</div>
-						</div>
-					</form>
+
 
 					<div class="w3.container" style="padding-top: 15px">
 						<form action="javascript:void(0);" class="w3-container">
