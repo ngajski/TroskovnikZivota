@@ -138,25 +138,6 @@ public class ExpenseItem {
 	}
 	
 	/**
-	 * Returns summed up income amounts between <code>startDate</code>
-	 * and <code>endDate</code>
-	 * 
-	 * @param startDate
-	 * @param stopDate
-	 * @return summed up expense
-	 */
-	public Double getExpenseBetweenDates(String startDate,String stopDate) {
-		double expense = 0;
-		
-		while (Date.happenedBefore(startDate, stopDate)) {
-			expense += this.getExpenseForDate(startDate);
-			startDate = Date.nextMonth(startDate);
-		}
-		
-		return expense;
-	}
-	
-	/**
 	 * Sets <code>this.startDate</code> and <code>this.endDate</code> to right
 	 * format.
 	 */

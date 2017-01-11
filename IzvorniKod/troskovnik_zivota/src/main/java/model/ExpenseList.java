@@ -1,12 +1,12 @@
 package model;
 
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -223,50 +223,6 @@ public class ExpenseList {
 		}
 		return incomeByMonth;
 	}
-	
-	public Map.Entry<IncomeItem, Double> findGreatestIncome(String startDate, String stopDate) {
-		IncomeItem maxItem = null;
-		double maxIncome = 0;
-		
-		for (IncomeItem item : incomeItems) {
-			item.validateAmounts();
-			
-			double incomeAmount = item.getIncomeBetweenDates(startDate, stopDate);
-			if (incomeAmount >= maxIncome) {
-				maxIncome = incomeAmount;
-				maxItem = item;
-			}
-		}
-		
-		Map.Entry<IncomeItem,Double> entry =
-			    new AbstractMap.SimpleEntry<IncomeItem,Double>(maxItem, maxIncome);
-		return entry ;
-	}
-	
-	public Map.Entry<ExpenseItem, Double> findGreatestExpense(String startDate, String stopDate) {
-		ExpenseItem maxItem = null;
-		double maxIncome = 0;
-		
-		for (ExpenseCategory expenseCategory : this.expenseCategories) {
-			List<ExpenseItem> items = expenseCategory.getExpenseItems();
-			for (ExpenseItem item : items) {
-
-				item.validateDates();
-				item.validateAmounts();
-				
-				double expenseAmount = item.getExpenseBetweenDates(startDate, stopDate);
-				if (expenseAmount >= maxIncome) {
-					maxIncome = expenseAmount;
-					maxItem = item;
-				}
-			}
-		}
-
-		
-		Map.Entry<ExpenseItem,Double> entry =
-			    new AbstractMap.SimpleEntry<ExpenseItem,Double>(maxItem, maxIncome);
-		return entry ;
-	}
 
 	public Long getId() {
 		return id;
@@ -331,9 +287,17 @@ public class ExpenseList {
 			item.revalidate(this);
 		}
 
+		// TODO
+		for (ExpenseCategory category : expenseCategories) {
+			// if (category.getOwnerID().equals(this.id)) {
+			// category.revalidate(this, null);
+			// }
+		}
+
 		System.out.println("Validirao " + this.name);
 		this.userOwner = user;
 		this.id = null;
+		// this.ownerID = new Long(user.getId());
 	}
 
 }
