@@ -173,9 +173,6 @@ public class ExpenseListResource {
 		}
 		category.setName(expenseCategory.getName());
 		category.issetFixed(expenseCategory.isgetFixed());
-		for ( ExpenseItem item : category.getExpenseItems()){
-			item.issetFixed(expenseCategory.isgetFixed());
-		}
 		return "SVE PET";
 	}
 

@@ -228,7 +228,7 @@
 					dataType : 'text',
 					contentType : "application/json",
 					success : function(responseData, textStatus, jqXHR) {
-						if (reposnseData == "NE"){
+						if (responseData == "NE"){
 							displayModalAlert("Ime kategorije već postoji!");
 						}else{
 						window.location.reload();
@@ -246,6 +246,7 @@
 
 	function editExpenseItem(currentElementID) {
 		hideAll();
+		$("#expenseValue").val("");
 		$.ajax({
 			type : 'GET',
 			url : "service/expenseList/getexpenseitem/" + currentElementID,
@@ -262,12 +263,14 @@
 				$('#expenseComment').val(expenseItem.comment);
 				$('#startDateExpenseItem').val(expenseItem.startDate);
 				$('#endDateExpenseItem').val(expenseItem.endDate);
+				
 				var fixed;
 				if (expenseItem.fixed == true) {
-					document.getElementById("incomeIsFixedYes").checked = true;
+					fixed = "DA";
 				} else {
-					document.getElementById("incomeIsFixedNo").checked = true;
+					fixed = "NE";
 				}
+				document.getElementById("checkFixed").innerHTML = fixed;
 
 				var period = expenseItem.period;
 				if (period == "ANUALY") {
@@ -875,6 +878,7 @@
 
 	function editIncomeItem(currentElementID) {
 		hideAll();
+		$("#incomeValue").val("");
 		$.ajax({
 			type : 'GET',
 			url : "service/expenseList/getincomeitem/" + currentElementID,
@@ -893,13 +897,13 @@
 				$('#endDateIncome').val(incomeItem.endDate);
 				$('#addIncomeItemDivision').show(750);
 				
+				
 				var fixed;
 				if (incomeItem.fixed == true) {
-					fixed = "DA";
+					document.getElementById("incomeIsFixedYes").checked = true;
 				} else {
-					fixed = "NE";
+					document.getElementById("incomeIsFixedNo").checked = true;
 				}
-				document.getElementById("checkFixed").innerHTML = fixed;
 
 				var period = incomeItem.period;
 				if (period == "ANUALY") {
