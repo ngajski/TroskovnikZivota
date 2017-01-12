@@ -157,7 +157,6 @@ public class ExpenseList {
 				}
 				
 				item.validateDates();
-				item.validateAmounts();
 
 				int payingMonths = Date.difference2(startDate, stopDate) + 1;
 
@@ -205,8 +204,6 @@ public class ExpenseList {
 					continue;
 				}
 			}
-			
-			item.validateAmounts();
 
 			int payingMonths = Date.difference2(startDate, stopDate) + 1;
 
@@ -231,7 +228,6 @@ public class ExpenseList {
 		double maxIncome = 0;
 		
 		for (IncomeItem item : incomeItems) {
-			item.validateAmounts();
 			
 			double incomeAmount = item.getIncomeBetweenDates(startDate, stopDate);
 			if (incomeAmount >= maxIncome) {
@@ -252,10 +248,7 @@ public class ExpenseList {
 		for (ExpenseCategory expenseCategory : this.expenseCategories) {
 			List<ExpenseItem> items = expenseCategory.getExpenseItems();
 			for (ExpenseItem item : items) {
-
 				item.validateDates();
-				item.validateAmounts();
-				
 				double expenseAmount = item.getExpenseBetweenDates(startDate, stopDate);
 				if (expenseAmount >= maxIncome) {
 					maxIncome = expenseAmount;
