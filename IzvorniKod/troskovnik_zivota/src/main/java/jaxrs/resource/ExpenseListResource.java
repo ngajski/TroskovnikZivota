@@ -266,7 +266,7 @@ public class ExpenseListResource {
 		if (!superCategoryName.equals("Default")) {
 			for (ExpenseCategory category : expenseList.getExpenseCategories()) {
 				if (category.getName().equals(superCategoryName)) {
-					ExpenseCategory superCategory = DAOProvider.getDAO().getCategoryByName(superCategoryName);
+					ExpenseCategory superCategory = DAOProvider.getDAO().getCategoryByID(category.getId());
 					expenseCategory.setSuperCategory(superCategory);
 					break;
 				}

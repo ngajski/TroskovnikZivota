@@ -957,7 +957,179 @@
 	 }*/
 </script>
 
+<!-- Funkcije za iznos input -->
+<script type="text/javascript">
+var exepctNumber = true;
 
+
+function myFunction(event) {
+	if (event.key == "Delete" || event.key == "Backspace" || event.key == "Del" || event.key == "Escape" ) {
+		return;
+	}
+	if ($('#expenseValue').val() == null || $('#expenseValue').val() == "") {
+		exepctNumber = true;
+	}
+	if (exepctNumber) {
+		if (isNumber(event.key)) {
+			exepctNumber = false;
+			return;
+		} else {
+			$('#expenseValue').val(
+					$('#expenseValue').val().substring(0,
+							$('#expenseValue').val().length - 1));
+			return;
+		}
+	} else {
+		if (isDot(event.key)){
+			return;
+		}
+		if (isSepartor(event.key)) {
+			$('#expenseValue').val($('#expenseValue').val().trim() + ';');
+			exepctNumber = true;
+			return;
+		} else if (isNumber(event.key)) {
+			return;
+		} else {
+			$('#expenseValue').val(
+					$('#expenseValue').val().substring(0,
+							$('#expenseValue').val().length - 1));
+			return;
+		}
+	}
+}
+
+
+function myFunction2(event) {
+	if (event.key == "Delete" || event.key == "Backspace" || event.key == "Del" || event.key == "Escape" ) {
+		return;
+	}
+	if ($('#expenseValueCREATE').val() == null || $('#expenseValueCREATE').val() == "") {
+		exepctNumber = true;
+	}
+	if (exepctNumber) {
+		if (isNumber(event.key)) {
+			exepctNumber = false;
+			return;
+		} else {
+			$('#expenseValueCREATE').val(
+					$('#expenseValueCREATE').val().substring(0,
+							$('#expenseValueCREATE').val().length - 1));
+			return;
+		}
+	} else {
+		if (isDot(event.key)){
+			return;
+		}
+		if (isSepartor(event.key)) {
+			$('#expenseValueCREATE').val($('#expenseValueCREATE').val().trim() + ';');
+			exepctNumber = true;
+			return;
+		} else if (isNumber(event.key)) {
+			return;
+		} else {
+			$('#expenseValueCREATE').val(
+					$('#expenseValueCREATE').val().substring(0,
+							$('#expenseValueCREATE').val().length - 1));
+			return;
+		}
+	}
+}
+
+function myFunction3(event) {
+	if (event.key == "Delete" || event.key == "Backspace" || event.key == "Del" || event.key == "Escape" ) {
+		return;
+	}
+	if ($('#incomeValueCREATE').val() == null || $('#incomeValueCREATE').val() == "") {
+		exepctNumber = true;
+	}
+	if (exepctNumber) {
+		if (isNumber(event.key)) {
+			exepctNumber = false;
+			return;
+		} else {
+			$('#incomeValueCREATE').val(
+					$('#incomeValueCREATE').val().substring(0,
+							$('#incomeValueCREATE').val().length - 1));
+			return;
+		}
+	} else {
+		if (isDot(event.key)){
+			return;
+		}
+		if (isSepartor(event.key)) {
+			$('#incomeValueCREATE').val($('#incomeValueCREATE').val().trim() + ';');
+			exepctNumber = true;
+			return;
+		} else if (isNumber(event.key)) {
+			return;
+		} else {
+			$('#incomeValueCREATE').val(
+					$('#incomeValueCREATE').val().substring(0,
+							$('#incomeValueCREATE').val().length - 1));
+			return;
+		}
+	}
+}
+
+
+function myFunction4(event) {
+	if (event.key == "Delete" || event.key == "Backspace" || event.key == "Del" || event.key == "Escape" ) {
+		return;
+	}
+	if ($('#incomeValue').val() == null || $('#incomeValue').val() == "") {
+		exepctNumber = true;
+	}
+	if (exepctNumber) {
+		if (isNumber(event.key)) {
+			exepctNumber = false;
+			return;
+		} else {
+			$('#incomeValue').val(
+					$('#incomeValue').val().substring(0,
+							$('#incomeValue').val().length - 1));
+			return;
+		}
+	} else {
+		if (isDot(event.key)){
+			return;
+		}
+		if (isSepartor(event.key)) {
+			$('#incomeValue').val($('#incomeValue').val().trim() + ';');
+			exepctNumber = true;
+			return;
+		} else if (isNumber(event.key)) {
+			return;
+		} else {
+			$('#incomeValue').val(
+					$('#incomeValue').val().substring(0,
+							$('#incomeValue').val().length - 1));
+			return;
+		}
+	}
+}
+function isNumber(char) {
+	if (char >= '0' && char <= '9') {
+		return true;
+	} else {
+		return false;
+	}
+}
+function isSepartor(char) {
+	if (char == " ") {
+		return true;
+	} else {
+		return false;
+	}
+}
+function isDot(char) {
+	if (char == ".") {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+</script>
 
 <body>
 
@@ -1066,18 +1238,6 @@
 					<form action="javascript:void(0);" class="w3-container">
 						<div class="w3-row">
 							<div class="w3-col s3">
-								<h4 style="margin-top: 3px">Iznos</h4>
-							</div>
-							<div class="w3-col s9 w3-center">
-								<input id="expenseValue"
-									class="requiredInputExpenseItemTestEdit w3-input w3-border w3-animate-input"
-									type="text" style="width: 30%">
-							</div>
-						</div>
-					</form>
-					<form action="javascript:void(0);" class="w3-container">
-						<div class="w3-row">
-							<div class="w3-col s3">
 								<h4 style="margin-top: 3px">Period</h4>
 							</div>
 							<div class="w3-col s9 w3-center">
@@ -1128,6 +1288,18 @@
 							</div>
 						</div>
 
+					</form>
+					<form action="javascript:void(0);" class="w3-container">
+						<div class="w3-row" style="padding-top: 15px">
+							<div class="w3-col s3">
+								<h4 style="margin-top: 3px">Iznos</h4>
+							</div>
+							<div class="w3-col s9 w3-center">
+								<input id="expenseValue" onkeyup="myFunction(event)"
+									class="requiredInputExpenseItemTestEdit w3-input w3-border w3-animate-input"
+									type="text" style="width: 30%">
+							</div>
+						</div>
 					</form>
 
 
@@ -1188,18 +1360,7 @@
 						</div>
 					</div>
 				</form>
-				<form action="javascript:void(0);" class="w3-container">
-					<div class="w3-row">
-						<div class="w3-col s3">
-							<h4 style="margin-top: 3px">Iznos</h4>
-						</div>
-						<div class="w3-col s9 w3-center">
-							<input id="expenseValueCREATE"
-								class="requiredInputExpenseItemTest w3-input w3-border w3-animate-input"
-								type="text" style="width: 30%">
-						</div>
-					</div>
-				</form>
+		
 				<form action="javascript:void(0);" class="w3-container">
 					<div class="w3-row">
 						<div class="w3-col s3">
@@ -1255,7 +1416,18 @@
 					</div>
 
 				</form>
-
+						<form action="javascript:void(0);" class="w3-container">
+					<div class="w3-row" style ="padding-top:15px">
+						<div class="w3-col s3">
+							<h4 style="margin-top: 3px">Iznos</h4>
+						</div>
+						<div class="w3-col s9 w3-center">
+							<input id="expenseValueCREATE" onkeyup="myFunction2(event)"
+								class="requiredInputExpenseItemTest w3-input w3-border w3-animate-input"
+								type="text" style="width: 30%">
+						</div>
+					</div>
+				</form>
 
 				<div class="w3.container" style="padding-top: 15px">
 					<form action="javascript:void(0);" class="w3-container">
@@ -1376,18 +1548,6 @@
 				<form action="javascript:void(0);" class="w3-container">
 					<div class="w3-row">
 						<div class="w3-col s3">
-							<h4 style="margin-top: 3px">Iznos</h4>
-						</div>
-						<div class="w3-col s9 w3-center">
-							<input id="incomeValue"
-								class="requiredInputIncomeTestEdit w3-input w3-border w3-animate-input"
-								type="text" style="width: 30%">
-						</div>
-					</div>
-				</form>
-				<form action="javascript:void(0);" class="w3-container">
-					<div class="w3-row">
-						<div class="w3-col s3">
 							<h4 style="margin-top: 3px">Period</h4>
 						</div>
 						<div class="w3-col s9 w3-center">
@@ -1470,7 +1630,18 @@
 					</div>
 
 				</form>
-
+						<form action="javascript:void(0);" class="w3-container">
+					<div class="w3-row" style = "padding-top:15px">
+						<div class="w3-col s3">
+							<h4 style="margin-top: 3px">Iznos</h4>
+						</div>
+						<div class="w3-col s9 w3-center">
+							<input id="incomeValue" onkeyup="myFunction4(event)"
+								class="requiredInputIncomeTestEdit w3-input w3-border w3-animate-input"
+								type="text" style="width: 30%">
+						</div>
+					</div>
+				</form>
 
 				<div class="w3.container" style="padding-top: 15px">
 					<form action="javascript:void(0);" class="w3-container">
@@ -1517,18 +1688,6 @@
 						</div>
 						<div class="w3-col s9 w3-center">
 							<input id="incomeNameCREATE"
-								class="requiredInputIncomeTest w3-input w3-border w3-animate-input"
-								type="text" style="width: 30%">
-						</div>
-					</div>
-				</form>
-				<form action="javascript:void(0);" class="w3-container">
-					<div class="w3-row">
-						<div class="w3-col s3">
-							<h4 style="margin-top: 3px">Iznos</h4>
-						</div>
-						<div class="w3-col s9 w3-center">
-							<input id="incomeValueCREATE"
 								class="requiredInputIncomeTest w3-input w3-border w3-animate-input"
 								type="text" style="width: 30%">
 						</div>
@@ -1621,7 +1780,18 @@
 
 				</form>
 
-
+				<form action="javascript:void(0);" class="w3-container">
+					<div class="w3-row" style = "padding-top:15px">
+						<div class="w3-col s3">
+							<h4 style="margin-top: 3px">Iznos</h4>
+						</div>
+						<div class="w3-col s9 w3-center">
+							<input id="incomeValueCREATE" onkeyup="myFunction3(event)"
+								class="requiredInputIncomeTest w3-input w3-border w3-animate-input"
+								type="text" style="width: 30%">
+						</div>
+					</div>
+				</form>
 				<div class="w3.container" style="padding-top: 15px">
 					<form action="javascript:void(0);" class="w3-container">
 						<div class="w3-row">
