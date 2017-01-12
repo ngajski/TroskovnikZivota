@@ -14,7 +14,7 @@
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="js/general.js"></script>
 <script src="js/modalAlerts.js"></script>
-
+<script src="js/checkDates.js"></script>
 <script type="text/javascript">
 	$(document).ready(
 
@@ -127,24 +127,8 @@
 		var comment = $('#expenseComment').val();
 		var startDate = $('#startDateExpenseItem').val();
 		var endDate = $('#endDateExpenseItem').val();
-
-		var startDateChecker = startDate.substring(0, startDate.indexOf('/'));
-		var endDateChecker = endDate.substring(0, endDate.indexOf('/'));
-		
-		if (startDateChecker > 12 || startDateChecker < 1 || endDateChecker > 12 || endDateChecker < 1 ){
-			displayModalAlert("Krivo uneseni datumi.");
-			return;
-		}
-		
-		
-		startDateChecker = startDate.substring(startDate.indexOf('/')+1);
-		endDateChecker = endDate.substring(endDate.indexOf('/')+1);
-		
-		if ( ( startDateChecker > endDateChecker ) || ( (startDateChecker[0] != 2 ) && (startDateChecker[0] != 1)) || ((endDateChecker[0] != 2) && (endDateChecker[0] != 1 )) ){
-			displayModalAlert("Krivo uneseni datumi.");
-			return;
-		}
-		
+		var string = $('#expenseValue').val();
+		var fixerino = $("#checkFixed").text();
 		var amounts = [];
 		var amount = $('#expenseValue').val();
 		for (var i = 0; i < amount.split(";").length; i++) {
@@ -165,6 +149,11 @@
 		if (periodCheck == "Jednoročno") {
 			period = "ONE_TIME";
 		}
+		
+		if ( !checkDates(startDate, endDate, string, fixerino, period)){
+			return;
+		}
+		
 
 		var x = {
 			id : id,
@@ -430,22 +419,6 @@
 		
 		var startDate = $('#startDateExpenseItemCREATE').val();
 		var endDate = $('#endDateExpenseItemCREATE').val();
-
-		var startDateChecker = startDate.substring(0, startDate.indexOf('/'));
-		var endDateChecker = endDate.substring(0, endDate.indexOf('/'));
-		
-		if (startDateChecker > 12 || startDateChecker < 1 || endDateChecker > 12 || endDateChecker < 1 ){
-			displayModalAlert("Krivo uneseni datumi.");
-			return;
-		}
-		
-		startDateChecker = startDate.substring(startDate.indexOf('/')+1);
-		endDateChecker = endDate.substring(endDate.indexOf('/')+1);
-		
-		if ( ( startDateChecker > endDateChecker ) || ( (startDateChecker[0] != 2 ) && (startDateChecker[0] != 1)) || ((endDateChecker[0] != 2) && (endDateChecker[0] != 1 )) ){
-			displayModalAlert("Krivo uneseni datumi.");
-			return;
-		}
 		
 		var amounts = [];
 		var amount = $('#expenseValueCREATE').val();
@@ -456,6 +429,7 @@
 
 		var category_name = $("#categoryIDCREATE").val();
 		var name = $("#expenseNameCREATE").val();
+		var string = $("#expenseValueCREATE").val();
 		var period = document.getElementById("expensePeriodCREATE");
 		var periodCheck = period.options[period.selectedIndex].value;
 		if (periodCheck == "") {
@@ -470,6 +444,12 @@
 		if (periodCheck == "Jednoročno") {
 			period = "ONE_TIME";
 		}
+		var fixerino = $("#checkFixedExpenseItemCREATE").text();
+		if (!checkDates(startDate, endDate, string, fixerino,period)){
+			return;
+		}
+		
+		
 		var x = {
 			name : name,
 			amounts : amounts,
@@ -683,23 +663,7 @@
 		var comment = $('#incomeComment').val();
 		var startDate = $('#startDateIncome').val();
 		var endDate = $('#endDateIncome').val();
-		
-		var startDateChecker = startDate.substring(0, startDate.indexOf('/'));
-		var endDateChecker = endDate.substring(0, endDate.indexOf('/'));
-		
-		if (startDateChecker > 12 || startDateChecker < 1 || endDateChecker > 12 || endDateChecker < 1 ){
-			displayModalAlert("Krivo uneseni datumi.");
-			return;
-		}
-		
-		startDateChecker = startDate.substring(startDate.indexOf('/')+1);
-		endDateChecker = endDate.substring(endDate.indexOf('/')+1);
-		
-		if ( ( startDateChecker > endDateChecker ) || ( (startDateChecker[0] != 2 ) && (startDateChecker[0] != 1)) || ((endDateChecker[0] != 2) && (endDateChecker[0] != 1 )) ){
-			displayModalAlert("Krivo uneseni datumi.");
-			return;
-		}
-		
+		var string = $("#incomeValue").val();
 		
 		var amounts = [];
 		var amount = $('#incomeValue').val();
@@ -721,6 +685,24 @@
 		if (periodCheck == "Jednoročno") {
 			period = "ONE_TIME";
 		}
+		
+		var fixed;
+		var fixedd = "NE";
+		if (document.getElementById("incomeIsFixedYes").checked) {
+			fixed = true;
+			fixedd = "DA";
+		} else if (document.getElementById("incomeIsFixedNo").checked) {
+			fixed = false;
+			fixedd = "NE";
+		}
+		
+		
+		if (!checkDates(startDate, endDate, string, fixedd,period)){
+
+			return;
+			}
+		
+		
 		var x = {
 			id : id,
 			name : name,
@@ -728,6 +710,7 @@
 			amounts : amounts,
 			startDate : startDate,
 			endDate : endDate,
+			fixed : fixed,
 			period : period
 
 		}
@@ -786,25 +769,7 @@
 			var comment = $('#incomeCommentCREATE').val();
 			var startDate = $('#startDateIncomeCREATE').val();
 			var endDate = $('#endDateIncomeCREATE').val();
-
-			
-			var startDateChecker = startDate.substring(0, startDate.indexOf('/'));
-			var endDateChecker = endDate.substring(0, endDate.indexOf('/'));
-			
-			if (startDateChecker > 12 || startDateChecker < 1 || endDateChecker > 12 || endDateChecker < 1 ){
-				displayModalAlert("Krivo uneseni datumi.");
-				return;
-			}
-			
-			startDateChecker = startDate.substring(startDate.indexOf('/')+1);
-			endDateChecker = endDate.substring(endDate.indexOf('/')+1);
-			
-			if ( ( startDateChecker > endDateChecker ) || ( (startDateChecker[0] != 2 ) && (startDateChecker[0] != 1)) || ((endDateChecker[0] != 2) && (endDateChecker[0] != 1 )) ){
-				displayModalAlert("Krivo uneseni datumi.");
-				return;
-			}
-			
-			
+			var string = $("#incomeValueCREATE").val();			
 			
 			var sallary = true;
 			if (document.getElementById("incomeSallaryCREATE").checked) {
@@ -814,10 +779,13 @@
 			}
 
 			var fixed;
+			var fixedd = "NE";
 			if (document.getElementById("incomeIsFixedYesCREATE").checked) {
 				fixed = true;
+				fixedd = "DA";
 			} else if (document.getElementById("incomeIsFixedNoCREATE").checked) {
 				fixed = false;
+				fixedd = "NE";
 			}
 
 			var amounts = [];
@@ -825,7 +793,12 @@
 			for (var i = 0; i < amount.split(";").length; i++) {
 				amounts.push(amount.split(";")[i]);
 			}
+			
+			if (!checkDates(startDate, endDate, string, fixedd,period)){
 
+				return;
+		}			
+			
 			var x = {
 				name : val,
 				amounts : amounts,
