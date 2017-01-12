@@ -329,7 +329,7 @@ function isDot(char) {
 		
 		if ( emptyExists('requiredInputExpenseItemHome')){
 			displayModalAlert("Molimo Vas popunite sva obavezna polja.")
-			return;
+			return false;
 		}
 				
 		var startDate = $('#startDateExpenseItem').val();
@@ -340,7 +340,7 @@ function isDot(char) {
 		
 		if (startDateChecker > 12 || startDateChecker < 1 || endDateChecker > 12 || endDateChecker < 1 ){
 			displayModalAlert("Krivo uneseni datumi.");
-			return;
+			return false;
 		}
 		
 		startDateChecker = startDate.substring(startDate.indexOf('/')+1);
@@ -348,7 +348,7 @@ function isDot(char) {
 		
 		if ( ( startDateChecker > endDateChecker ) || ( (startDateChecker[0] != 2 ) && (startDateChecker[0] != 1)) || ((endDateChecker[0] != 2) && (endDateChecker[0] != 1 )) ){
 			displayModalAlert("Krivo uneseni datumi.");
-			return;
+			return false;
 		}
 		
 		
@@ -1510,7 +1510,7 @@ function isDot(char) {
 
 		<div id="dynamicContainer">
 			<div class="w3-container" id="displayExpenseListDiv">
-				<h4>Postojeći troškovnici</h4>
+				<h1>Postojeći troškovnici</h1>
 				<table
 					class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white"
 					id="expenseListsTable">
@@ -1519,22 +1519,19 @@ function isDot(char) {
 				<br>
 			</div>
 
-			<div class="w3-container" id="newExpenseListDiv"
-				style="display: none;">
-				<h4>newExpenseListDiv TODO</h4>
-			</div>
 
 			<div class="w3-container" id="analizeExpenseListDiv"
 				style="display: none;">
 				<h1>Analiza troškovnika</h1>
 				
-				<div class="w3-container w3-card-4 w3-light-grey"
+				<div class="w3-container w3-card-4 w3-white"
 					id="expenseListAnalizeRadioBox"></div>
 				<hr>
 				
 
-			<form action='javascript:void(0);' id=''
-				class="w3-container w3-card-4 w3-light-grey"
+			<form action='javascript:void(0);' id='statsForm'
+				class="w3-container w3-card-4 w3-white"
+				style="display: none;"
 				>
 
 				<h3 class="w3-left ">Odaberite razdoblje za prikaz</h3>
