@@ -195,7 +195,6 @@ public class ExpenseListResource {
 		item.setStartDate(expenseItem.getStartDate());
 		item.setPeriod(expenseItem.getPeriod());
 		item.issetFixed(expenseItem.isFixed());
-
 		item.setAmounts(expenseItem.getAmounts());
 		return "SVE PET";
 	}

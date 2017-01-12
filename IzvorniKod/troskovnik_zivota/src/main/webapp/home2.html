@@ -343,6 +343,15 @@ function isDot(char) {
 			displayModalAlert("Krivo uneseni datumi.");
 			return;
 		}
+		
+		if (startDateChecker == endDateChecker){
+			var help1 = parseInt(startDate.substring(0, startDate.indexOf('/')));
+			var help2 = parseInt(endDate.substring(0, endDate.indexOf('/')));
+			if ( !(help2 >= help1)){
+				displayModalAlert("Krivo uneseni datumi.");
+				return;
+			}
+		}
 				
 		var amounts = [];
 		var amount = $('#expenseValue').val();
@@ -422,11 +431,11 @@ function isDot(char) {
 			var help2 = parseInt(startDate.substring(0, startDate.indexOf('/'))) - parseInt(endDate.substring(0, endDate.indexOf('/')));
 			var help3 = Math.abs(help1 - help2)+1;
 			if (help3 % 3 == 0 ){
-				if ( fixed == "DA" && monthCounter == (help3/3)){
-					return true;
-				} else if (fixed == "DA" && (monthCounter != (help3/3))){
-					displayModalAlert("Broj iznosa se ne podudara s danim datumima");
+				if ( fixed == "DA" && monthCounter != 1){
+					displayModalAlert("Za fiksne stavke smije postojati samo jedan iznos");
 					return false;
+				} else if (fixed == "DA" && (monthCounter == 1)){
+					return true;
 				}else {
 				if ( (help3/3) != monthCounter){
 					displayModalAlert("Broj iznosa se ne podudara s unesenim brojem kvartala");

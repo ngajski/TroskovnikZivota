@@ -448,7 +448,7 @@
 		}
 		
 		var amounts = [];
-		var amount = $('#expenseValue').val();
+		var amount = $('#expenseValueCREATE').val();
 		for (var i = 0; i < amount.split(";").length; i++) {
 			amounts.push(amount.split(";")[i]);
 		}
@@ -495,7 +495,7 @@
 						} else {
 							/* POZOVI ALERT */
 							/* nema reload-a */
-							displayModalAlert("Kategorija sa istim nazivom već postoji.<br>Molimo Vas izaberite drugi naziv.");
+							displayModalAlert("Stavka sa istim nazivom već postoji.<br>Molimo Vas izaberite drugi naziv.");
 						}
 
 					},
@@ -745,8 +745,8 @@
 					displayModalAlert("Ime prihoda već postoji!");
 				}else{
 				window.location.reload();
-				console.log('IncomeItem updated !')}
-			},
+			}
+				},
 			error : function(responseData, textStatus, errorThrown) {
 				console.log('POST failed nisam updateo item!');
 			}
