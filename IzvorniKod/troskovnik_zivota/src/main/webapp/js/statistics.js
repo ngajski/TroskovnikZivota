@@ -22,6 +22,8 @@ function generateExpenseListsAnalisisRadioBox(expenseLists) {
 			
 			hookup.append(cloned);
 		}
+		
+		$("#statsForm").show();
 	} else {
 		hookup
 				.append("<label style='font-size: 20px'>Nema postojećih troškovnika. </label>");

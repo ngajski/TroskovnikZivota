@@ -333,7 +333,7 @@ function isDot(char) {
 		
 		if (startDateChecker > 12 || startDateChecker < 1 || endDateChecker > 12 || endDateChecker < 1 ){
 			displayModalAlert("Krivo uneseni datumi.");
-			return;
+			return false;
 		}
 		
 		startDateChecker = startDate.substring(startDate.indexOf('/')+1);
@@ -341,7 +341,7 @@ function isDot(char) {
 		
 		if ( ( startDateChecker > endDateChecker ) || ( (startDateChecker[0] != 2 ) && (startDateChecker[0] != 1)) || ((endDateChecker[0] != 2) && (endDateChecker[0] != 1 )) ){
 			displayModalAlert("Krivo uneseni datumi.");
-			return;
+			return false;
 		}
 		
 		if (startDateChecker == endDateChecker){
@@ -349,7 +349,7 @@ function isDot(char) {
 			var help2 = parseInt(endDate.substring(0, endDate.indexOf('/')));
 			if ( !(help2 >= help1)){
 				displayModalAlert("Krivo uneseni datumi.");
-				return;
+				return false;
 			}
 		}
 				
@@ -1659,8 +1659,9 @@ function isDot(char) {
 				<hr>
 
 
-				<form action='javascript:void(0);' id=''
-					class="w3-container w3-card-4 w3-light-grey">
+				<form action='javascript:void(0);' id='statsForm'
+					class="w3-container w3-card-4 w3-light-grey"
+					style="display: none;">
 
 					<h3 class="w3-left ">Odaberite razdoblje za prikaz</h3>
 					<hr>
