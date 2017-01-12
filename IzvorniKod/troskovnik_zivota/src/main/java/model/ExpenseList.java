@@ -1,5 +1,6 @@
 package model;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -148,15 +149,15 @@ public class ExpenseList {
 		for (ExpenseCategory expenseCategory : categories) {
 			List<ExpenseItem> items = expenseCategory.getExpenseItems();
 			for (ExpenseItem item : items) {
-
-				item.validateDates();
-				item.validateAmounts();
 				
 				if (fixed != null) {
 					if (item.isFixed() != fixed) {
 						continue;
 					}
 				}
+				
+				item.validateDates();
+				item.validateAmounts();
 
 				int payingMonths = Date.difference2(startDate, stopDate) + 1;
 
@@ -198,13 +199,14 @@ public class ExpenseList {
 		Map<String, Double> incomeByMonth = new LinkedHashMap<>();
 
 		for (IncomeItem item : incomeItems) {
-			item.validateAmounts();
 			
 			if (sallary != null) {
 				if (item.isSallary() != sallary) {
 					continue;
 				}
 			}
+			
+			item.validateAmounts();
 
 			int payingMonths = Date.difference2(startDate, stopDate) + 1;
 
@@ -222,6 +224,50 @@ public class ExpenseList {
 			}
 		}
 		return incomeByMonth;
+	}
+	
+	public Map.Entry<IncomeItem, Double> findGreatestIncome(String startDate, String stopDate) {
+		IncomeItem maxItem = null;
+		double maxIncome = 0;
+		
+		for (IncomeItem item : incomeItems) {
+			item.validateAmounts();
+			
+			double incomeAmount = item.getIncomeBetweenDates(startDate, stopDate);
+			if (incomeAmount >= maxIncome) {
+				maxIncome = incomeAmount;
+				maxItem = item;
+			}
+		}
+		
+		Map.Entry<IncomeItem,Double> entry =
+			    new AbstractMap.SimpleEntry<IncomeItem,Double>(maxItem, maxIncome);
+		return entry ;
+	}
+	
+	public Map.Entry<ExpenseItem, Double> findGreatestExpense(String startDate, String stopDate) {
+		ExpenseItem maxItem = null;
+		double maxIncome = 0;
+		
+		for (ExpenseCategory expenseCategory : this.expenseCategories) {
+			List<ExpenseItem> items = expenseCategory.getExpenseItems();
+			for (ExpenseItem item : items) {
+
+				item.validateDates();
+				item.validateAmounts();
+				
+				double expenseAmount = item.getExpenseBetweenDates(startDate, stopDate);
+				if (expenseAmount >= maxIncome) {
+					maxIncome = expenseAmount;
+					maxItem = item;
+				}
+			}
+		}
+
+		
+		Map.Entry<ExpenseItem,Double> entry =
+			    new AbstractMap.SimpleEntry<ExpenseItem,Double>(maxItem, maxIncome);
+		return entry ;
 	}
 
 	public Long getId() {
