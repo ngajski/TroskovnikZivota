@@ -5,27 +5,23 @@ function searchExpenseListsForStatistics() {
 
 function generateExpenseListsAnalisisRadioBox(expenseLists) {
 	var hookup = $("#expenseListAnalizeRadioBox").empty();
-	
 	if (expenseLists.length != 0) {
-		hookup.append("<h3>Troškonvici za analizu</h3>");
+		hookup
+				.append("<h3>Troškonvici za analizu</h3>");
 		for (var i = 0; i < expenseLists.length; ++i) {
 			var checkboxTemplate = $("#radioTemplate");
 			var cloned = checkboxTemplate.clone().removeAttr("style")
 					.removeAttr("id");
-
-			cloned.children("input").attr("name", "analizeRadioBtn").attr(
-					"value", expenseLists[i].name);
+			
+			cloned.children("input").attr("name","analizeRadioBtn").attr("value",expenseLists[i].name);
 			cloned.children("label").html(expenseLists[i].name);
-
+			
 			if (i == 0) {
-				cloned.children("input").attr("checked", "checked");
+				cloned.children("input").attr("checked","checked");
 			}
-
+			
 			hookup.append(cloned);
 		}
-
-		$("#statsForm").show();
-		
 	} else {
 		hookup
 				.append("<label style='font-size: 20px'>Nema postojećih troškovnika. </label>");
