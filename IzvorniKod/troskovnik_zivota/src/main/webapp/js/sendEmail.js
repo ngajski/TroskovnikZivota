@@ -48,10 +48,10 @@ function generateSendEmailUsersRBG(users, searchParameter, parameterValue) {
 			cloned.children("label").html(html);
 			if (i == 0) {
 				cloned.children("input").attr("name", "sendEmailUsersRBG")
-						.attr('value', users[i].email).attr('checked', true);
+						.attr('value', users[i].email + "-" + users[i].username).attr('checked', true);
 			} else {
 				cloned.children("input").attr("name", "sendEmailUsersRBG")
-						.attr('value', users[i].email);
+						.attr('value', users[i].email + "-" + users[i].username);
 			}
 
 			hookup.append(cloned);
@@ -97,7 +97,9 @@ function searchForUsers() {
 function sendEmail() {
 	var expenseListName = $('#sendEmailExpenseListRBGHookup').find(
 			'input:checked').val();
-	var userEmailTo = $('#sendEmailUsersRBGHookup').find('input:checked').val();
+	var userInfo = $('#sendEmailUsersRBGHookup').find('input:checked').val();
+	var userEmailTo = userInfo.split("-")[0];
+	var usernameTo = userInfo.split("-")[1];
 	var username = sessionStorage.getItem('username');
 
 	var url = "/troskovnik-zivota/service/expenseList/sendEmail/";
@@ -110,7 +112,7 @@ function sendEmail() {
 		url : url,
 		dataType : 'json',
 		success : function(responseData, textStatus, jqXHR) {
-			addNotification(username, expenseListName);
+			addNotification(usernameTo, expenseListName);
 		},
 		error : function(responseData, textStatus, errorThrown) {
 			alert('POST failed.');

@@ -180,6 +180,7 @@ public class ExpenseListResource {
 	@Path("/expenseItem")
 	@Produces({ MediaType.TEXT_PLAIN })
 	public String editExpenseItem(ExpenseItem expenseItem) {
+
 		ExpenseItem item = DAOProvider.getDAO().getExpenseItemByID(expenseItem.getId());
 		for ( ExpenseCategory cat : item.getExpenseCategoryOwner().getExpenseListOwner().getExpenseCategories()){
 			for ( ExpenseItem itm : cat.getExpenseItems()){
@@ -194,6 +195,7 @@ public class ExpenseListResource {
 		item.setStartDate(expenseItem.getStartDate());
 		item.setPeriod(expenseItem.getPeriod());
 		item.issetFixed(expenseItem.isFixed());
+
 		item.setAmounts(expenseItem.getAmounts());
 		return "SVE PET";
 	}
@@ -281,7 +283,7 @@ public class ExpenseListResource {
 	@POST
 	@Path("/expenseitem/{category_name}/{name}")
 	@Produces({ MediaType.TEXT_PLAIN })
-	public String addExpenseItemToExpenseList(@PathParam("category_name") String categoryName,
+	public String addExpenseItem(@PathParam("category_name") String categoryName,
 			@PathParam("name") String name, ExpenseItem expenseItem) {
 		ExpenseList expenseList = DAOProvider.getDAO().getExpenseListByName(name);
 		for (ExpenseCategory category : expenseList.getExpenseCategories()) {

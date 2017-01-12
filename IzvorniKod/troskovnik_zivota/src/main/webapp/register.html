@@ -58,35 +58,33 @@ html, body, h1, h2, h3, h4, h5 {
 									success : function(responseData,
 											textStatus, jqXHR) {
 										var user = responseData;
-										sessionStorage.setItem('user', JSON
-												.stringify(user));
-										$("input[name='firstName']").val(
-												user.firstName);
-										$("input[name='lastName']").val(
-												user.lastName);
-										$("input[name='email']")
-												.val(user.email);
+										var date = user.dateOfBirth;
+										var day = date.split('/')[0];
+										var month  = date.split('/')[1];
+										var year = date.split('/')[2];
+										$("#BDDay").val(day);
+										$("#BDMonth").val(month);
+										$("#BDYear").val(year);
+										
+										sessionStorage.setItem('user', JSON.stringify(user));
+										$("input[name='firstName']").val(user.firstName);
+										$("input[name='lastName']").val(user.lastName);
+										$("input[name='email']").val(user.email);
 
 										$("input[name='oib']").val(user.oib);
-										$("input[name='telefon']").val(
-												user.telefon);
-										$("input[name='town']").val(
-												user.address.town);
-										$("input[name='dateOfBirth']").val(
-												user.dateOfBirth);
+										$("input[name='telefon']").val(user.telefon);
+										$("input[name='town']").val(user.address.town);
 										if (user.address.postCode != 0) {
-											$("input[name='postCode']").val(
-													user.address.postCode);
+											$("input[name='postCode']").val(user.address.postCode);
 										}
-										$("input[name='street']").val(
-												user.address.street);
+										$("input[name='street']").val(user.address.street);
 										if (user.address.houseNumber != 0) {
-											$("input[name='houseNumber']").val(
-													user.address.houseNumber);
+											$("input[name='houseNumber']").val(user.address.houseNumber);
 										}
 
-										$('#formButton')
-												.html('Spremi promjene');
+										$("input[name='oib']").val(user.oib);
+										
+										$('#formButton').html('Spremi promjene');
 										$('#usernameDiv').show();
 										$('#passwordDiv').show();
 
@@ -146,7 +144,7 @@ html, body, h1, h2, h3, h4, h5 {
 		var MonthOfBirth = $("#BDMonth :selected").text();
 		var YearOfBirth = $("#BDYear :selected").text();
 
-		var dateOfBirth = MonthOfBirth + "/" + dayOfBirth + "/" + YearOfBirth;
+		var dateOfBirth = dayOfBirth  + "/" + MonthOfBirth + "/" + YearOfBirth;
 
 		var address = {
 			town : town,
@@ -286,6 +284,11 @@ html, body, h1, h2, h3, h4, h5 {
 	
 	function validateForm() {
 		if (emptyExists('requiredInput')) {
+			return;
+		}
+		
+		if (!validateEmail($("input[name='email']").val())){			
+			openModal('modal2', "Email je krivo unesen.");
 			return;
 		}
 
