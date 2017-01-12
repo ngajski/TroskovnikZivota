@@ -121,10 +121,48 @@ public class IncomeItem {
 			
 			int payingMonth = Date.difference2(this.startDate,date);
 
-			return amounts.get(payingMonth);
+			List<Double> validatedAmounts = validateAmounts();
+			return validatedAmounts.get(payingMonth);
 		} else {
 			return new Double(0.0);
 		}
+	}
+	
+	private List<Double> validateAmounts() {
+		if (this.fixed) {
+			return this.amounts;
+		} else if (this.period == Period.MONTHLY) {
+			return this.amounts;
+		}
+		
+		List<Double> validatedAmounts = new ArrayList<>();
+		int payingMonths = Date.difference2(startDate, endDate) + 1;
+		
+		int position = 0;
+		if (period == Period.QUARTARLY) {
+			for (int i = 0; i < payingMonths; ++i) {
+				if (i % 3 == 0 && position < amounts.size()) {
+					validatedAmounts.add(amounts.get(position));
+					position++;
+				} else {
+					validatedAmounts.add(new Double(0));
+				}
+			}
+		} else if (period == Period.ANUALY) {
+			for (int i = 0; i < payingMonths; ++i) {
+				if (i % 12 == 0 && position < amounts.size()) {
+					validatedAmounts.add(amounts.get(position));
+					position++;
+				} else {
+					validatedAmounts.add(new Double(0));
+				}
+			}
+		} else {
+			return this.amounts;
+		}
+		
+		return validatedAmounts; 
+		
 	}
 	
 	
@@ -244,43 +282,6 @@ public class IncomeItem {
 	public void revalidate(ExpenseList owner) {
 		this.id = null;
 		this.expenseListOwner = owner;
-	}
-
-	public void validateAmounts() {
-		if (this.fixed) {
-			return;
-		} else if (this.period == Period.MONTHLY) {
-			return;
-		}
-		
-		List<Double> validatedAmounts = new ArrayList<>();
-		int payingMonths = Date.difference2(startDate, endDate) + 1;
-		
-		int position = 0;
-		if (period == Period.QUARTARLY) {
-			for (int i = 0; i < payingMonths; ++i) {
-				if (i % 3 == 0 && position < amounts.size()) {
-					validatedAmounts.add(amounts.get(position));
-					position++;
-				} else {
-					validatedAmounts.add(new Double(0));
-				}
-			}
-		} else if (period == Period.ANUALY) {
-			for (int i = 0; i < payingMonths; ++i) {
-				if (i % 12 == 0 && position < amounts.size()) {
-					validatedAmounts.add(amounts.get(position));
-					position++;
-				} else {
-					validatedAmounts.add(new Double(0));
-				}
-			}
-		} else {
-			return;
-		}
-		
-		this.amounts = validatedAmounts; 
-		
 	}
 
 	
