@@ -2,6 +2,7 @@ package servlets;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -17,6 +18,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import dao.DAOProvider;
+import model.ExpenseCategory;
 import model.ExpenseList;
 
 @WebServlet (name="sumGraph", urlPatterns="/graph/sum")
@@ -43,11 +45,12 @@ public class SummedGraphServlet extends HttpServlet {
 		}
 
 		ExpenseList expenseList = DAOProvider.getDAO().getExpenseListByName(expenseListName);
-
+		List<ExpenseCategory> categories = DAOProvider.getDAO().getDirectExpenseCategories(expenseList);
+		
 		Map<String, Double> allIncomes = expenseList.findIncomeAmount(startDate, endDate, null);
-		;
+		
 		Map<String, Double> allExpenses = expenseList.findExpenseAmount(startDate, endDate, new LinkedHashMap<>(),
-				expenseList.getExpenseCategories(), null);
+				categories, null);
 
 		DefaultCategoryDataset grap3DataSet = new DefaultCategoryDataset();
 
